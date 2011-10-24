@@ -18,7 +18,7 @@
 Name:           grub2
 Epoch:          1
 Version:        1.99
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -34,6 +34,7 @@ Patch1:		grub-1.99-grub_test_assert_printf.patch
 Patch2:		grub-1.99-just-say-linux.patch
 Patch3:		grub-1.99-Workaround-for-variable-set-but-not-used-issue.patch
 Patch4:		grub2-handle-initramfs-on-xen.patch
+Patch5:		grub2-1.99-handle-more-dmraid.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -354,6 +355,10 @@ fi
 %endif
 
 %changelog
+* Mon Oct 24 2011 Peter Jones <pjones@redhat.com> - 1.99-11
+- Handle dmraid better.
+  Resolves: rhbz#742226
+
 * Wed Oct 19 2011 Adam Williamson <awilliam@redhat.com> - 1.99-10
 - /etc/default/grub is explicitly intended for user customization, so
   mark it as config(noreplace)
