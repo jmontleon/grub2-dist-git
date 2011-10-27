@@ -18,7 +18,7 @@
 Name:           grub2
 Epoch:          1
 Version:        1.99
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -355,6 +355,9 @@ fi
 %endif
 
 %changelog
+* Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.99-12
+- Rebuilt for glibc bug#747377
+
 * Mon Oct 24 2011 Peter Jones <pjones@redhat.com> - 1.99-11
 - Handle dmraid better.
   Resolves: rhbz#742226
