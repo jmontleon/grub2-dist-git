@@ -18,7 +18,7 @@
 Name:           grub2
 Epoch:          1
 Version:        1.99
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -35,6 +35,9 @@ Patch2:		grub-1.99-just-say-linux.patch
 Patch3:		grub-1.99-Workaround-for-variable-set-but-not-used-issue.patch
 Patch4:		grub2-handle-initramfs-on-xen.patch
 Patch5:		grub2-1.99-handle-more-dmraid.patch
+Patch6:		grub2-gfxpayload-efi.patch
+# https://savannah.gnu.org/bugs/index.php?35018
+Patch7:		grub-1.99-fix_grub-probe_call.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -108,7 +111,7 @@ cd grub-efi-%{version}
 	CFLAGS="$(echo $RPM_OPT_FLAGS | sed			\
 		-e 's/-fstack-protector//g'			\
 		-e 's/--param=ssp-buffer-size=4//g'		\
-		-e 's/-mregparm=3/-mregparm=4//g'		\
+		-e 's/-mregparm=3/-mregparm=4/g'		\
 		-e 's/-fexceptions//g'				\
 		-e 's/-fasynchronous-unwind-tables//g' )"	\
 	TARGET_LDFLAGS=-static					\
@@ -140,7 +143,7 @@ PLATFORM=pc
 	CFLAGS="$(echo $RPM_OPT_FLAGS | sed			\
 		-e 's/-fstack-protector//g'			\
 		-e 's/--param=ssp-buffer-size=4//g'		\
-		-e 's/-mregparm=3/-mregparm=4//g'		\
+		-e 's/-mregparm=3/-mregparm=4/g'		\
 		-e 's/-fexceptions//g'				\
 		-e 's/-m64//g'					\
 		-e 's/-fasynchronous-unwind-tables//g' )"	\
@@ -151,6 +154,14 @@ PLATFORM=pc
 
 make %{?_smp_mflags}
 
+sed -i -e 's,(grub),(%{name}),g' \
+	-e 's,grub.info,%{name}.info,g' \
+	-e 's,\* GRUB:,* GRUB2:,g' \
+	-e 's,/boot/grub/,/boot/%{name}/,g' \
+	-e 's,grub-,%{name}-,g' \
+	docs/grub.info
+sed -i -e 's,grub-dev,%{name}-dev,g' docs/grub-dev.info
+
 %install
 set -e
 rm -fr $RPM_BUILD_ROOT
@@ -158,6 +169,7 @@ rm -fr $RPM_BUILD_ROOT
 %ifarch %{efi}
 cd grub-efi-%{version}
 make DESTDIR=$RPM_BUILD_ROOT install
+mv $RPM_BUILD_ROOT/etc/bash_completion.d/grub $RPM_BUILD_ROOT/etc/bash_completion.d/grub-efi
 
 # Ghost config file
 install -d $RPM_BUILD_ROOT/boot/%{name}-efi
@@ -225,11 +237,12 @@ if [ "$1" = 1 ]; then
 	/sbin/install-info --info-dir=%{_infodir} %{_infodir}/grub2-dev.info.gz || :
 fi
 
+%triggerun -- grub2 < 1:1.99-4
 # grub2 < 1.99-4 removed a number of essential files in postun. To fix upgrades
 # from the affected grub2 packages, we first back up the files in triggerun and
 # later restore them in triggerpostun.
 # https://bugzilla.redhat.com/show_bug.cgi?id=735259
-%triggerun -- grub2 < 1:1.99-4
+
 # Back up the files before uninstalling old grub2
 mkdir -p /boot/grub2.tmp &&
 mv -f /boot/grub2/*.mod \
@@ -292,12 +305,10 @@ fi
 %dir %{_sysconfdir}/grub.d
 %config %{_sysconfdir}/grub.d/??_*
 %{_sysconfdir}/grub.d/README
-%{_sysconfdir}/%{name}.cfg
+%config(noreplace) %{_sysconfdir}/%{name}.cfg
 %config(noreplace) %{_sysconfdir}/default/grub
 %dir /boot/%{name}
-# Actually, this is replaced by update-grub from scriptlets,
-# but it takes care of modified persistent part
-%config(noreplace) /boot/%{name}/grub.cfg
+%ghost %config(noreplace) /boot/%{name}/grub.cfg
 %doc grub-%{version}/COPYING grub-%{version}/INSTALL grub-%{version}/NEWS
 %doc grub-%{version}/README grub-%{version}/THANKS grub-%{version}/TODO
 %doc grub-%{version}/ChangeLog grub-%{version}/README.Fedora
@@ -308,7 +319,7 @@ fi
 %files efi
 %defattr(-,root,root,-)
 %attr(0755,root,root)/boot/efi/EFI/redhat
-/etc/bash_completion.d/grub
+/etc/bash_completion.d/grub-efi
 %{_libdir}/grub2-efi
 %{_libdir}/grub/
 /sbin/grub2-efi-mkconfig
@@ -341,12 +352,10 @@ fi
 %dir %{_sysconfdir}/grub.d
 %config %{_sysconfdir}/grub.d/??_*
 %{_sysconfdir}/grub.d/README
-%{_sysconfdir}/grub2-efi.cfg
+%config(noreplace) %{_sysconfdir}/grub2-efi.cfg
 %config(noreplace) %{_sysconfdir}/default/grub
 %dir /boot/grub2-efi
-# Actually, this is replaced by update-grub from scriptlets,
-# but it takes care of modified persistent part
-%config(noreplace) /boot/grub2-efi/grub.cfg
+%ghost %config(noreplace) /boot/grub2-efi/grub.cfg
 %doc grub-%{version}/COPYING grub-%{version}/INSTALL grub-%{version}/NEWS
 %doc grub-%{version}/README grub-%{version}/THANKS grub-%{version}/TODO
 %doc grub-%{version}/ChangeLog grub-%{version}/README.Fedora
@@ -355,12 +364,28 @@ fi
 %endif
 
 %changelog
-* Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.99-12
-- Rebuilt for glibc bug#747377
+* Thu Dec 08 2011 Adam Williamson <awilliam@redhat.com> - 1.99-13
+- fix hardwired call to grub-probe in 30_os-prober (rhbz#737203)
 
-* Mon Oct 24 2011 Peter Jones <pjones@redhat.com> - 1.99-11
-- Handle dmraid better.
-  Resolves: rhbz#742226
+* Mon Nov 07 2011 Peter Jones <pjones@redhat.com> - 1.99-12
+- Lots of .spec fixes from Mads Kiilerich:
+  Remove comment about update-grub - it isn't run in any scriptlets
+  patch info pages so they can be installed and removed correctly when renamed
+  fix references to grub/grub2 renames in info pages (#743964)
+  update README.Fedora (#734090)
+  fix comments for the hack for upgrading from grub2 < 1.99-4
+  fix sed syntax error preventing use of $RPM_OPT_FLAGS (#704820)
+  make /etc/grub2*.cfg %config(noreplace)
+  make grub.cfg %ghost - an empty file is of no use anyway
+  create /etc/default/grub more like anaconda would create it (#678453)
+  don't create rescue entries by default - grubby will not maintain them anyway
+  set GRUB_SAVEDEFAULT=true so saved defaults works (rbhz#732058)
+  grub2-efi should have its own bash completion
+  don't set gfxpayload in efi mode - backport upstream r3402
+- Handle dmraid better. Resolves: rhbz#742226
+
+* Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.99-11
+- Rebuilt for glibc bug#747377
 
 * Wed Oct 19 2011 Adam Williamson <awilliam@redhat.com> - 1.99-10
 - /etc/default/grub is explicitly intended for user customization, so
