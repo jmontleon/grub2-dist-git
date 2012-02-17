@@ -18,7 +18,7 @@
 Name:           grub2
 Epoch:          1
 Version:        1.99
-Release:        13%{?dist}
+Release:        13%{?dist}.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -109,6 +109,7 @@ cd grub-efi-%{version}
 ./autogen.sh
 %configure							\
 	CFLAGS="$(echo $RPM_OPT_FLAGS | sed			\
+		-e 's/-O.//g'					\
 		-e 's/-fstack-protector//g'			\
 		-e 's/--param=ssp-buffer-size=4//g'		\
 		-e 's/-mregparm=3/-mregparm=4/g'		\
@@ -364,6 +365,9 @@ fi
 %endif
 
 %changelog
+* Fri Feb 17 2012 Orion Poplawski <orion@cora.nwra.com> - 1:1.99-13.1
+- Build with -Os (bug 782144)
+
 * Thu Dec 08 2011 Adam Williamson <awilliam@redhat.com> - 1.99-13
 - fix hardwired call to grub-probe in 30_os-prober (rhbz#737203)
 
