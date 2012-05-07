@@ -18,7 +18,7 @@
 Name:           grub2
 Epoch:          1
 Version:        1.99
-Release:        13%{?dist}.2
+Release:        13%{?dist}.3
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -304,7 +304,7 @@ fi
 /sbin/%{name}-ofpathname
 %endif
 %{_bindir}/%{name}-script-check
-%dir %{_sysconfdir}/grub.d
+%attr(0700,root,root) %dir %{_sysconfdir}/grub.d
 %config %{_sysconfdir}/grub.d/??_*
 %{_sysconfdir}/grub.d/README
 %config(noreplace) %{_sysconfdir}/%{name}.cfg
@@ -351,7 +351,7 @@ fi
 /sbin/grub2-efi-ofpathname
 %endif
 %{_bindir}/grub2-efi-script-check
-%dir %{_sysconfdir}/grub.d
+%attr(0700,root,root) %dir %{_sysconfdir}/grub.d
 %config %{_sysconfdir}/grub.d/??_*
 %{_sysconfdir}/grub.d/README
 %config(noreplace) %{_sysconfdir}/grub2-efi.cfg
@@ -366,6 +366,9 @@ fi
 %endif
 
 %changelog
+* Mon May 07 2012 Peter Jones <pjones@redhat.com> - 1.99-13.3
+- Work around #819031 .
+
 * Mon Mar 12 2012 Adam Williamson <awilliam@redhat.com> - 1:1.99-13.2
 - Build with -Os for both grub2-efi and regular grub2 (complete fix for
   782144) (thanks Ian Collier)
