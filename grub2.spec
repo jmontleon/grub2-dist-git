@@ -392,6 +392,7 @@ fi
 %changelog
 * Thu Aug 02 2012 Peter Jones <pjones@redhat.com> - 2.0-0.38.beta6
 - PPC - Handle device paths with commas correctly.
+  Related: rhbz#828740
 
 * Mon Jun 18 2012 Peter Jones <pjones@redhat.com> - 2.0-0.37.beta6
 - Fix double-free in grub-probe.
