@@ -1,0 +1,115 @@
+From 741d77171bd6ea971a98bdd6c78acb8f153ee896 Mon Sep 17 00:00:00 2001
+From: Fedora Ninjas <pjones@fedoraproject.org>
+Date: Wed, 23 Jul 2012 19:33:50 -0300
+Subject: [PATCH] Handle deives with comma in the name
+
+---
+ grub-core/disk/ieee1275/ofdisk.c |   15 +++++++++++----
+ grub-core/kern/ieee1275/openfw.c |   27 ++++++++++++++++++++++++---
+ grub-core/kern/main.c            |   14 ++++++++++++--
+ 3 files changed, 47 insertions(+), 9 deletions(-)
+
+diff --git a/grub-core/disk/ieee1275/ofdisk.c b/grub-core/disk/ieee1275/ofdisk.c
+index b5bb713..3280ead 100644
+--- a/grub-core/disk/ieee1275/ofdisk.c
++++ b/grub-core/disk/ieee1275/ofdisk.c
+@@ -265,10 +265,17 @@ grub_ofdisk_iterate (int (*hook) (const char *name),
+ 	    continue;
+ 
+ 	  {
+-	    char buffer[sizeof ("ieee1275/") + grub_strlen (ent->shortest)];
+-	    char *ptr;
+-	    ptr = grub_stpcpy (buffer, "ieee1275/");
+-	    grub_strcpy (ptr, ent->shortest);
++	    char buffer[sizeof ("ieee1275/") + 2 * grub_strlen (ent->shortest)];
++	    const char *iptr;
++	    char *optr;
++	    optr = grub_stpcpy (buffer, "ieee1275/");
++	    for (iptr = ent->shortest; *iptr; )
++	      {
++		if (*iptr == ',')
++		  *optr++ = '\\';
++		*optr++ = *iptr++;
++	      }
++	    *optr = 0;
+ 	    if (hook (buffer))
+ 	      return 1;
+ 	  }
+diff --git a/grub-core/kern/ieee1275/openfw.c b/grub-core/kern/ieee1275/openfw.c
+index caf820d..a23bb60 100644
+--- a/grub-core/kern/ieee1275/openfw.c
++++ b/grub-core/kern/ieee1275/openfw.c
+@@ -439,21 +439,42 @@ char *
+ grub_ieee1275_encode_devname (const char *path)
+ {
+   char *device = grub_ieee1275_get_devname (path);
+-  char *partition = grub_ieee1275_parse_args (path, GRUB_PARSE_PARTITION);
++  char *partition;
+   char *encoding;
++  char *optr;
++  const char *iptr;
+ 
++  encoding = grub_malloc (sizeof ("ieee1275/") + 2 * grub_strlen (device)
++			  + sizeof (",XXXXXXXXXXXX"));
++  if (!encoding)
++    {
++      grub_free (device);
++      return 0;
++    }
++
++  partition = grub_ieee1275_parse_args (path, GRUB_PARSE_PARTITION);
++
++  optr = grub_stpcpy (encoding, "ieee1275/");
++  for (iptr = device; *iptr; )
++    {
++      if (*iptr == ',')
++	*optr++ ='\\';
++      *optr++ = *iptr++;
++    }
+   if (partition && partition[0])
+     {
+       unsigned int partno = grub_strtoul (partition, 0, 0);
+ 
++      *optr++ = ',';
++
+       if (grub_ieee1275_test_flag (GRUB_IEEE1275_FLAG_0_BASED_PARTITIONS))
+ 	/* GRUB partition 1 is OF partition 0.  */
+ 	partno++;
+ 
+-      encoding = grub_xasprintf ("ieee1275/%s,%d", device, partno);
++      grub_snprintf (optr, sizeof ("XXXXXXXXXXXX"), "%d", partno);
+     }
+   else
+-    encoding = grub_xasprintf ("ieee1275/%s", device);
++    *optr = '\0';
+ 
+   grub_free (partition);
+   grub_free (device);
+diff --git a/grub-core/kern/main.c b/grub-core/kern/main.c
+index 7a386d0..c05ac11 100644
+--- a/grub-core/kern/main.c
++++ b/grub-core/kern/main.c
+@@ -153,8 +153,18 @@ grub_set_prefix_and_root (void)
+       /* We have a partition, but still need to fill in the drive.  */
+       char *comma, *new_device;
+ 
+-      comma = grub_strchr (fwdevice, ',');
+-      if (comma)
++      for (comma = fwdevice; *comma; )
++	{
++	  if (comma[0] == '\\' && comma[1] == ',')
++	    {
++	      comma += 2;
++	      continue;
++	    }
++	  if (*comma == ',')
++	    break;
++	  comma++;
++	}
++      if (*comma)
+ 	{
+ 	  char *drive = grub_strndup (fwdevice, comma - fwdevice);
+ 	  new_device = grub_xasprintf ("%s%s", drive, device);
+-- 
+1.7.10.4
+
