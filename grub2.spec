@@ -39,7 +39,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.0
-Release:        0.38.beta6%{?dist}
+Release:        0.39%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -65,6 +65,7 @@ Patch18:	grub-2.00-support-vscsi-on-ibm-ppc.patch
 Patch19:	grub-2.00-ppc-usb-quiesce.patch
 Patch20:	grub-2.00-no-double-free.patch
 Patch21:	grub-2.00-ppc_handle_devices_with_comma.patch
+Patch22:	grub-2.00-increase-the-ieee1275-device-path-buffer-size.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -390,6 +391,9 @@ fi
 %doc grub-%{tarversion}/themes/starfield/COPYING.CC-BY-SA-3.0
 
 %changelog
+* Tue Nov 27 2012 Peter Jones <pjones@redhat.com> - 2.0-0.39
+- Fix device path truncations on ppc (pfsmorigo, #857305)
+
 * Thu Aug 02 2012 Peter Jones <pjones@redhat.com> - 2.0-0.38.beta6
 - PPC - Handle device paths with commas correctly.
   Related: rhbz#828740
