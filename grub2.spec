@@ -18,10 +18,12 @@
 %ifarch %{ix86}
 %global grubefiarch i386-efi
 %global grubefiname grubia32.efi
+%global grubeficdname gcdia32.efi
 %endif
 %ifarch x86_64
 %global grubefiarch %{_arch}-efi
 %global grubefiname grubx64.efi
+%global grubeficdname gcdx64.efi
 %endif
 
 %if 0%{?rhel}
@@ -33,13 +35,13 @@
 
 %endif
 
-%global tarversion 2.00~beta6
+%global tarversion 2.00
 %undefine _missing_build_ids_terminate_build
 
 Name:           grub2
 Epoch:          1
-Version:        2.0
-Release:        0.39%{?dist}
+Version:        2.00
+Release:        15%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -50,22 +52,32 @@ Source0:        ftp://alpha.gnu.org/gnu/grub/grub-%{tarversion}.tar.xz
 Source3:        README.Fedora
 Source4:	http://unifoundry.com/unifont-5.1.20080820.pcf.gz
 Source5:	theme.tar.bz2
-Patch0:		grub-2.00-ieee1276.patch
-Patch1:		grub-2.00-no-canon.patch
+#Source6:	grub-cd.cfg
 Patch2:		grub-1.99-just-say-linux.patch
 Patch5:		grub-1.99-ppc-terminfo.patch
-Patch10:	grub-2.00-add-fw_path-search.patch
+Patch10:	grub-2.00-add-fw_path-search_v2.patch
 Patch11:	grub-2.00-Add-fwsetup.patch
 Patch13:	grub-2.00-Dont-set-boot-on-ppc.patch
-Patch14:	grub-2.00-ignore-gnulib-gets-stupidity.patch
-Patch15:	grub-2.00-linux-mbr.patch
-Patch16:	grub-2.00-no-huge-video.patch
-Patch17:	grub-2.00-ppc-hints.patch
-Patch18:	grub-2.00-support-vscsi-on-ibm-ppc.patch
-Patch19:	grub-2.00-ppc-usb-quiesce.patch
-Patch20:	grub-2.00-no-double-free.patch
-Patch21:	grub-2.00-ppc_handle_devices_with_comma.patch
-Patch22:	grub-2.00-increase-the-ieee1275-device-path-buffer-size.patch
+Patch18:	grub-2.00-ignore-gnulib-gets-stupidity.patch
+#Patch19:	grub-2.00-who-trusts-you-and-who-do-you-trust.patch
+Patch20:	grub2-linuxefi.patch
+Patch21:	grub2-cdpath.patch
+Patch22:	grub2-use-linuxefi.patch
+Patch23:	grub-2.00-dont-decrease-mmap-size.patch
+Patch24:	grub-2.00-no-insmod-on-sb.patch
+Patch25:	grub-2.00-efidisk-ahci-workaround.patch
+Patch26:	grub-2.00-increase-the-ieee1275-device-path-buffer-size.patch
+Patch27:	grub-2.00-Handle-escapes-in-labels.patch
+Patch28:	grub-2.00-fix-http-crash.patch
+Patch29:	grub-2.00-Issue-separate-DNS-queries-for-ipv4-and-ipv6.patch
+Patch30:	grub-2.00-cas-reboot-support.patch
+Patch31:	grub-2.00-for-ppc-include-all-modules-in-the-core-image.patch
+Patch32:	add-vlan-tag-support.patch
+Patch33:	follow-the-symbolic-link-ieee1275.patch
+Patch34:	grub-2.00-add-X-option-to-printf-functions.patch
+Patch35:	grub-2.00-dhcp-client-id-and-uuid-options-added.patch
+Patch36:	grub-2.00-search-for-specific-config-file-for-netboot.patch
+Patch37:	grub2-add-bootpath-device-to-the-list.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -83,6 +95,9 @@ BuildRequires:  autoconf automake autogen device-mapper-devel
 BuildRequires:	freetype-devel gettext-devel git
 BuildRequires:	texinfo
 BuildRequires:	dejavu-sans-fonts
+%ifarch %{efiarchs}
+BuildRequires:	pesign >= 0.99-8
+%endif
 
 Requires:	gettext os-prober which file system-logos
 Requires:	%{name}-tools = %{epoch}:%{version}-%{release}
@@ -130,7 +145,7 @@ cp %{SOURCE3} .
 # place unifont in the '.' from which configure is run
 cp %{SOURCE4} unifont.pcf.gz
 git init
-git config user.email "pjones@fedoraproject.org"
+git config user.email "grub2-owner@fedoraproject.org"
 git config user.name "Fedora Ninjas"
 git add .
 git commit -a -q -m "%{tarversion} baseline."
@@ -144,7 +159,7 @@ cp %{SOURCE3} .
 # place unifont in the '.' from which configure is run
 cp %{SOURCE4} unifont.pcf.gz
 git init
-git config user.email "pjones@fedoraproject.org"
+git config user.email "grub2-owner@fedoraproject.org"
 git config user.name "Fedora Ninjas"
 git add .
 git commit -a -q -m "%{tarversion} baseline."
@@ -168,10 +183,18 @@ cd grub-efi-%{tarversion}
         --program-transform-name=s,grub,%{name},		\
 	--disable-werror
 make %{?_smp_mflags}
-./grub-mkimage -O %{grubefiarch} -o %{grubefiname}  -d grub-core \
-	part_gpt hfsplus fat ext2 btrfs normal chain boot configfile linux \
-	minicmd reboot halt search font gfxterm echo video all_video \
-	test gfxmenu png efifwsetup
+CD_MODULES="	all_video boot btrfs cat chain configfile echo efifwsetup \
+		efinet ext2 fat font gfxmenu gfxterm gzio halt hfsplus iso9660 \
+		jpeg linuxefi minicmd normal part_apple part_msdos part_gpt \
+		password_pbkdf2 png reboot search search_fs_uuid \
+		search_fs_file search_label sleep test video xfs"
+./grub-mkimage -O %{grubefiarch} -o %{grubeficdname}.orig -p /EFI/BOOT \
+		-d grub-core ${CD_MODULES}
+%pesign -s -i %{grubeficdname}.orig -o %{grubeficdname}
+GRUB_MODULES="${CD_MODULES} mdraid09 mdraid1x"
+./grub-mkimage -O %{grubefiarch} -o %{grubefiname}.orig -p /EFI/%{efidir} \
+		-d grub-core ${GRUB_MODULES}
+%pesign -s -i %{grubefiname}.orig -o %{grubefiname}
 cd ..
 %endif
 
@@ -222,6 +245,7 @@ rm -fr $RPM_BUILD_ROOT
 %ifarch %{efiarchs}
 cd grub-efi-%{tarversion}
 make DESTDIR=$RPM_BUILD_ROOT install
+find $RPM_BUILD_ROOT -iname "*.module" -exec chmod a-x {} \;
 
 # Ghost config file
 install -m 755 -d $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/
@@ -242,6 +266,8 @@ do
 #        install -m 755 -D $BASE$EXT $TGT
 done
 install -m 755 %{grubefiname} $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/%{grubefiname}
+install -m 755 %{grubeficdname} $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/%{grubeficdname}
+install -D -m 644 unicode.pf2 $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/fonts/unicode.pf2
 cd ..
 %endif
 
@@ -287,6 +313,18 @@ tar xjf %{SOURCE5}
 $RPM_BUILD_ROOT%{_bindir}/%{name}-mkfont -o boot/grub2/themes/system/DejaVuSans-10.pf2      -s 10 /usr/share/fonts/dejavu/DejaVuSans.ttf # "DejaVu Sans Regular 10"
 $RPM_BUILD_ROOT%{_bindir}/%{name}-mkfont -o boot/grub2/themes/system/DejaVuSans-12.pf2      -s 12 /usr/share/fonts/dejavu/DejaVuSans.ttf # "DejaVu Sans Regular 12"
 $RPM_BUILD_ROOT%{_bindir}/%{name}-mkfont -o boot/grub2/themes/system/DejaVuSans-Bold-14.pf2 -s 14 /usr/share/fonts/dejavu/DejaVuSans-Bold.ttf # "DejaVu Sans Bold 14"
+
+# Make selinux happy with exec stack binaries.
+mkdir ${RPM_BUILD_ROOT}%{_sysconfdir}/prelink.conf.d/
+cat << EOF > ${RPM_BUILD_ROOT}%{_sysconfdir}/prelink.conf.d/grub2.conf
+# these have execstack, and break under selinux
+-b /usr/bin/grub2-script-check
+-b /usr/bin/grub2-mkrelpath
+-b /usr/bin/grub2-fstest
+-b /usr/sbin/grub2-bios-setup
+-b /usr/sbin/grub2-probe
+-b /usr/sbin/grub2-sparc64-setup
+EOF
 
 %clean    
 rm -rf $RPM_BUILD_ROOT
@@ -341,6 +379,7 @@ fi
 %{_libdir}/grub/%{grubefiarch}
 %config(noreplace) %{_sysconfdir}/%{name}-efi.cfg
 %attr(0755,root,root)/boot/efi/EFI/%{efidir}
+%attr(0755,root,root)/boot/efi/EFI/%{efidir}/fonts
 %ghost %config(noreplace) /boot/efi/EFI/%{efidir}/grub.cfg
 %doc grub-%{tarversion}/COPYING
 %endif
@@ -373,6 +412,7 @@ fi
 %endif
 %{_bindir}/%{name}-script-check
 %{_sysconfdir}/bash_completion.d/grub
+%{_sysconfdir}/prelink.conf.d/grub2.conf
 %attr(0700,root,root) %dir %{_sysconfdir}/grub.d
 %config %{_sysconfdir}/grub.d/??_*
 %{_sysconfdir}/grub.d/README
@@ -391,12 +431,75 @@ fi
 %doc grub-%{tarversion}/themes/starfield/COPYING.CC-BY-SA-3.0
 
 %changelog
-* Tue Nov 27 2012 Peter Jones <pjones@redhat.com> - 2.0-0.39
-- Fix device path truncations on ppc (pfsmorigo, #857305)
+* Thu Dec 20 2012 Dennis Gilmore <dennis@ausil.us> - 2.00-15
+- bump nvr
 
-* Thu Aug 02 2012 Peter Jones <pjones@redhat.com> - 2.0-0.38.beta6
+* Mon Dec 17 2012 Karsten Hopp <karsten@redhat.com> 2.00-14
+- add bootpath device to the device list (pfsmorigo, #886685)
+
+* Tue Nov 27 2012 Peter Jones <pjones@redhat.com> - 2.00-13
+- Add vlan tag support (pfsmorigo, #871563)
+- Follow symlinks during PReP installation in grub2-install (pfsmorigo, #874234)
+- Improve search paths for config files on network boot (pfsmorigo, #873406)
+
+* Tue Oct 23 2012 Peter Jones <pjones@redhat.com> - 2.00-12
+- Don't load modules when grub transitions to "normal" mode on UEFI.
+
+* Mon Oct 22 2012 Peter Jones <pjones@redhat.com> - 2.00-11
+- Rebuild with newer pesign so we'll get signed with the final signing keys.
+
+* Thu Oct 18 2012 Peter Jones <pjones@redhat.com> - 2.00-10
+- Various PPC fixes.
+- Fix crash fetching from http (gustavold, #860834)
+- Issue separate dns queries for ipv4 and ipv6 (gustavold, #860829)
+- Support IBM CAS reboot (pfsmorigo, #859223)
+- Include all modules in the core image on ppc (pfsmorigo, #866559)
+
+* Mon Oct 01 2012 Peter Jones <pjones@redhat.com> - 1:2.00-9
+- Work around bug with using "\x20" in linux command line.
+  Related: rhbz#855849
+
+* Thu Sep 20 2012 Peter Jones <pjones@redhat.com> - 2.00-8
+- Don't error on insmod on UEFI/SB, but also don't do any insmodding.
+- Increase device path size for ieee1275
+  Resolves: rhbz#857936
+- Make network booting work on ieee1275 machines.
+  Resolves: rhbz#857936
+
+* Wed Sep 05 2012 Matthew Garrett <mjg@redhat.com> - 2.00-7
+- Add Apple partition map support for EFI
+
+* Thu Aug 23 2012 David Cantrell <dcantrell@redhat.com> - 2.00-6
+- Only require pesign on EFI architectures (#851215)
+
+* Tue Aug 14 2012 Peter Jones <pjones@redhat.com> - 2.00-5
+- Work around AHCI firmware bug in efidisk driver.
+- Move to newer pesign macros
+- Don't allow insmod if we're in secure-boot mode.
+
+* Wed Aug 08 2012 Peter Jones <pjones@redhat.com>
+- Split module lists for UEFI boot vs UEFI cd images.
+- Add raid modules for UEFI image (related: #750794)
+- Include a prelink whitelist for binaries that need execstack (#839813)
+- Include fix efi memory map fix from upstream (#839363)
+
+* Wed Aug 08 2012 Peter Jones <pjones@redhat.com> - 2.00-4
+- Correct grub-mkimage invocation to use efidir RPM macro (jwb)
+- Sign with test keys on UEFI systems.
 - PPC - Handle device paths with commas correctly.
   Related: rhbz#828740
+
+* Wed Jul 25 2012 Peter Jones <pjones@redhat.com> - 2.00-3
+- Add some more code to support Secure Boot, and temporarily disable
+  some other bits that don't work well enough yet.
+  Resolves: rhbz#836695
+
+* Wed Jul 11 2012 Matthew Garrett <mjg@redhat.com> - 2.00-2
+- Set a prefix for the image - needed for installer work
+- Provide the font in the EFI directory for the same reason
+
+* Thu Jun 28 2012 Peter Jones <pjones@redhat.com> - 2.00-1
+- Rebase to grub-2.00 release.
 
 * Mon Jun 18 2012 Peter Jones <pjones@redhat.com> - 2.0-0.37.beta6
 - Fix double-free in grub-probe.
