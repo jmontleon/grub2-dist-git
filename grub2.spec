@@ -185,10 +185,10 @@ CD_MODULES="	all_video boot btrfs cat chain configfile echo efifwsetup \
 		jpeg linuxefi minicmd normal part_apple part_msdos part_gpt \
 		password_pbkdf2 png reboot search search_fs_uuid \
 		search_fs_file search_label sleep test video xfs"
-./grub-mkimage -O %{grubefiarch} -o %{grubeficdname}.orig -p /EFI/BOOT \
+./grub-mkimage -O %{grubefiarch} -o %{grubeficdname} -p /EFI/BOOT \
 		-d grub-core ${CD_MODULES}
 GRUB_MODULES="${CD_MODULES} mdraid09 mdraid1x"
-./grub-mkimage -O %{grubefiarch} -o %{grubefiname}.orig -p /EFI/%{efidir} \
+./grub-mkimage -O %{grubefiarch} -o %{grubefiname} -p /EFI/%{efidir} \
 		-d grub-core ${GRUB_MODULES}
 cd ..
 %endif
