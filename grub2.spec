@@ -41,7 +41,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.00
-Release:        15%{?dist}
+Release:        15.1%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -95,9 +95,6 @@ BuildRequires:  autoconf automake autogen device-mapper-devel
 BuildRequires:	freetype-devel gettext-devel git
 BuildRequires:	texinfo
 BuildRequires:	dejavu-sans-fonts
-%ifarch %{efiarchs}
-BuildRequires:	pesign >= 0.99-8
-%endif
 
 Requires:	gettext os-prober which file system-logos
 Requires:	%{name}-tools = %{epoch}:%{version}-%{release}
@@ -190,11 +187,9 @@ CD_MODULES="	all_video boot btrfs cat chain configfile echo efifwsetup \
 		search_fs_file search_label sleep test video xfs"
 ./grub-mkimage -O %{grubefiarch} -o %{grubeficdname}.orig -p /EFI/BOOT \
 		-d grub-core ${CD_MODULES}
-%pesign -s -i %{grubeficdname}.orig -o %{grubeficdname}
 GRUB_MODULES="${CD_MODULES} mdraid09 mdraid1x"
 ./grub-mkimage -O %{grubefiarch} -o %{grubefiname}.orig -p /EFI/%{efidir} \
 		-d grub-core ${GRUB_MODULES}
-%pesign -s -i %{grubefiname}.orig -o %{grubefiname}
 cd ..
 %endif
 
@@ -431,6 +426,9 @@ fi
 %doc grub-%{tarversion}/themes/starfield/COPYING.CC-BY-SA-3.0
 
 %changelog
+* Thu Jan 31 2013 Peter Jones <pjones@redhat.com> - 2.00-15.1
+- Remove pesign stuff since this is f17.
+
 * Thu Dec 20 2012 Dennis Gilmore <dennis@ausil.us> - 2.00-15
 - bump nvr
 
