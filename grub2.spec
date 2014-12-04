@@ -41,7 +41,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.00
-Release:        26%{?dist}
+Release:        27%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -539,6 +539,7 @@ Patch0482: 0482-Fix-net_bootp-cmd-crash-when-there-isn-t-network-car.patch
 Patch0483: 0483-Initialize-grub_file_filters_-all-enabled.patch
 Patch0484: 0484-Use-2-instead-of-1-for-our-right-hand-margin-so-line.patch
 Patch0485: 0485-Don-t-require-a-password-to-boot-entries-generated-b.patch
+Patch0486: 0001-Update-to-minilzo-2.08.patch
 
 BuildRequires:  flex bison binutils python
 BuildRequires:  ncurses-devel xz-devel
@@ -941,6 +942,10 @@ fi
 %{_datarootdir}/grub/themes/
 
 %changelog
+* Fri Dec 05 2014 Peter Jones <pjones@redhat.com> - 2.00-27
+- Update minilzo to 2.08 for CVE-2014-4607
+  Resolves: rhbz#1131793
+
 * Mon Jun 23 2014 Adam Williamson <awilliam@redhat.com> - 2.00-26
 - Don't require password to boot normally - #840204
 
