@@ -47,7 +47,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.17%{?dist}
+Release:        0.18%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -217,6 +217,7 @@ Patch0154: 0154-Try-to-emit-linux16-initrd16-and-linuxefi-initrdefi-.patch
 Patch0155: 0001-Update-to-minilzo-2.08.patch
 Patch0156: 0001-Make-grub2-mkconfig-construct-titles-that-look-like-.patch
 Patch0157: 0002-Make-rescue-and-debug-entries-sort-right-again-in-gr.patch
+Patch0158: 0158-Fix-security-issue-when-reading-username-and-passwor.patch
 
 BuildRequires:  flex bison binutils python
 BuildRequires:  ncurses-devel xz-devel bzip2-devel
@@ -652,6 +653,12 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Thu Dec 10 2015 Peter Jones <pjones@redhat.com> - 2.02-0.18
+- Fix security issue when reading username and password
+  Related: CVE-2015-8370
+- Do a better job of handling GRUB2_PASSWORD
+  Related: rhbz#1284370
+
 * Fri Nov 20 2015 Peter Jones <pjones@redhat.com> - 2.02-0.17
 - Rebuild without multiboot* modules in the EFI image.
   Related: rhbz#1264103
