@@ -84,3 +84,4 @@ Patch0082: 0082-Measure-kernel-and-initrd-on-BIOS-systems.patch
 Patch0083: 0083-Measure-the-kernel-commandline.patch
 Patch0084: 0084-Measure-commands.patch
 Patch0085: 0085-Measure-multiboot-images-and-modules.patch
+Patch0086: 0001-Make-grub-editenv-build-again.patch

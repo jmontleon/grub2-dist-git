@@ -1,4 +1,4 @@
-From 4f316cbb70563a26a8cb42ce5122c198cfd3636d Mon Sep 17 00:00:00 2001
+From 6bd3eaeac50254fdb0c6830fb4e1808a8ba465d6 Mon Sep 17 00:00:00 2001
 From: Matthew Garrett <mjg59@srcf.ucam.org>
 Date: Mon, 10 Aug 2015 15:27:12 -0700
 Subject: [PATCH 84/85] Measure commands

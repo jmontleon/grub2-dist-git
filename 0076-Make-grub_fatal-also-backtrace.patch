@@ -1,4 +1,4 @@
-From 9e51bd34baf8c705380abb4dc4b3847c11c93829 Mon Sep 17 00:00:00 2001
+From 306ae3bc0f75dd256369a7fd276e7514960ac1e5 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Wed, 27 Jan 2016 09:22:42 -0500
 Subject: [PATCH 76/85] Make grub_fatal() also backtrace.

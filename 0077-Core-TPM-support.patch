@@ -1,4 +1,4 @@
-From 59e54f473afa4e4f67dde8f11a33cb8490496086 Mon Sep 17 00:00:00 2001
+From 2769effc6c6748bc052fba1ef056f947ec18ce13 Mon Sep 17 00:00:00 2001
 From: Matthew Garrett <mjg59@coreos.com>
 Date: Tue, 14 Jul 2015 17:06:35 -0700
 Subject: [PATCH 77/85] Core TPM support

@@ -1,4 +1,4 @@
-From 6bcfc6f286d099a26cc0c7a00a6458d1d7993485 Mon Sep 17 00:00:00 2001
+From 97d4a9d6f5432130dde624c99e8402cb8b641394 Mon Sep 17 00:00:00 2001
 From: Matthew Garrett <mjg59@coreos.com>
 Date: Sun, 9 Aug 2015 16:32:29 -0700
 Subject: [PATCH 83/85] Measure the kernel commandline

@@ -1,44 +1,5 @@
 %undefine _hardened_build
 
-# Modules always contain just 32-bit code
-%define _libdir %{_exec_prefix}/lib
-
-# 64bit intel machines use 32bit boot loader
-# (We cannot just redefine _target_cpu, as we'd get i386.rpm packages then)
-%ifarch x86_64
-%define _target_platform i386-%{_vendor}-%{_target_os}%{?_gnu}
-%endif
-# sparc is always compiled 64 bit
-%ifarch %{sparc}
-%define _target_platform sparc64-%{_vendor}-%{_target_os}%{?_gnu}
-%endif
-
-%if ! 0%{?efi}
-
-%global efi_only aarch64
-%global efiarchs %{ix86} x86_64 ia64 %{efi_only}
-
-%ifarch %{ix86}
-%global grubefiarch i386-efi
-%global grubefiname grubia32.efi
-%global grubeficdname gcdia32.efi
-%endif
-%ifarch x86_64
-%global grubefiarch %{_arch}-efi
-%global grubefiname grubx64.efi
-%global grubeficdname gcdx64.efi
-%endif
-%ifarch aarch64
-%global grubefiarch arm64-efi
-%global grubefiname grubaa64.efi
-%global grubeficdname gcdaa64.efi
-%endif
-
-# Figure out the right file path to use
-%global efidir %(eval echo $(grep ^ID= /etc/os-release | sed -e 's/^ID=//' -e 's/rhel/redhat/'))
-
-%endif
-
 %global tarversion 2.02~beta3
 %undefine _missing_build_ids_terminate_build
 
@@ -47,24 +8,26 @@ Epoch:          1
 Version:        2.02
 Release:        0.26%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
-
 Group:          System Environment/Base
 License:        GPLv3+
 URL:            http://www.gnu.org/software/grub/
 Obsoletes:	grub < 1:0.98
 Source0:        ftp://alpha.gnu.org/gnu/grub/grub-%{tarversion}.tar.xz
+Source1:	grub.macros
+Source2:	grub.patches
 #Source0:	ftp://ftp.gnu.org/gnu/grub/grub-%%{tarversion}.tar.xz
 Source4:	http://unifoundry.com/unifont-5.1.20080820.pcf.gz
 Source5:	theme.tar.bz2
 Source6:	gitignore
-Source7:	grub.patches
+
+%include %{SOURCE1}
 
 # generate with do-rebase
-%include %{SOURCE7}
+%include %{SOURCE2}
 
 # And these are:
 # git checkout debuginfo
-# git format-patch fedora-23..
+# git format-patch fedora-24..
 Patch10001: 10001-Put-the-correct-.file-directives-in-our-.S-files.patch
 Patch10002: 10002-Make-it-possible-to-enabled-build-id-sha1.patch
 #Patch10003: 10003-Don-t-tell-the-compiler-to-do-annoying-things-with-.patch
@@ -75,83 +38,102 @@ Patch10005: 10005-Make-a-gdb-dprintf-that-tells-us-load-addresses.patch
 BuildRequires:  flex bison binutils python
 BuildRequires:  ncurses-devel xz-devel bzip2-devel
 BuildRequires:  freetype-devel libusb-devel
-BuildRequires:	rpm-devel
-%ifarch %{sparc} x86_64 aarch64 ppc64le
+BuildRequires:	rpm-devel rpm-libs
+%ifarch %{sparc} aarch64 ppc64le ppc64
 # sparc builds need 64 bit glibc-devel - also for 32 bit userland
-BuildRequires:  /usr/lib64/crt1.o glibc-static
+BuildRequires:  /usr/lib64/crt1.o glibc-static glibc-devel
+%else
+%ifarch x86_64 %{ix86}
+BuildRequires:  /usr/lib/crt1.o glibc-static(x86-32) glibc-devel(x86-32)
+BuildRequires:  /usr/lib64/crt1.o glibc-static(x86-64) glibc-devel(x86-64)
 %else
 # ppc64 builds need the ppc crt1.o
-BuildRequires:  /usr/lib/crt1.o glibc-static
+BuildRequires:  /usr/lib/crt1.o glibc-static glibc-devel
+%endif
 %endif
 BuildRequires:  autoconf automake autogen device-mapper-devel
 BuildRequires:	freetype-devel gettext-devel git
 BuildRequires:	texinfo
 BuildRequires:	dejavu-sans-fonts
 BuildRequires:	help2man
-%ifarch %{efiarchs}
-%ifnarch aarch64
+%ifarch %{efi_arch}
 BuildRequires:	pesign >= 0.99-8
 %endif
-%endif
 
-Requires:	gettext which file
-Requires:	%{name}-tools = %{epoch}:%{version}-%{release}
-Requires:	os-prober >= 1.58-11
-Requires(pre):  dracut
-Requires(post): dracut
+ExcludeArch:	s390 s390x
 
-ExcludeArch:	s390 s390x %{arm}
-Obsoletes:	grub2 <= 1:2.00-20%{?dist}
+%global desc \
+The GRand Unified Bootloader (GRUB) is a highly configurable and customizable\n\
+bootloader with modular architecture.  It supports a rich variety of kernel\n\
+formats, file systems, computer architectures and hardware devices.\n\
+%{nil}
 
 %description
-The GRand Unified Bootloader (GRUB) is a highly configurable and customizable
-bootloader with modular architecture.  It support rich varietyof kernel formats,
-file systems, computer architectures and hardware devices.  This subpackage
-provides support for PC BIOS systems.
+%{desc}
 
-%ifarch %{efiarchs}
-%package efi
-Summary:	GRUB for EFI systems.
-Group:		System Environment/Base
-Requires:	%{name}-tools = %{epoch}:%{version}-%{release}
-Obsoletes:	grub2-efi <= 1:2.00-20%{?dist}
+%package debuginfo
+Summary:	Debug information for package grub2
+Group:		Development/Debug
 
-%description efi
-The GRand Unified Bootloader (GRUB) is a highly configurable and customizable
-bootloader with modular architecture.  It support rich varietyof kernel formats,
-file systems, computer architectures and hardware devices.  This subpackage
-provides support for EFI systems.
-
-%package efi-modules
-Summary:	Modules used to build custom grub.efi images
-Group:		System Environment/Base
-Requires:	%{name}-tools = %{epoch}:%{version}-%{release}
-Obsoletes:	grub2-efi <= 1:2.00-20%{?dist}
-
-%description efi-modules
-The GRand Unified Bootloader (GRUB) is a highly configurable and customizable
-bootloader with modular architecture.  It support rich varietyof kernel formats,
-file systems, computer architectures and hardware devices.  This subpackage
-provides support for rebuilding your own grub.efi on EFI systems.
-%endif
+%description debuginfo
+This package provides debug information for package grub2.
+Debug information is useful when developing applications that use this
+package or when debugging this package.
 
 %package tools
 Summary:	Support tools for GRUB.
 Group:		System Environment/Base
 Requires:	gettext os-prober which file system-logos
+Requires:	%{name}-tools-minimal = %{epoch}:%{version}-%{release}.%{arch}
 
 %description tools
-The GRand Unified Bootloader (GRUB) is a highly configurable and customizable
-bootloader with modular architecture.  It support rich varietyof kernel formats,
-file systems, computer architectures and hardware devices.  This subpackage
-provides tools for support of all platforms.
+%{desc}
+This subpackage provides tools for support of all platforms.
+
+%package tools-minimal
+Summary:	Support tools for GRUB.
+Group:		System Environment/Base
+Requires:	gettext os-prober which file system-logos
+
+%description tools-minimal
+%{desc}
+This subpackage provides tools for support of all platforms.
+
+%package tools-extra
+Summary:	Support tools for GRUB.
+Group:		System Environment/Base
+Requires:	gettext os-prober which file system-logos
+
+%description tools-extra
+%{desc}
+This subpackage provides tools for support of all platforms.
+
+%package modules-%{grublegacyarch}
+Summary:        Modules for %{name}-%{grublegacyarch}
+Group:          System Environment/Base
+BuildArch:	noarch
+Supplements:	%{name}-%{grublegacyarch} = %{epoch}:%{version}-%{release}
+
+%description modules-%{grublegacyarch}
+%{desc}
+This subpackage provides modules for use on %{grublegacyarch} systems.
+
+%package tools-%{grublegacyarch}
+Summary:	Support tools for GRUB.
+Group:		System Environment/Base
+Requires:	gettext os-prober which file system-logos
+Requires:	%{name}-tools-minimal = %{epoch}:%{version}-%{release}.%{arch}
+Recommends:	%{name}-tools = %{epoch}:%{version}-%{release}.%{arch}
+
+%description tools-%{grublegacyarch}
+%{desc}
+This subpackage provides tools for support of %{grublegacyarch} platforms.
 
 %package starfield-theme
 Summary:	An example theme for GRUB.
 Group:		System Environment/Base
 Requires:	system-logos
-Obsoletes:	grub2 <= 1:2.00-20%{?dist}
-Obsoletes:	grub2-efi <= 1:2.00-20%{?dist}
+BuildArch:	noarch
 
 %description starfield-theme
 The GRand Unified Bootloader (GRUB) is a highly configurable and customizable
@@ -159,190 +141,34 @@ bootloader with modular architecture.  It support rich varietyof kernel formats,
 file systems, computer architectures and hardware devices.  This subpackage
 provides an example theme for the grub screen.
 
+
+%define_efi_variant %{with_efi_arch} %{grubefiarch} %{grubefiname} %{grubeficdname}
+%define_efi_variant %{with_alt_efi_arch} %{grubaltefiarch} %{grubaltefiname} %{grubalteficdname}
+%define_legacy_variant %{with_legacy_arch} %{grublegacyarch}
+
 %prep
 %setup -T -c -n grub-%{tarversion}
-%ifarch %{efiarchs}
-%setup -D -q -T -a 0 -n grub-%{tarversion}
-cd grub-%{tarversion}
-# place unifont in the '.' from which configure is run
-cp %{SOURCE4} unifont.pcf.gz
-cp %{SOURCE6} .gitignore
-git init
-echo '![[:digit:]][[:digit:]]_*.in' > util/grub.d/.gitignore
-echo '!*.[[:digit:]]' > util/.gitignore
-git config user.email "%{name}-owner@fedoraproject.org"
-git config user.name "Fedora Ninjas"
-git config gc.auto 0
-git add .
-git commit -a -q -m "%{tarversion} baseline."
-git am %{patches} </dev/null
-git config --unset user.email
-git config --unset user.name
-cd ..
-mv grub-%{tarversion} grub-efi-%{tarversion}
-%endif
-
-%ifarch %{efi_only}
-ln -s grub-efi-%{tarversion} grub-%{tarversion}
-%else
-%setup -D -q -T -a 0 -n grub-%{tarversion}
-cd grub-%{tarversion}
-# place unifont in the '.' from which configure is run
-cp %{SOURCE4} unifont.pcf.gz
-cp %{SOURCE6} .gitignore
-git init
-echo '![[:digit:]][[:digit:]]_*.in' > util/grub.d/.gitignore
-echo '!*.[[:digit:]]' > util/.gitignore
-git config user.email "%{name}-owner@fedoraproject.org"
-git config user.name "Fedora Ninjas"
-git config gc.auto 0
-git add .
-git commit -a -q -m "%{tarversion} baseline."
-git am %{patches} </dev/null
-git config --unset user.email
-git config --unset user.name
-%endif
+%do_setup %{with_efi_arch} %{grubefiarch}
+%do_setup %{with_alt_efi_arch} %{grubaltefiarch}
+%do_setup %{with_legacy_arch} %{grublegacyarch}
 
 %build
-%ifarch %{efiarchs}
-cd grub-efi-%{tarversion}
-./autogen.sh
-%configure							\
-	CFLAGS="$(echo $RPM_OPT_FLAGS | sed			\
-		-e 's/-O.//g'					\
-		-e 's/-fstack-protector[[:alpha:]-]\+//g'	\
-		-e 's/-Wp,-D_FORTIFY_SOURCE=[[:digit:]]\+//g'	\
-		-e 's/--param=ssp-buffer-size=4//g'		\
-		-e 's/-mregparm=3/-mregparm=4/g'		\
-		-e 's/-fexceptions//g'				\
-		-e 's/-fasynchronous-unwind-tables//g'		\
-		-e 's/^/ -fno-strict-aliasing /' )"		\
-	TARGET_LDFLAGS=-static					\
-        --with-platform=efi					\
-	--with-grubdir=%{name}					\
-        --program-transform-name=s,grub,%{name},		\
-	--disable-grub-mount					\
-	--disable-werror
-make %{?_smp_mflags}
-
-GRUB_MODULES="	all_video boot btrfs cat chain configfile echo \
-		efifwsetup efinet ext2 fat font gfxmenu gfxterm gzio halt \
-		hfsplus iso9660 jpeg loadenv loopback lvm mdraid09 mdraid1x \
-		minicmd normal part_apple part_msdos part_gpt \
-		password_pbkdf2 png \
-		reboot search search_fs_uuid search_fs_file search_label \
-		serial sleep syslinuxcfg test tftp video xfs"
-%ifarch aarch64
-GRUB_MODULES+=" linux "
-%else
-GRUB_MODULES+=" backtrace usb usbserial_common "
-GRUB_MODULES+=" usbserial_pl2303 usbserial_ftdi usbserial_usbdebug "
-GRUB_MODULES+=" linuxefi"
-%endif
-./grub-mkimage -O %{grubefiarch} -o %{grubefiname}.orig -p /EFI/%{efidir} \
-		-d grub-core ${GRUB_MODULES}
-./grub-mkimage -O %{grubefiarch} -o %{grubeficdname}.orig -p /EFI/BOOT \
-		-d grub-core ${GRUB_MODULES}
-%ifarch aarch64
-mv %{grubefiname}.orig %{grubefiname}
-mv %{grubeficdname}.orig %{grubeficdname}
-%else
-%pesign -s -i %{grubeficdname}.orig -o %{grubeficdname}
-%pesign -s -i %{grubefiname}.orig -o %{grubefiname}
-%endif
-cd ..
-%endif
-
-cd grub-%{tarversion}
-%ifnarch %{efi_only}
-./autogen.sh
-# -static is needed so that autoconf script is able to link
-# test that looks for _start symbol on 64 bit platforms
-%ifarch %{sparc} ppc ppc64 ppc64le
-%define platform ieee1275
-%else
-%define platform pc
-%endif
-%configure							\
-	CFLAGS="$(echo $RPM_OPT_FLAGS | sed			\
-		-e 's/-O.//g'					\
-		-e 's/-fstack-protector[[:alpha:]-]\+//g'	\
-		-e 's/-Wp,-D_FORTIFY_SOURCE=[[:digit:]]\+//g'	\
-		-e 's/--param=ssp-buffer-size=4//g'		\
-		-e 's/-mregparm=3/-mregparm=4/g'		\
-		-e 's/-fexceptions//g'				\
-		-e 's/-m64//g'					\
-		-e 's/-fasynchronous-unwind-tables//g'		\
-		-e 's/-mcpu=power7/-mcpu=power6/g'		\
-		-e 's/^/ -fno-strict-aliasing /' )"		\
-	TARGET_LDFLAGS=-static					\
-        --with-platform=%{platform}				\
-	--with-grubdir=%{name}					\
-        --program-transform-name=s,grub,%{name},		\
-	--disable-grub-mount					\
-	--disable-werror
-
-make %{?_smp_mflags}
-%endif
-
-sed -i -e 's,(grub),(%{name}),g' \
-	-e 's,grub.info,%{name}.info,g' \
-	-e 's,\* GRUB:,* GRUB2:,g' \
-	-e 's,/boot/grub/,/boot/%{name}/,g' \
-	-e 's,\([^-]\)grub-\([a-z]\),\1%{name}-\2,g' \
-	docs/grub.info
-sed -i -e 's,grub-dev,%{name}-dev,g' docs/grub-dev.info
-
-/usr/bin/makeinfo --html --no-split -I docs -o grub-dev.html docs/grub-dev.texi
-/usr/bin/makeinfo --html --no-split -I docs -o grub.html docs/grub.texi
-sed -i	-e 's,/boot/grub/,/boot/%{name}/,g' \
-	-e 's,\([^-]\)grub-\([a-z]\),\1%{name}-\2,g' \
-	grub.html
+%do_efi_build %{with_efi_arch} %{grubefiarch} %{grubefiname} %{grubeficdname}
+%do_common_build %{with_efi_arch} %{efi_only} %{grubefiarch}
+%do_efi_build %{with_alt_efi_arch} %{grubaltefiarch} %{grubaltefiname} %{grubalteficdname}
+%do_legacy_build %{with_legacy_arch} %{grublegacyarch}
+%do_common_build %{with_legacy_arch} %{no_efi_arch} %{grublegacyarch}
 
 %install
 set -e
 rm -fr $RPM_BUILD_ROOT
 
-%ifarch %{efiarchs}
-cd grub-efi-%{tarversion}
-make DESTDIR=$RPM_BUILD_ROOT install
-find $RPM_BUILD_ROOT -iname "*.module" -exec chmod a-x {} \;
+%do_efi_install %{with_efi_arch} %{grubefiarch} %{grubefiname} %{grubeficdname}
+%do_common_install %{with_efi_arch} %{efi_only} %{grubefiarch}
+%do_efi_install %{with_alt_efi_arch} %{grubaltefiarch} %{grubaltefiname} %{grubalteficdname}
+%do_legacy_install %{with_legacy_arch} %{grublegacyarch}
+%do_common_install %{with_legacy_arch} %{no_efi_arch} %{grublegacyarch}
 
-# Ghost config file
-install -m 755 -d $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/
-touch $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/grub.cfg
-ln -s ../boot/efi/EFI/%{efidir}/grub.cfg $RPM_BUILD_ROOT%{_sysconfdir}/%{name}-efi.cfg
-
-install -m 755 %{grubefiname} $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/%{grubefiname}
-install -m 755 %{grubeficdname} $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/%{grubeficdname}
-install -D -m 644 unicode.pf2 $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/fonts/unicode.pf2
-cd ..
-%endif
-
-cd grub-%{tarversion}
-%ifnarch %{efi_only}
-make DESTDIR=$RPM_BUILD_ROOT install
-
-# Ghost config file
-install -d $RPM_BUILD_ROOT/boot/%{name}
-touch $RPM_BUILD_ROOT/boot/%{name}/grub.cfg
-ln -s ../boot/%{name}/grub.cfg $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.cfg
-%endif
-
-cp -a $RPM_BUILD_ROOT%{_datarootdir}/locale/en\@quot $RPM_BUILD_ROOT%{_datarootdir}/locale/en
-
-mv $RPM_BUILD_ROOT%{_infodir}/grub.info $RPM_BUILD_ROOT%{_infodir}/%{name}.info
-mv $RPM_BUILD_ROOT%{_infodir}/grub-dev.info $RPM_BUILD_ROOT%{_infodir}/%{name}-dev.info
-rm $RPM_BUILD_ROOT%{_infodir}/dir
-
-# Defaults
-mkdir ${RPM_BUILD_ROOT}%{_sysconfdir}/default
-touch ${RPM_BUILD_ROOT}%{_sysconfdir}/default/grub
-mkdir ${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig
-ln -sf %{_sysconfdir}/default/grub \
-	${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig/grub
-
-cd ..
 %find_lang grub
 
 # Fedora theme in /boot/grub2/themes/system/
@@ -364,11 +190,6 @@ cat << EOF > ${RPM_BUILD_ROOT}%{_sysconfdir}/prelink.conf.d/grub2.conf
 -b /usr/sbin/grub2-sparc64-setup
 EOF
 
-%ifarch %{efiarchs}
-mkdir -p boot/efi/EFI/%{efidir}/
-ln -s /boot/efi/EFI/%{efidir}/grubenv boot/grub2/grubenv
-%endif
-
 # Don't run debuginfo on all the grub modules and whatnot; it just
 # rejects them, complains, and slows down extraction.
 %global finddebugroot "%{_builddir}/%{?buildsubdir}/debug"
@@ -387,7 +208,7 @@ cp -a ${RPM_BUILD_ROOT}/usr/sbin %{finddebugroot}/usr/sbin
 %clean    
 rm -rf $RPM_BUILD_ROOT
 
-%pre tools
+%pre tools-minimal
 if [ -f /boot/grub2/user.cfg ]; then
     if grep -q '^GRUB_PASSWORD=' /boot/grub2/user.cfg ; then
 	sed -i 's/^GRUB_PASSWORD=/GRUB2_PASSWORD=/' /boot/grub2/user.cfg
@@ -452,85 +273,91 @@ if [ "$1" = 0 ]; then
 	/sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/%{name}-dev.info.gz || :
 fi
 
+%if 0
 %ifnarch %{efi_only}
-%files -f grub.lang
-%defattr(-,root,root,-)
-%{_libdir}/grub/*-%{platform}/
+%files %{grublegacyarch} -f grub.lang
 %config(noreplace) %{_sysconfdir}/%{name}.cfg
 %ghost %config(noreplace) /boot/%{name}/grub.cfg
 %doc grub-%{tarversion}/COPYING
 %config(noreplace) %ghost /boot/grub2/grubenv
 %endif
-
-%ifarch %{efiarchs}
-%files efi
-%defattr(-,root,root,-)
-%config(noreplace) %{_sysconfdir}/%{name}-efi.cfg
-%attr(0755,root,root)/boot/efi/EFI/%{efidir}
-%attr(0755,root,root)/boot/efi/EFI/%{efidir}/fonts
-%ghost %config(noreplace) /boot/efi/EFI/%{efidir}/grub.cfg
-%doc grub-%{tarversion}/COPYING
-/boot/grub2/grubenv
-# I know 0700 seems strange, but it lives on FAT so that's what it'll
-# get no matter what we do.
-%config(noreplace) %ghost %attr(0700,root,root)/boot/efi/EFI/%{efidir}/grubenv
-
-%files efi-modules
-%defattr(-,root,root,-)
-%{_libdir}/grub/%{grubefiarch}
 %endif
 
-%files tools -f grub.lang
+%files tools-minimal
 %defattr(-,root,root,-)
 %dir %{_libdir}/grub/
 %dir %{_datarootdir}/grub/
 %dir %{_datarootdir}/grub/themes
-%{_datarootdir}/grub/*
-%{_sbindir}/%{name}-bios-setup
-%{_sbindir}/%{name}-install
-%{_sbindir}/%{name}-macbless
-%{_sbindir}/%{name}-mkconfig
-%{_sbindir}/%{name}-ofpathname
-%{_sbindir}/%{name}-probe
-%{_sbindir}/%{name}-reboot
-%{_sbindir}/%{name}-rpm-sort
-%{_sbindir}/%{name}-set-default
-%{_sbindir}/%{name}-setpassword
-%{_sbindir}/%{name}-sparc64-setup
-%{_bindir}/%{name}-editenv
-%{_bindir}/%{name}-file
-%{_bindir}/%{name}-fstest
-%{_bindir}/%{name}-glue-efi
-%{_bindir}/%{name}-kbdcomp
-%{_bindir}/%{name}-menulst2cfg
-%{_bindir}/%{name}-mkfont
-%{_bindir}/%{name}-mkimage
-%{_bindir}/%{name}-mklayout
-%{_bindir}/%{name}-mknetdir
-%{_bindir}/%{name}-mkpasswd-pbkdf2
-%{_bindir}/%{name}-mkrelpath
-%ifnarch %{sparc}
-%{_bindir}/%{name}-mkrescue
-%endif
-%{_bindir}/%{name}-mkstandalone
-%{_bindir}/%{name}-render-label
-%{_bindir}/%{name}-script-check
-%{_bindir}/%{name}-syslinux2cfg
-%{_datarootdir}/bash-completion/completions/grub
 %{_sysconfdir}/prelink.conf.d/grub2.conf
 %attr(0700,root,root) %dir %{_sysconfdir}/grub.d
 %config %{_sysconfdir}/grub.d/??_*
 %{_sysconfdir}/grub.d/README
 %attr(0644,root,root) %ghost %config(noreplace) %{_sysconfdir}/default/grub
+%{_datarootdir}/grub/*
+%{_sbindir}/%{name}-mkconfig
+%{_sbindir}/%{name}-probe
+%{_sbindir}/%{name}-reboot
+%{_sbindir}/%{name}-rpm-sort
+%{_sbindir}/%{name}-setpassword
+%{_sbindir}/%{name}-set-default
+%{_bindir}/%{name}-editenv
+%{_bindir}/%{name}-file
+%{_bindir}/%{name}-mkpasswd-pbkdf2
+%{_bindir}/%{name}-mkrelpath
+%{_bindir}/%{name}-script-check
+
+%files tools
+%defattr(-,root,root,-)
+%{_infodir}/%{name}*
+%{_datarootdir}/bash-completion/completions/grub
+%{_sbindir}/%{name}-install
+%{_bindir}/%{name}-menulst2cfg
+%{_datadir}/man/man?/*
+
+%if %{with_legacy_arch}
+%files tools-%{grublegacyarch}
+%defattr(-,root,root,-)
+%{_sbindir}/%{name}-install
+%ifarch %{ix86} x86_64
+%{_sbindir}/%{name}-bios-setup
+%else
+%exclude %{_sbindir}/%{name}-bios-setup
+%endif
+%ifarch %{sparc}
+%{_sbindir}/%{name}-sparc64-setup
+%else
+%exclude %{_sbindir}/%{name}-sparc64-setup
+%endif
+%ifarch %{sparc} ppc ppc64 ppc64le
+%{_sbindir}/%{name}-ofpathname
+%else
+%exclude %{_sbindir}/%{name}-ofpathname
+%endif
+%endif
+
+%files tools-extra
+%{_sbindir}/%{name}-install
+%{_sbindir}/%{name}-macbless
+%{_bindir}/%{name}-fstest
+%{_bindir}/%{name}-glue-efi
+%{_bindir}/%{name}-kbdcomp
+%{_bindir}/%{name}-mkfont
+%{_bindir}/%{name}-mkimage
+%{_bindir}/%{name}-mklayout
+%{_bindir}/%{name}-mknetdir
+%ifnarch %{sparc}
+%{_bindir}/%{name}-mkrescue
+%endif
+%{_bindir}/%{name}-mkstandalone
+%{_bindir}/%{name}-render-label
+%{_bindir}/%{name}-syslinux2cfg
 %{_sysconfdir}/sysconfig/grub
 %dir /boot/%{name}
 %dir /boot/%{name}/themes/
 %dir /boot/%{name}/themes/system
 %exclude /boot/%{name}/themes/system/*
 %exclude %{_datarootdir}/grub/themes/
-%{_infodir}/%{name}*
-%{_datadir}/man/man?/*
-%doc grub-%{tarversion}/COPYING grub-%{tarversion}/INSTALL
+%doc grub-%{tarversion}/INSTALL
 %doc grub-%{tarversion}/NEWS grub-%{tarversion}/README
 %doc grub-%{tarversion}/THANKS grub-%{tarversion}/TODO
 %doc grub-%{tarversion}/grub.html
@@ -542,6 +369,13 @@ fi
 /boot/%{name}/themes/system
 %dir %{_datarootdir}/grub/themes
 %{_datarootdir}/grub/themes/starfield
+
+%files debuginfo -f debugfiles.list
+%defattr(-,root,root)
+
+%define_efi_variant_files %{with_efi_arch} %{grubefiarch} %{grubefiname} %{grubeficdname}
+%define_efi_variant_files %{with_alt_efi_arch} %{grubaltefiarch} %{grubaltefiname} %{grubalteficdname}
+%define_legacy_variant_files %{with_legacy_arch} %{grublegacyarch}
 
 %changelog
 * Fri Mar 04 2016 Peter Jones <pjones@redhat.com> - 2.02-0.26
