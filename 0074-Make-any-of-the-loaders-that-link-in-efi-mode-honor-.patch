@@ -24,9 +24,17 @@ Signed-off-by: Peter Jones <pjones@redhat.com>
  grub-core/loader/xnu.c             |  7 +++++
  include/grub/efi/efi.h             |  1 -
  include/grub/efi/sb.h              | 29 +++++++++++++++++++
- 15 files changed, 146 insertions(+), 29 deletions(-)
+ include/grub/ia64/linux.h          |  0
+ include/grub/mips/linux.h          |  0
+ include/grub/powerpc/linux.h       |  0
+ include/grub/sparc64/linux.h       |  0
+ 19 files changed, 146 insertions(+), 29 deletions(-)
  create mode 100644 grub-core/kern/efi/sb.c
  create mode 100644 include/grub/efi/sb.h
+ create mode 100644 include/grub/ia64/linux.h
+ create mode 100644 include/grub/mips/linux.h
+ create mode 100644 include/grub/powerpc/linux.h
+ create mode 100644 include/grub/sparc64/linux.h
 
 diff --git a/grub-core/Makefile.am b/grub-core/Makefile.am
 index 04e9395..fd715a8 100644
@@ -469,6 +477,18 @@ index 0000000..9629fbb
 +int EXPORT_FUNC (grub_efi_secure_boot) (void);
 +
 +#endif /* ! GRUB_EFI_SB_HEADER */
+diff --git a/include/grub/ia64/linux.h b/include/grub/ia64/linux.h
+new file mode 100644
+index 0000000..e69de29
+diff --git a/include/grub/mips/linux.h b/include/grub/mips/linux.h
+new file mode 100644
+index 0000000..e69de29
+diff --git a/include/grub/powerpc/linux.h b/include/grub/powerpc/linux.h
+new file mode 100644
+index 0000000..e69de29
+diff --git a/include/grub/sparc64/linux.h b/include/grub/sparc64/linux.h
+new file mode 100644
+index 0000000..e69de29
 -- 
 2.5.0
 
