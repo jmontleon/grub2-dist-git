@@ -8,14 +8,14 @@ system and .gitignore, so solve that slightly better.
 
 Signed-off-by: Peter Jones <pjones@redhat.com>
 ---
- .gitignore | 265 ++++++++++++++++++++++++++++---------------------------------
- 1 file changed, 120 insertions(+), 145 deletions(-)
+ .gitignore | 256 ++++++++++++++++++++++++++++---------------------------------
+ 1 file changed, 118 insertions(+), 138 deletions(-)
 
 diff --git a/.gitignore b/.gitignore
-index 18ab8e8..06c9f3a 100644
+index 2b0156a..523ee65 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -1,93 +1,154 @@
+@@ -1,32 +1,57 @@
 -00_header
 -10_*
 -20_linux_xen
@@ -82,11 +82,9 @@ index 18ab8e8..06c9f3a 100644
 -DISTLIST
 +depcomp
  docs/*.info
-+docs/stamp-1
  docs/stamp-vti
-+docs/version-dev.texi
  docs/version.texi
- ehci_test
+@@ -34,56 +59,94 @@ ehci_test
  example_grub_script_test
  example_scripted_test
  example_unit_test
@@ -177,8 +175,6 @@ index 18ab8e8..06c9f3a 100644
 -grub-emu-lite.exe
  grub_emu_init.c
  grub_emu_init.h
--/grub-file
--/grub-file.exe
 -grub-fstest
 -grub-fstest.exe
  grub_fstest_init.c
@@ -187,8 +183,6 @@ index 18ab8e8..06c9f3a 100644
 -grub-install
 -grub-install.exe
 -grub-kbdcomp
--/grub-macbless
--/grub-macbless.exe
 -grub-macho2img
 -/grub-menulst2cfg
 -/grub-menulst2cfg.exe
@@ -214,7 +208,7 @@ index 18ab8e8..06c9f3a 100644
  grub_script_check_init.c
  grub_script_check_init.h
  grub_script_comments
-@@ -113,136 +174,50 @@ grub_script_strcmp
+@@ -109,133 +172,50 @@ grub_script_strcmp
  grub_script_test
  grub_script_vars1
  grub_script_while1
@@ -229,8 +223,6 @@ index 18ab8e8..06c9f3a 100644
 -grub-shell-tester
 -grub-sparc64-setup
 -grub-sparc64-setup.exe
--/grub-syslinux2cfg
--/grub-syslinux2cfg.exe
  gzcompress_test
  hddboot_test
  help_test
@@ -318,7 +310,6 @@ index 18ab8e8..06c9f3a 100644
 -grub-core/*.module
 -grub-core/*.module.exe
 -grub-core/*.pp
--grub-core/kernel.img.bin
 +update-grub_lib
  util/bash-completion.d/grub
 -grub-core/gnulib/alloca.h
@@ -365,7 +356,7 @@ index 18ab8e8..06c9f3a 100644
 -/garbage-gen
 -/garbage-gen.exe
 -/grub-fs-tester
-+xzcompress_test
++xcompress_test
 -- 
 2.5.0
 
