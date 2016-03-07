@@ -1,7 +1,7 @@
-From 30fa988875e7b218240ac2100f4bab768c80a7f6 Mon Sep 17 00:00:00 2001
+From 31911d7fb7e5ecbf246c7a224f1ab52743567994 Mon Sep 17 00:00:00 2001
 From: Fedora Ninjas <grub2-owner@fedoraproject.org>
 Date: Wed, 12 Feb 2014 14:54:04 -0500
-Subject: [PATCH 56/85] Use the default device tree from the grub default file
+Subject: [PATCH 56/91] Use the default device tree from the grub default file
 
 instead of hardcoding a value.
 
@@ -26,7 +26,7 @@ index c088b70..9d595ac 100644
  if test "x${grub_cfg}" != "x"; then
    rm -f "${grub_cfg}.new"
 diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
-index dc3d081..30e0e85 100644
+index 462b461..a9692a0 100644
 --- a/util/grub.d/10_linux.in
 +++ b/util/grub.d/10_linux.in
 @@ -232,8 +232,8 @@ while [ "x$list" != "x" ] ; do

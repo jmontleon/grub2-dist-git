@@ -1,7 +1,7 @@
-From 5212412d2c54f112cb68aa5dfc4711abdec9ce94 Mon Sep 17 00:00:00 2001
+From a1992a23a63329c99f08f7e44e1c616c5fdefe22 Mon Sep 17 00:00:00 2001
 From: Prarit Bhargava <prarit@redhat.com>
 Date: Wed, 12 Mar 2014 10:58:16 -0400
-Subject: [PATCH 19/85] Fix bad test on GRUB_DISABLE_SUBMENU.
+Subject: [PATCH 19/91] Fix bad test on GRUB_DISABLE_SUBMENU.
 
 The file /etc/grub.d/10_linux does
 
@@ -20,7 +20,7 @@ Resolves: rhbz#1063414
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
-index 5a78513..6f835b7 100644
+index de9044c..cf6331f 100644
 --- a/util/grub.d/10_linux.in
 +++ b/util/grub.d/10_linux.in
 @@ -224,7 +224,11 @@ while [ "x$list" != "x" ] ; do

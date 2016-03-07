@@ -1,7 +1,7 @@
-From 62ce77c55bb224f3c318d94cf45bf170d2fc806f Mon Sep 17 00:00:00 2001
+From 5dcb19b3fe51a05946645f2e0a3aa0d942afbc94 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Tue, 18 Feb 2014 09:37:49 -0500
-Subject: [PATCH 50/85] Don't emit "Booting ..." message.
+Subject: [PATCH 50/91] Don't emit "Booting ..." message.
 
 UI team still hates this stuff, so we're disabling it for RHEL 7.
 
@@ -9,16 +9,20 @@ Resolves: rhbz#1023142
 
 Signed-off-by: Peter Jones <pjones@redhat.com>
 ---
- grub-core/normal/menu.c       | 2 ++
+ grub-core/normal/menu.c       | 4 +++-
  grub-core/normal/menu_entry.c | 3 ---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/grub-core/normal/menu.c b/grub-core/normal/menu.c
-index 73a94aa..e74cb56 100644
+index 4fecc28..e74cb56 100644
 --- a/grub-core/normal/menu.c
 +++ b/grub-core/normal/menu.c
-@@ -832,9 +832,11 @@ static void
- notify_booting (grub_menu_entry_t __attribute__((unused)) entry,
+@@ -829,12 +829,14 @@ run_menu (grub_menu_t menu, int nested, int *auto_boot)
+ 
+ /* Callback invoked immediately before a menu entry is executed.  */
+ static void
+-notify_booting (grub_menu_entry_t entry,
++notify_booting (grub_menu_entry_t __attribute__((unused)) entry,
  		void *userdata __attribute__((unused)))
  {
 +#if 0

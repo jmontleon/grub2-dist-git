@@ -1,7 +1,7 @@
-From bdc3eb0098b4b7d85423bb5674e50d78b01f3f49 Mon Sep 17 00:00:00 2001
+From 73a194f0b19feedd6f0d6501b2a06833117a1a95 Mon Sep 17 00:00:00 2001
 From: Raymund Will <rw@suse.com>
 Date: Fri, 10 Apr 2015 01:45:02 -0400
-Subject: [PATCH 72/85] Use device part of chainloader target, if present.
+Subject: [PATCH 72/91] Use device part of chainloader target, if present.
 
 Otherwise chainloading is restricted to '$root', which might not even
 be readable by EFI!

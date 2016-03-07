@@ -1,7 +1,7 @@
-From 83a711aa32c98578a9a38c71eef6659fe4cc90a7 Mon Sep 17 00:00:00 2001
+From cfa8ed0aabb4de6b15f315bfe4d791e938953422 Mon Sep 17 00:00:00 2001
 From: William Jon McCann <william.jon.mccann@gmail.com>
 Date: Wed, 15 May 2013 13:30:20 -0400
-Subject: [PATCH 30/85] Don't write messages to the screen
+Subject: [PATCH 30/91] Don't write messages to the screen
 
 Writing messages to the screen before the menus or boot splash
 happens so quickly it looks like something is wrong and isn't
@@ -120,7 +120,7 @@ index 8ab7794..da47b18 100644
  
    grub_boot_time ("Before loading embedded modules.");
 diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
-index c41a9ca..74f5f29 100644
+index 8ccf012..a3d9711 100644
 --- a/util/grub.d/10_linux.in
 +++ b/util/grub.d/10_linux.in
 @@ -128,29 +128,22 @@ linux_entry ()

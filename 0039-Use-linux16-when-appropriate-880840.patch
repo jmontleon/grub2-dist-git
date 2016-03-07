@@ -1,7 +1,7 @@
-From 2366e7d0b5915ca44930a682258a0a913269befc Mon Sep 17 00:00:00 2001
+From 4f103cc39484e9188ef0d71c8028deace61dbb41 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Mon, 28 Oct 2013 10:05:07 -0400
-Subject: [PATCH 39/85] Use linux16 when appropriate (#880840)
+Subject: [PATCH 39/91] Use linux16 when appropriate (#880840)
 
 The kernel group really would prefer that we use the 16 bit entry point
 on x86 bios machines.
@@ -14,7 +14,7 @@ Signed-off-by: Peter Jones <pjones@redhat.com>
  1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
-index 74f5f29..5b49dcb 100644
+index a3d9711..f3bf6ac 100644
 --- a/util/grub.d/10_linux.in
 +++ b/util/grub.d/10_linux.in
 @@ -76,6 +76,11 @@ linux_entry ()

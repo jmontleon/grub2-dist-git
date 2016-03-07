@@ -1,7 +1,7 @@
-From ba2e29130c54c0082f2b9a6719e891c1a7397a03 Mon Sep 17 00:00:00 2001
+From 46e347b0aa0cc280dd8c962c56def2b634091ae9 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Tue, 14 Jan 2014 13:12:23 -0500
-Subject: [PATCH 46/85] Make 10_linux work with our changes for linux16 and
+Subject: [PATCH 46/91] Make 10_linux work with our changes for linux16 and
  linuxefi on aarch64
 
 Signed-off-by: Peter Jones <pjones@redhat.com>
@@ -10,7 +10,7 @@ Signed-off-by: Peter Jones <pjones@redhat.com>
  1 file changed, 28 insertions(+), 3 deletions(-)
 
 diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
-index d54b982..ab9d32d 100644
+index ef52cf3..191aebe 100644
 --- a/util/grub.d/10_linux.in
 +++ b/util/grub.d/10_linux.in
 @@ -77,8 +77,18 @@ linux_entry ()

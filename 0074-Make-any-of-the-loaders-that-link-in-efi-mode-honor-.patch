@@ -1,7 +1,7 @@
-From f1896dc881b276559079773ba666266979df2f74 Mon Sep 17 00:00:00 2001
+From 4c075c2124b8a67dde2ffbae812ed2aaef4c7aca Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Tue, 6 Oct 2015 16:09:25 -0400
-Subject: [PATCH 74/85] Make any of the loaders that link in efi mode honor
+Subject: [PATCH 74/91] Make any of the loaders that link in efi mode honor
  secure boot.
 
 And in this case "honor" means "even if somebody does link this in, they
@@ -24,17 +24,9 @@ Signed-off-by: Peter Jones <pjones@redhat.com>
  grub-core/loader/xnu.c             |  7 +++++
  include/grub/efi/efi.h             |  1 -
  include/grub/efi/sb.h              | 29 +++++++++++++++++++
- include/grub/ia64/linux.h          |  0
- include/grub/mips/linux.h          |  0
- include/grub/powerpc/linux.h       |  0
- include/grub/sparc64/linux.h       |  0
- 19 files changed, 146 insertions(+), 29 deletions(-)
+ 15 files changed, 146 insertions(+), 29 deletions(-)
  create mode 100644 grub-core/kern/efi/sb.c
  create mode 100644 include/grub/efi/sb.h
- create mode 100644 include/grub/ia64/linux.h
- create mode 100644 include/grub/mips/linux.h
- create mode 100644 include/grub/powerpc/linux.h
- create mode 100644 include/grub/sparc64/linux.h
 
 diff --git a/grub-core/Makefile.am b/grub-core/Makefile.am
 index 04e9395..fd715a8 100644
@@ -477,18 +469,6 @@ index 0000000..9629fbb
 +int EXPORT_FUNC (grub_efi_secure_boot) (void);
 +
 +#endif /* ! GRUB_EFI_SB_HEADER */
-diff --git a/include/grub/ia64/linux.h b/include/grub/ia64/linux.h
-new file mode 100644
-index 0000000..e69de29
-diff --git a/include/grub/mips/linux.h b/include/grub/mips/linux.h
-new file mode 100644
-index 0000000..e69de29
-diff --git a/include/grub/powerpc/linux.h b/include/grub/powerpc/linux.h
-new file mode 100644
-index 0000000..e69de29
-diff --git a/include/grub/sparc64/linux.h b/include/grub/sparc64/linux.h
-new file mode 100644
-index 0000000..e69de29
 -- 
 2.5.0
 

@@ -1,7 +1,7 @@
-From b8293967f7455f70a3f586f5583d7a9e5cc6772c Mon Sep 17 00:00:00 2001
+From feaa2b8718712b92bb1d4b5385a19aeb751b0897 Mon Sep 17 00:00:00 2001
 From: William Jon McCann <william.jon.mccann@gmail.com>
 Date: Wed, 15 May 2013 17:49:45 -0400
-Subject: [PATCH 32/85] Don't add '*' to highlighted row
+Subject: [PATCH 32/91] Don't add '*' to highlighted row
 
 It is already highlighted.
 ---
