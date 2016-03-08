@@ -1,7 +1,7 @@
 From e20911613b7bd4b4bcbf0f2fddb6659bde2da6af Mon Sep 17 00:00:00 2001
 From: Marcel Kolaja <mkolaja@redhat.com>
 Date: Tue, 21 Jan 2014 10:57:08 -0500
-Subject: [PATCH 08/91] Honor a symlink when generating configuration by
+Subject: [PATCH 08/87] Honor a symlink when generating configuration by
  grub2-mkconfig
 
 Honor a symlink when generating configuration by grub2-mkconfig, so that

@@ -1,7 +1,7 @@
 From b1dad9a073229e27ca370a45fd3e950fe08bb042 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Mon, 7 Mar 2016 13:15:22 -0500
-Subject: [PATCH 07/91] Add some __unused__ where gcc 5.x is more picky about
+Subject: [PATCH 07/87] Add some __unused__ where gcc 5.x is more picky about
  it.
 
 With some build flags, gcc 5.x throws more warnings about __unused__ not

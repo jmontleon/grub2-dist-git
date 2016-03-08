@@ -1,7 +1,7 @@
 From cdf2dc67eb5bd1e6497b901d449c9de1db1f2a3b Mon Sep 17 00:00:00 2001
 From: Robert Marshall <rmarshall@redhat.com>
 Date: Fri, 29 Jan 2016 14:49:24 -0500
-Subject: [PATCH 01/91] Failed config now returns exit code (#1252311)
+Subject: [PATCH 01/87] Failed config now returns exit code (#1252311)
 
 Grub would notify the user if the new config was invalid, however, it
 did not exit properly with exit code 1. Added the proper exit code.
