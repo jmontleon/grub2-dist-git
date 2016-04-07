@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.28%{?dist}
+Release:        0.29%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -544,6 +544,9 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Thu Apr 07 2016 Peter Jones <pjones@redhat.com> - 2.02-0.29
+- Fix ppc64 build failure on fedora-24
+
 * Tue Apr 05 2016 pjones <pjones@redhat.com> - 1:2.02-0.27
 - Pull TPM updates from mjg59.
   Resolves: rhbz#1318067
