@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.30%{?dist}
+Release:        0.33%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -544,6 +544,13 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Thu Jun 09 2016 pjones <pjones@redhat.com> - 1:2.02-0.33
+- Revert TPM patches, they break some x86 platforms and ppc64
+  Resolves: rhbz#1334075
+  Resolves: rhbz#1334672
+- Chainloading on EFI doesn't work with some bootloaders
+  Resolves: rhbz#1320273
+
 * Thu Apr 07 2016 pjones <pjones@redhat.com> - 1:2.02-0.30
 - Revert 27e66193, which was replaced by upstream's 49426e9fd
   Resolves: rhbz#1251600
