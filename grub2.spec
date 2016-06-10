@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.33%{?dist}
+Release:        0.34%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -273,7 +273,7 @@ cd grub-%{tarversion}
 		-e 's/-fexceptions//g'				\
 		-e 's/-m64//g'					\
 		-e 's/-fasynchronous-unwind-tables//g'		\
-		-e 's/-mcpu=power7/-mcpu=power6/g'		\
+		-e 's/-mcpu=power8/-mcpu=power6/g'		\
 		-e 's/^/ -fno-strict-aliasing /' )"		\
 	TARGET_LDFLAGS=-static					\
         --with-platform=%{platform}				\
@@ -544,6 +544,12 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Fri Jun 10 2016 Peter Jones <pjones@redhat.com> - 2.02-0.34
+- Update ppc64 configure invocation
+  Resolves: rhbz#1344700
+- Make chainloader code work right when shim is absent or disabled
+  Resolves: rhbz#1344512
+
 * Thu Jun 09 2016 pjones <pjones@redhat.com> - 1:2.02-0.33
 - Revert TPM patches, they break some x86 platforms and ppc64
   Resolves: rhbz#1334075

@@ -78,4 +78,7 @@ Patch0076: 0076-Make-grub-editenv-build-again.patch
 Patch0077: 0077-Fix-locale-issue-in-grub-setpassword-1294243.patch
 Patch0078: 0078-Fix-up-some-man-pages-rpmdiff-noticed.patch
 Patch0079: 0079-Handle-rssd-storage-devices.patch
-Patch0080: 0080-Re-work-some-intricacies-of-PE-loading.patch
+Patch0080: 0080-Warn-if-grub-password-will-not-be-read-1290803.patch
+Patch0081: 0081-Clean-up-grub-setpassword-documentation-1290799.patch
+Patch0082: 0082-Re-work-some-intricacies-of-PE-loading.patch
+Patch0083: 0083-Rework-even-more-of-efi-chainload-so-non-sb-cases-wo.patch
