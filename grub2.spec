@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.36%{?dist}
+Release:        0.36%{?dist}.bls2
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -225,7 +225,7 @@ cd grub-efi-%{tarversion}
 	--disable-werror
 make %{?_smp_mflags}
 
-GRUB_MODULES="	all_video boot btrfs cat chain configfile echo \
+GRUB_MODULES="	all_video blscfg boot btrfs cat chain configfile echo \
 		efifwsetup efinet ext2 fat font gfxmenu gfxterm gzio halt \
 		hfsplus iso9660 jpeg loadenv loopback lvm mdraid09 mdraid1x \
 		minicmd normal part_apple part_msdos part_gpt \
@@ -334,7 +334,6 @@ cp -a $RPM_BUILD_ROOT%{_datarootdir}/locale/en\@quot $RPM_BUILD_ROOT%{_datarootd
 mv $RPM_BUILD_ROOT%{_infodir}/grub.info $RPM_BUILD_ROOT%{_infodir}/%{name}.info
 mv $RPM_BUILD_ROOT%{_infodir}/grub-dev.info $RPM_BUILD_ROOT%{_infodir}/%{name}-dev.info
 rm $RPM_BUILD_ROOT%{_infodir}/dir
-
 # Defaults
 mkdir ${RPM_BUILD_ROOT}%{_sysconfdir}/default
 touch ${RPM_BUILD_ROOT}%{_sysconfdir}/default/grub
@@ -342,6 +341,8 @@ mkdir ${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig
 ln -sf %{_sysconfdir}/default/grub \
 	${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig/grub
 
+./grub-editenv ${RPM_BUILD_ROOT}/boot/efi/EFI/%{efidir}/grubenv create
+truncate -s 512 ${RPM_BUILD_ROOT}/boot/efi/EFI/%{efidir}/grubenv
 cd ..
 %find_lang grub
 
@@ -364,9 +365,11 @@ cat << EOF > ${RPM_BUILD_ROOT}%{_sysconfdir}/prelink.conf.d/grub2.conf
 -b /usr/sbin/grub2-sparc64-setup
 EOF
 
-%ifarch %{efiarchs}
 mkdir -p boot/efi/EFI/%{efidir}/
 ln -s /boot/efi/EFI/%{efidir}/grubenv boot/grub2/grubenv
+
+%ifarch %{efiarchs}
+mkdir -p boot/efi/EFI/%{efidir}/loader/entries/
 %endif
 
 # Don't run debuginfo on all the grub modules and whatnot; it just
@@ -467,6 +470,7 @@ fi
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/%{name}-efi.cfg
 %attr(0755,root,root)/boot/efi/EFI/%{efidir}
+%attr(0755,root,root)/boot/efi/EFI/%{efidir}/loader/entries/
 %attr(0755,root,root)/boot/efi/EFI/%{efidir}/fonts
 %ghost %config(noreplace) /boot/efi/EFI/%{efidir}/grub.cfg
 %doc grub-%{tarversion}/COPYING

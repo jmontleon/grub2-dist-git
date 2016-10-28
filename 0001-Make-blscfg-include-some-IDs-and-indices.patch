@@ -1,0 +1,86 @@
+From 3f2d8bc3a052c7ab6f89a7684ac93b0f8401a6b5 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Fri, 28 Oct 2016 10:55:56 -0400
+Subject: [PATCH] Make blscfg include some IDs and indices
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ grub-core/commands/blscfg.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/grub-core/commands/blscfg.c b/grub-core/commands/blscfg.c
+index af838d2..2a16858 100644
+--- a/grub-core/commands/blscfg.c
++++ b/grub-core/commands/blscfg.c
+@@ -56,6 +56,9 @@ static int parse_entry (
+   grub_file_t f = NULL;
+   grub_off_t sz;
+   char *title = NULL, *options = NULL, *clinux = NULL, *initrd = NULL, *src = NULL;
++  char *id = NULL;
++  char *class[] = { NULL, NULL };
++  char **classes = class[0];
+   const char *args[2] = { NULL, NULL };
+   const char *dirname = (const char *)data;
+   const char *devid = grub_env_get ("boot");
+@@ -120,6 +123,20 @@ static int parse_entry (
+ 	  if (!initrd)
+ 	    goto finish;
+ 	}
++      else if (grub_strncmp (buf, "id ", 3) == 0)
++	{
++	  grub_free (id);
++	  id = grub_strdup (buf + 3);
++	  if (!id)
++	    goto finish;
++	}
++      else if (grub_strncmp (buf, "index ", 6) == 0)
++	{
++	  grub_free (class[0]);
++	  class[0] = grub_strdup (buf + 6);
++	  if (!class[0])
++	    goto finish;
++	}
+ 
+       grub_free(buf);
+     }
+@@ -141,7 +158,7 @@ static int parse_entry (
+ 			GRUB_BOOT_DEVICE, clinux, options ? " " : "", options ? options : "",
+ 			initrd ? GRUB_INITRD_CMD " " : "", initrd ? GRUB_BOOT_DEVICE : "", initrd ? initrd : "", initrd ? "\n" : "");
+ 
+-  grub_normal_add_menu_entry (1, args, NULL, NULL, "bls", NULL, NULL, src, 0);
++  grub_normal_add_menu_entry (1, args, classes, id, "bls", NULL, NULL, src, 0);
+ 
+ finish:
+   grub_free (p);
+@@ -150,6 +167,8 @@ finish:
+   grub_free (clinux);
+   grub_free (initrd);
+   grub_free (src);
++  grub_free (id);
++  grub_free (class[0]);
+ 
+   if (f)
+     grub_file_close (f);
+@@ -333,7 +352,7 @@ finish:
+ #endif
+ 
+ static grub_err_t
+-grub_cmd_bls_import (grub_extcmd_context_t ctxt __attribute__ ((unused)),
++grub_cmd_blscfg (grub_extcmd_context_t ctxt __attribute__ ((unused)),
+ 		     int argc __attribute__ ((unused)),
+ 		     char **args __attribute__ ((unused)))
+ {
+@@ -384,8 +403,8 @@ static grub_extcmd_t cmd;
+ 
+ GRUB_MOD_INIT(bls)
+ {
+-  cmd = grub_register_extcmd ("bls_import",
+-			      grub_cmd_bls_import,
++  cmd = grub_register_extcmd ("blscfg",
++			      grub_cmd_blscfg,
+ 			      0,
+ 			      NULL,
+ 			      N_("Import Boot Loader Specification snippets."),
+-- 
+2.9.3
+
