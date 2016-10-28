@@ -1,0 +1,531 @@
+From 00857b7fb451f2abf9e97229aef537dab3d56f6e Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Mon, 24 Oct 2016 14:51:06 -0400
+Subject: [PATCH 1/2] blscfg: make the bls_import command know to search env
+ files for blsdir
+
+This makes it so when you do "bls_import" on EFI systems, it searches
+/EFI/*/ directories for a grubenv, and if it finds it, temporarily
+merges that environment into grub's env.
+
+Once that is done, if there's a variable named "blsdir", it looks there
+for BLS config files.  If that is absent, it tries to load them from
+/EFI/$DIR/loader/entries/
+---
+ grub-core/commands/blscfg.c  | 219 ++++++++++++++++++++++++++++++++++++++++---
+ grub-core/commands/loadenv.c |  77 +--------------
+ grub-core/commands/loadenv.h |  93 ++++++++++++++++++
+ include/grub/compiler.h      |   2 +
+ 4 files changed, 305 insertions(+), 86 deletions(-)
+ create mode 100644 grub-core/commands/loadenv.h
+
+diff --git a/grub-core/commands/blscfg.c b/grub-core/commands/blscfg.c
+index 4274aca..af838d2 100644
+--- a/grub-core/commands/blscfg.c
++++ b/grub-core/commands/blscfg.c
+@@ -30,25 +30,26 @@
+ #include <grub/env.h>
+ #include <grub/file.h>
+ #include <grub/normal.h>
++#include <grub/lib/envblk.h>
+ 
+ GRUB_MOD_LICENSE ("GPLv3+");
+ 
++#include "loadenv.h"
++
++#define GRUB_BLS_CONFIG_PATH "/loader/entries/"
++#define GRUB_BOOT_DEVICE "($root)"
+ #ifdef GRUB_MACHINE_EFI
+ #define GRUB_LINUX_CMD "linuxefi"
+ #define GRUB_INITRD_CMD "initrdefi"
+-#define GRUB_BLS_CONFIG_PATH "/EFI/fedora/loader/entries/"
+-#define GRUB_BOOT_DEVICE "($boot)"
+ #else
+ #define GRUB_LINUX_CMD "linux"
+ #define GRUB_INITRD_CMD "initrd"
+-#define GRUB_BLS_CONFIG_PATH "/loader/entries/"
+-#define GRUB_BOOT_DEVICE "($root)"
+ #endif
+ 
+ static int parse_entry (
+     const char *filename,
+-    const struct grub_dirhook_info *info __attribute__ ((unused)),
+-    void *data __attribute__ ((unused)))
++    const struct grub_dirhook_info *info UNUSED,
++    void *data)
+ {
+   grub_size_t n;
+   char *p;
+@@ -56,6 +57,10 @@ static int parse_entry (
+   grub_off_t sz;
+   char *title = NULL, *options = NULL, *clinux = NULL, *initrd = NULL, *src = NULL;
+   const char *args[2] = { NULL, NULL };
++  const char *dirname = (const char *)data;
++  const char *devid = grub_env_get ("boot");
++
++  grub_dprintf ("blscfg", "filename: \"%s\"\n", filename);
+ 
+   if (filename[0] == '.')
+     return 0;
+@@ -67,12 +72,14 @@ static int parse_entry (
+   if (grub_strcmp (filename + n - 5, ".conf") != 0)
+     return 0;
+ 
+-  p = grub_xasprintf (GRUB_BLS_CONFIG_PATH "%s", filename);
++  p = grub_xasprintf ("(%s)%s/%s", devid, dirname, filename);
++  grub_dprintf ("blscfg", "entry path: \"%s\"\n", p);
+ 
+   f = grub_file_open (p);
+   if (!f)
+     goto finish;
+ 
++  grub_dprintf ("blscfg", "getting size\n");
+   sz = grub_file_size (f);
+   if (sz == GRUB_FILE_SIZE_UNKNOWN || sz > 1024*1024)
+     goto finish;
+@@ -119,12 +126,13 @@ static int parse_entry (
+ 
+   if (!linux)
+     {
+-      grub_printf ("Skipping file %s with no 'linux' key.", p);
++      grub_dprintf ("blscfg", "Skipping file %s with no 'linux' key.", p);
+       goto finish;
+     }
+ 
+   args[0] = title ? title : filename;
+ 
++  grub_dprintf("blscfg", "adding menu entry for \"%s\"\n", clinux);
+   src = grub_xasprintf ("load_video\n"
+ 			"set gfx_payload=keep\n"
+ 			"insmod gzio\n"
+@@ -149,6 +157,181 @@ finish:
+   return 0;
+ }
+ 
++#ifdef GRUB_MACHINE_EFI
++static grub_envblk_t saved_env = NULL;
++
++static int
++save_var (const char *name, const char *value, void *whitelist UNUSED)
++{
++  const char *val = grub_env_get (name);
++  grub_dprintf("blscfg", "saving \"%s\"\n", name);
++
++  if (val)
++    grub_envblk_set (saved_env, name, value);
++
++  return 0;
++}
++
++static int
++unset_var (const char *name, const char *value UNUSED, void *whitelist)
++{
++  grub_dprintf("blscfg", "restoring \"%s\"\n", name);
++  if (! whitelist)
++    {
++      grub_env_unset (name);
++      return 0;
++    }
++
++  if (test_whitelist_membership (name,
++				 (const grub_env_whitelist_t *) whitelist))
++    grub_env_unset (name);
++
++  return 0;
++}
++
++struct find_entry_info {
++	grub_device_t dev;
++	grub_fs_t fs;
++};
++
++/*
++ * filename: if the directory is /EFI/something/ , filename is "something"
++ * info: unused
++ * data: the filesystem object the file is on.
++ */
++static int find_entry (const char *filename,
++		       const struct grub_dirhook_info *dirhook_info UNUSED,
++		       void *data)
++{
++  struct find_entry_info *info = (struct find_entry_info *)data;
++  grub_file_t f = NULL;
++  char *grubenv_path = NULL;
++  grub_envblk_t env = NULL;
++  char *default_blsdir = NULL;
++  const char *blsdir = NULL;
++  char *saved_env_buf = NULL;
++  grub_size_t l;
++  int r = 0;
++  const char *devid = grub_env_get ("boot");
++
++  if (!grub_strcmp (filename, ".") ||
++      !grub_strcmp (filename, "..") ||
++      !grub_strcasecmp (filename, "boot"))
++    return 0;
++
++  saved_env_buf = grub_malloc (512);
++
++  // set a default blsdir
++  default_blsdir = grub_xasprintf ("/EFI/%s%s", filename,
++				   GRUB_BLS_CONFIG_PATH);
++  grub_env_set ("blsdir", default_blsdir);
++  grub_dprintf ("blscfg", "default_blsdir: \"%s\"\n", default_blsdir);
++
++  /*
++   * try to load a grubenv from /EFI/wherever/grubenv
++   */
++  grubenv_path = grub_xasprintf ("(%s)/EFI/%s/grubenv", devid, filename);
++  grub_dprintf ("blscfg", "looking for \"%s\"\n", grubenv_path);
++  f = grub_file_open (grubenv_path);
++
++  grub_dprintf ("blscfg", "%s it\n", f ? "found" : "did not find");
++  grub_free (grubenv_path);
++  if (f)
++    {
++      grub_off_t sz;
++
++      grub_dprintf ("blscfg", "getting size\n");
++      sz = grub_file_size (f);
++      if (sz == GRUB_FILE_SIZE_UNKNOWN || sz > 1024*1024)
++	goto finish;
++
++      grub_dprintf ("blscfg", "reading env\n");
++      env = read_envblk_file (f);
++      if (!env)
++	goto finish;
++      grub_dprintf ("blscfg", "read env file\n");
++
++      grub_memset (saved_env_buf, '#', 512);
++      grub_memcpy (saved_env_buf, GRUB_ENVBLK_SIGNATURE,
++		   sizeof (GRUB_ENVBLK_SIGNATURE));
++      grub_dprintf ("blscfg", "saving env\n");
++      saved_env = grub_envblk_open (saved_env_buf, 512);
++      if (!saved_env)
++	goto finish;
++
++      // save everything listed in "env" with values from our existing grub env
++      grub_envblk_iterate (env, NULL, save_var);
++      // set everything from our loaded grubenv into the real grub env
++      grub_envblk_iterate (env, NULL, set_var);
++    }
++  else
++    {
++      grub_err_t e;
++      grub_dprintf ("blscfg", "no such file\n");
++      do
++	{
++	  e = grub_error_pop();
++	} while (e);
++
++    }
++
++  blsdir = grub_env_get ("blsdir");
++  if (!blsdir)
++    goto finish;
++
++  grub_dprintf ("blscfg", "blsdir: \"%s\"\n", blsdir);
++  if (blsdir[0] != '/')
++    blsdir = grub_xasprintf ("/EFI/%s/%s/", filename, blsdir);
++  else
++    blsdir = grub_strdup (blsdir);
++
++  if (!blsdir)
++    goto finish;
++
++  grub_dprintf ("blscfg", "blsdir: \"%s\"\n", blsdir);
++  r = info->fs->dir (info->dev, blsdir, parse_entry, (char *)blsdir);
++  if (r != 0) {
++      grub_dprintf ("blscfg", "parse_entry returned error\n");
++      grub_err_t e;
++      do
++	{
++	  e = grub_error_pop();
++	} while (e);
++  }
++
++finish:
++  grub_free (blsdir);
++
++  grub_env_unset ("blsdir");
++
++  if (saved_env)
++    {
++      // remove everything from the real environment that's defined in env
++      grub_envblk_iterate (env, NULL, unset_var);
++
++      // re-set the things from our original environment
++      grub_envblk_iterate (saved_env, NULL, set_var);
++      grub_envblk_close (saved_env);
++      saved_env = NULL;
++    }
++  else if (saved_env_buf)
++    {
++      // if we have a saved environment, grub_envblk_close() freed this.
++      grub_free (saved_env_buf);
++    }
++
++  if (env)
++    grub_envblk_close (env);
++
++  if (f)
++    grub_file_close (f);
++
++  grub_free (default_blsdir);
++
++  return 0;
++}
++#endif
++
+ static grub_err_t
+ grub_cmd_bls_import (grub_extcmd_context_t ctxt __attribute__ ((unused)),
+ 		     int argc __attribute__ ((unused)),
+@@ -158,15 +341,22 @@ grub_cmd_bls_import (grub_extcmd_context_t ctxt __attribute__ ((unused)),
+   grub_device_t dev;
+   static grub_err_t r;
+   const char *devid;
++#ifdef GRUB_MACHINE_EFI
++  struct find_entry_info info;
++#endif
+ 
+-  devid = grub_env_get ("root");
++  grub_dprintf ("blscfg", "finding boot\n");
++  devid = grub_env_get ("boot");
+   if (!devid)
+-    return grub_error (GRUB_ERR_FILE_NOT_FOUND, N_("variable `%s' isn't set"), "root");
++    return grub_error (GRUB_ERR_FILE_NOT_FOUND,
++		       N_("variable `%s' isn't set"), "boot");
+ 
++  grub_dprintf ("blscfg", "opening %s\n", devid);
+   dev = grub_device_open (devid);
+   if (!dev)
+     return grub_errno;
+ 
++  grub_dprintf ("blscfg", "probing fs\n");
+   fs = grub_fs_probe (dev);
+   if (!fs)
+     {
+@@ -174,7 +364,14 @@ grub_cmd_bls_import (grub_extcmd_context_t ctxt __attribute__ ((unused)),
+       goto finish;
+     }
+ 
+-  r = fs->dir (dev, GRUB_BLS_CONFIG_PATH, parse_entry, NULL);
++#ifdef GRUB_MACHINE_EFI
++  info.dev = dev;
++  info.fs = fs;
++  grub_dprintf ("blscfg", "scanning /EFI/\n");
++  r = fs->dir (dev, "/EFI/", find_entry, &info);
++#else
++  r = fs->dir (dev, GRUB_BLS_CONFIG_PATH, parse_entry, GRUB_BLS_CONFIG_PATH);
++#endif
+ 
+ finish:
+   if (dev)
+diff --git a/grub-core/commands/loadenv.c b/grub-core/commands/loadenv.c
+index acd93d1..91c9945 100644
+--- a/grub-core/commands/loadenv.c
++++ b/grub-core/commands/loadenv.c
+@@ -28,6 +28,8 @@
+ #include <grub/extcmd.h>
+ #include <grub/i18n.h>
+ 
++#include "loadenv.h"
++
+ GRUB_MOD_LICENSE ("GPLv3+");
+ 
+ static const struct grub_arg_option options[] =
+@@ -84,81 +86,6 @@ open_envblk_file (char *filename, int untrusted)
+   return file;
+ }
+ 
+-static grub_envblk_t
+-read_envblk_file (grub_file_t file)
+-{
+-  grub_off_t offset = 0;
+-  char *buf;
+-  grub_size_t size = grub_file_size (file);
+-  grub_envblk_t envblk;
+-
+-  buf = grub_malloc (size);
+-  if (! buf)
+-    return 0;
+-
+-  while (size > 0)
+-    {
+-      grub_ssize_t ret;
+-
+-      ret = grub_file_read (file, buf + offset, size);
+-      if (ret <= 0)
+-        {
+-          grub_free (buf);
+-          return 0;
+-        }
+-
+-      size -= ret;
+-      offset += ret;
+-    }
+-
+-  envblk = grub_envblk_open (buf, offset);
+-  if (! envblk)
+-    {
+-      grub_free (buf);
+-      grub_error (GRUB_ERR_BAD_FILE_TYPE, "invalid environment block");
+-      return 0;
+-    }
+-
+-  return envblk;
+-}
+-
+-struct grub_env_whitelist
+-{
+-  grub_size_t len;
+-  char **list;
+-};
+-typedef struct grub_env_whitelist grub_env_whitelist_t;
+-
+-static int
+-test_whitelist_membership (const char* name,
+-                           const grub_env_whitelist_t* whitelist)
+-{
+-  grub_size_t i;
+-
+-  for (i = 0; i < whitelist->len; i++)
+-    if (grub_strcmp (name, whitelist->list[i]) == 0)
+-      return 1;  /* found it */
+-
+-  return 0;  /* not found */
+-}
+-
+-/* Helper for grub_cmd_load_env.  */
+-static int
+-set_var (const char *name, const char *value, void *whitelist)
+-{
+-  if (! whitelist)
+-    {
+-      grub_env_set (name, value);
+-      return 0;
+-    }
+-
+-  if (test_whitelist_membership (name,
+-				 (const grub_env_whitelist_t *) whitelist))
+-    grub_env_set (name, value);
+-
+-  return 0;
+-}
+-
+ static grub_err_t
+ grub_cmd_load_env (grub_extcmd_context_t ctxt, int argc, char **args)
+ {
+diff --git a/grub-core/commands/loadenv.h b/grub-core/commands/loadenv.h
+new file mode 100644
+index 0000000..952f461
+--- /dev/null
++++ b/grub-core/commands/loadenv.h
+@@ -0,0 +1,93 @@
++/* loadenv.c - command to load/save environment variable.  */
++/*
++ *  GRUB  --  GRand Unified Bootloader
++ *  Copyright (C) 2008,2009,2010  Free Software Foundation, Inc.
++ *
++ *  GRUB is free software: you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation, either version 3 of the License, or
++ *  (at your option) any later version.
++ *
++ *  GRUB is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++static grub_envblk_t UNUSED
++read_envblk_file (grub_file_t file)
++{
++  grub_off_t offset = 0;
++  char *buf;
++  grub_size_t size = grub_file_size (file);
++  grub_envblk_t envblk;
++
++  buf = grub_malloc (size);
++  if (! buf)
++    return 0;
++
++  while (size > 0)
++    {
++      grub_ssize_t ret;
++
++      ret = grub_file_read (file, buf + offset, size);
++      if (ret <= 0)
++        {
++          grub_free (buf);
++          return 0;
++        }
++
++      size -= ret;
++      offset += ret;
++    }
++
++  envblk = grub_envblk_open (buf, offset);
++  if (! envblk)
++    {
++      grub_free (buf);
++      grub_error (GRUB_ERR_BAD_FILE_TYPE, "invalid environment block");
++      return 0;
++    }
++
++  return envblk;
++}
++
++struct grub_env_whitelist
++{
++  grub_size_t len;
++  char **list;
++};
++typedef struct grub_env_whitelist grub_env_whitelist_t;
++
++static int UNUSED
++test_whitelist_membership (const char* name,
++                           const grub_env_whitelist_t* whitelist)
++{
++  grub_size_t i;
++
++  for (i = 0; i < whitelist->len; i++)
++    if (grub_strcmp (name, whitelist->list[i]) == 0)
++      return 1;  /* found it */
++
++  return 0;  /* not found */
++}
++
++/* Helper for grub_cmd_load_env.  */
++static int UNUSED
++set_var (const char *name, const char *value, void *whitelist)
++{
++  if (! whitelist)
++    {
++      grub_env_set (name, value);
++      return 0;
++    }
++
++  if (test_whitelist_membership (name,
++				 (const grub_env_whitelist_t *) whitelist))
++    grub_env_set (name, value);
++
++  return 0;
++}
+diff --git a/include/grub/compiler.h b/include/grub/compiler.h
+index c9e1d7a..9859ff4 100644
+--- a/include/grub/compiler.h
++++ b/include/grub/compiler.h
+@@ -48,4 +48,6 @@
+ #  define WARN_UNUSED_RESULT
+ #endif
+ 
++#define UNUSED __attribute__((__unused__))
++
+ #endif /* ! GRUB_COMPILER_HEADER */
+-- 
+2.9.3
+

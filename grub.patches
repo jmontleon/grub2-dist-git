@@ -89,3 +89,6 @@ Patch0087: 0087-Add-grub-get-kernel-settings-and-use-it-in-10_linux.patch
 Patch0088: 0088-Normalize-slashes-in-tftp-paths.patch
 Patch0089: 0089-efi-chainloader-fix-wrong-sanity-check-in-relocate_c.patch
 Patch0090: 0090-efi-chainloader-truncate-overlong-relocation-section.patch
+Patch0091: 0001-blscfg-make-the-bls_import-command-know-to-search-en.patch
+Patch0092: 0002-Make-grub2-mkconfig-able-to-output-BLS-based-config-.patch
+Patch0093: 0001-Make-blscfg-include-some-IDs-and-indices.patch
