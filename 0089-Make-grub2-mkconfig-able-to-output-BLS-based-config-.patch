@@ -1,14 +1,15 @@
-From 7d96844d560e9a4ce14f785abbb4b9d25ee49987 Mon Sep 17 00:00:00 2001
+From 4f85d4f9b7b98ff8657628004410e8ba840c3f40 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Tue, 25 Oct 2016 13:26:38 -0400
-Subject: [PATCH 2/2] Make grub2-mkconfig able to output BLS based config file
+Subject: [PATCH 89/89] Make grub2-mkconfig able to output BLS based config
+ file
 
 Signed-off-by: Peter Jones <pjones@redhat.com>
 ---
  util/grub-mkconfig.in     |  3 ++-
  util/grub-mkconfig_lib.in | 24 +++++++++++++++---------
- util/grub.d/10_linux.in   | 20 ++++++++++++++++++++
- 3 files changed, 37 insertions(+), 10 deletions(-)
+ util/grub.d/10_linux.in   | 23 +++++++++++++++++++++++
+ 3 files changed, 40 insertions(+), 10 deletions(-)
 
 diff --git a/util/grub-mkconfig.in b/util/grub-mkconfig.in
 index e32de5e..0e0475d 100644
@@ -90,10 +91,10 @@ index 9c410ea..54b3576 100644
    fi
    IFS="$old_ifs"
 diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
-index 0c5b227..8d31b1d 100644
+index 0c5b227..e19d7ed 100644
 --- a/util/grub.d/10_linux.in
 +++ b/util/grub.d/10_linux.in
-@@ -105,6 +105,26 @@ linux_entry ()
+@@ -105,6 +105,29 @@ linux_entry ()
    if [ -z "$boot_device_id" ]; then
        boot_device_id="$(grub_get_device_id "${GRUB_DEVICE}")"
    fi
@@ -112,7 +113,10 @@ index 0c5b227..8d31b1d 100644
 +    bootefi_device="`${grub_probe} --target=device /boot/efi/`"
 +    prepare_grub_to_access_device ${bootefi_device} boot
 +
-+    echo bls_import
++    echo
++    echo '# load bls config options'
++    echo blscfg
++    echo
 +
 +    exit 0
 +  fi

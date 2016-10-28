@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.36%{?dist}.bls2
+Release:        0.36%{?dist}.bls3
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
