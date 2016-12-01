@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.34%{?dist}
+Release:        0.35%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -545,6 +545,9 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Thu Dec 01 2016 pjones <pjones@redhat.com> - 1:2.02-0.35
+- Rebased to newer upstream for fedora-25
+
 * Thu Aug 25 2016 Peter Jones <pjones@redhat.com> - 2.02-0.34
 - Update to be newer than f24's branch.
 - Add grub2-get-kernel-settings
