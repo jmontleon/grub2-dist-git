@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.35%{?dist}
+Release:        0.36%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -273,7 +273,7 @@ cd grub-%{tarversion}
 		-e 's/-fexceptions//g'				\
 		-e 's/-m64//g'					\
 		-e 's/-fasynchronous-unwind-tables//g'		\
-		-e 's/-mcpu=power7/-mcpu=power6/g'		\
+		-e 's/-mcpu=power[[:alnum:]]+/-mcpu=power6/g'	\
 		-e 's/^/ -fno-strict-aliasing /' )"		\
 	TARGET_LDFLAGS=-static					\
         --with-platform=%{platform}				\
@@ -545,8 +545,13 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
-* Thu Dec 01 2016 pjones <pjones@redhat.com> - 1:2.02-0.35
+* Thu Dec 01 2016 Peter Jones <pjones@redhat.com> - 2.02-0.36
 - Rebased to newer upstream for fedora-25
+
+* Thu Dec 01 2016 Peter Jones <pjones@redhat.com> - 2.02-0.34
+- Fix power6 makefile bits for newer autoconf defaults.
+- efi/chainloader: fix wrong sanity check in relocate_coff() (Laszlo Ersek)
+  Resolves: rhbz#1347291
 
 * Thu Aug 25 2016 Peter Jones <pjones@redhat.com> - 2.02-0.34
 - Update to be newer than f24's branch.
