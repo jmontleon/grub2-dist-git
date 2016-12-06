@@ -273,7 +273,7 @@ cd grub-%{tarversion}
 		-e 's/-fexceptions//g'				\
 		-e 's/-m64//g'					\
 		-e 's/-fasynchronous-unwind-tables//g'		\
-		-e 's/-mcpu=power8/-mcpu=power6/g'		\
+		-e 's/-mcpu=power[[:alnum:]]+/-mcpu=power6/g'	\
 		-e 's/^/ -fno-strict-aliasing /' )"		\
 	TARGET_LDFLAGS=-static					\
         --with-platform=%{platform}				\
@@ -488,6 +488,7 @@ fi
 %{_datarootdir}/grub/*
 %{_sbindir}/%{name}-bios-setup
 %{_sbindir}/%{name}-install
+%{_sbindir}/%{name}-get-kernel-settings
 %{_sbindir}/%{name}-macbless
 %{_sbindir}/%{name}-mkconfig
 %{_sbindir}/%{name}-ofpathname
