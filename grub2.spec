@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.34%{?dist}
+Release:        0.35%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -544,6 +544,13 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Tue Dec 06 2016 Peter Jones <pjones@redhat.com> - 2.02-0.35
+- Pull f25 bug fixes into f24:
+  Resolves: rhbz#1292615
+  Resolves: rhbz#1261926
+  Resolves: rhbz#1226325
+  Resolves: rhbz#1347291
+
 * Fri Jun 10 2016 Peter Jones <pjones@redhat.com> - 2.02-0.34
 - Update ppc64 configure invocation
   Resolves: rhbz#1344700
