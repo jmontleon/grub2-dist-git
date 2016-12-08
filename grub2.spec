@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.35%{?dist}
+Release:        0.38%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -545,6 +545,10 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Thu Dec 08 2016 Peter Jones <pjones@redhat.com> - 2.02-0.38
+- Fix regexp in power compile flags, and synchronize release number with
+  other branches.
+
 * Tue Dec 06 2016 Peter Jones <pjones@redhat.com> - 2.02-0.35
 - Pull f25 bug fixes into f24:
   Resolves: rhbz#1292615
