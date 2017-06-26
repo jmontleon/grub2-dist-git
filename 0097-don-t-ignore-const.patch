@@ -1,0 +1,25 @@
+From f2b28326d5aa2cdcaa56def8a806fbcc23962c03 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Mon, 26 Jun 2017 12:43:22 -0400
+Subject: [PATCH 097/105] don't ignore const
+
+---
+ grub-core/net/tftp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/grub-core/net/tftp.c b/grub-core/net/tftp.c
+index c4b5205d0..dd4ce6b23 100644
+--- a/grub-core/net/tftp.c
++++ b/grub-core/net/tftp.c
+@@ -307,7 +307,7 @@ static void
+ grub_normalize_filename (char *normalized, const char *filename)
+ {
+   char *dest = normalized;
+-  char *src = filename;
++  const char *src = filename;
+ 
+   while (*src != '\0')
+     {
+-- 
+2.13.0
+

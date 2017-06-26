@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.39%{?dist}
+Release:        0.40%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -546,6 +546,14 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Mon Jun 26 2017 Peter Jones <pjones@redhat.com> - 2.02-0.40
+- Fix tftp filename mangling to not reuse the wrong variable
+  Resolves: rhbz#1405208
+- Make grub2 initialize the kernel's boot_params structure correctly so the
+  upstream SB code doesn't throw a fit.
+  Resolves: rhbz#1418360
+  Resolves: rhbz#1451071
+
 * Wed Feb 01 2017 Stephen Gallagher <sgallagh@redhat.com> - 2.02-0.39
 - Add missing %%license macro
 
