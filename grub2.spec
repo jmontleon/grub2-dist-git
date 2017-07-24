@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.40%{?dist}
+Release:        0.41%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -366,7 +366,7 @@ EOF
 
 %ifarch %{efiarchs}
 mkdir -p boot/efi/EFI/%{efidir}/
-ln -s /boot/efi/EFI/%{efidir}/grubenv boot/grub2/grubenv
+ln -s ../efi/EFI/%{efidir}/grubenv boot/grub2/grubenv
 %endif
 
 # Don't run debuginfo on all the grub modules and whatnot; it just
@@ -546,6 +546,10 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Mon Jul 24 2017 Michael Cronenworth <mike@cchtml.com> - 2.02-0.41
+- Fix symlink to work on both EFI and BIOS machines
+  Resolves: rhbz#1335533
+
 * Mon Jun 26 2017 Peter Jones <pjones@redhat.com> - 2.02-0.40
 - Fix tftp filename mangling to not reuse the wrong variable
   Resolves: rhbz#1405208
