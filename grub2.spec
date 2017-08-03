@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.41%{?dist}
+Release:        0.42%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -546,6 +546,10 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Thu Aug 03 2017 Peter Jones <pjones@redhat.com> - 2.02-0.42
+- Rebuild this so it gets SB signed correctly.
+  Related: rhbz#1335533
+
 * Mon Jul 24 2017 Michael Cronenworth <mike@cchtml.com> - 2.02-0.41
 - Fix symlink to work on both EFI and BIOS machines
   Resolves: rhbz#1335533
