@@ -1,0 +1,31 @@
+From abf9beb7d667d3604774753cf698c439c6fbc736 Mon Sep 17 00:00:00 2001
+From: Michael Chang <mchang@suse.com>
+Date: Wed, 6 Apr 2016 18:19:14 +0800
+Subject: [PATCH 012/123] http: fix superfluous null line in range request
+ header
+
+At least the apache sever is very unhappy with that extra null line and will
+take more than ten seconds in responding to each range request, which slows
+down a lot the entire http file transfer process or even time out.
+---
+ grub-core/net/http.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/grub-core/net/http.c b/grub-core/net/http.c
+index 4684f8b33..a7c5101a1 100644
+--- a/grub-core/net/http.c
++++ b/grub-core/net/http.c
+@@ -381,9 +381,8 @@ http_establish (struct grub_file *file, grub_off_t offset, int initial)
+       ptr = nb->tail;
+       grub_snprintf ((char *) ptr,
+ 		     sizeof ("Range: bytes=XXXXXXXXXXXXXXXXXXXX-"
+-			     "\r\n"
+ 			     "\r\n"),
+-		     "Range: bytes=%" PRIuGRUB_UINT64_T "-\r\n\r\n",
++		     "Range: bytes=%" PRIuGRUB_UINT64_T "-\r\n",
+ 		     offset);
+       grub_netbuff_put (nb, grub_strlen ((char *) ptr));
+     }
+-- 
+2.14.3
+

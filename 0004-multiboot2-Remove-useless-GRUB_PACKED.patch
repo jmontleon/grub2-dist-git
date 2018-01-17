@@ -1,0 +1,26 @@
+From 7f2a856faec951b7ab816880bd26e1e10b17a596 Mon Sep 17 00:00:00 2001
+From: Vladimir Serbinenko <phcoder@gmail.com>
+Date: Thu, 10 Mar 2016 21:16:10 +0100
+Subject: [PATCH 004/123] multiboot2: Remove useless GRUB_PACKED
+
+Reported by: Daniel Kiper
+---
+ include/multiboot2.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/multiboot2.h b/include/multiboot2.h
+index 9d4862759..8b8c1568a 100644
+--- a/include/multiboot2.h
++++ b/include/multiboot2.h
+@@ -176,7 +176,7 @@ struct multiboot_mmap_entry
+ #define MULTIBOOT_MEMORY_BADRAM                 5
+   multiboot_uint32_t type;
+   multiboot_uint32_t zero;
+-} GRUB_PACKED;
++};
+ typedef struct multiboot_mmap_entry multiboot_memory_map_t;
+ 
+ struct multiboot_tag
+-- 
+2.14.3
+

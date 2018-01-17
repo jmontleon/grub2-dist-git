@@ -1,0 +1,45 @@
+From 76eac44af37358fb14f437a7878119e6d34e8d7f Mon Sep 17 00:00:00 2001
+From: Aaron Luft <aluft@lifesize.com>
+Date: Mon, 14 Mar 2016 16:48:33 -0400
+Subject: [PATCH 008/123] Remove the variable oldname which is attempting to
+ free stack space.
+
+Historically this variable hold previous value of filename that
+had to be freed if allocated previously. Currently this branch
+is entered only if filename was not allocated previously so it
+became redundant. It did not cause real problems because grub_free
+was not called, but code is confusing and causes compilation error
+in some cases.
+---
+ grub-core/fs/iso9660.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/grub-core/fs/iso9660.c b/grub-core/fs/iso9660.c
+index 67a67cf40..c9c8374bf 100644
+--- a/grub-core/fs/iso9660.c
++++ b/grub-core/fs/iso9660.c
+@@ -750,19 +750,15 @@ grub_iso9660_iterate_dir (grub_fshelp_node_t dir,
+ 
+         if (dir->data->joliet && !ctx.filename)
+           {
+-            char *oldname, *semicolon;
++            char *semicolon;
+ 
+-            oldname = name;
+             ctx.filename = grub_iso9660_convert_string
+-                  ((grub_uint8_t *) oldname, dirent.namelen >> 1);
++                  ((grub_uint8_t *) name, dirent.namelen >> 1);
+ 
+ 	    semicolon = grub_strrchr (ctx.filename, ';');
+ 	    if (semicolon)
+ 	      *semicolon = '\0';
+ 
+-            if (ctx.filename_alloc)
+-              grub_free (oldname);
+-
+             ctx.filename_alloc = 1;
+           }
+ 
+-- 
+2.14.3
+

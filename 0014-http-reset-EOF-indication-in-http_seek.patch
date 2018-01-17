@@ -1,0 +1,26 @@
+From 13f7ead3a17a5c2681b95c4bb4f40d8eb8648880 Mon Sep 17 00:00:00 2001
+From: Stefan Fritsch <sf@sfritsch.de>
+Date: Sat, 30 Apr 2016 09:10:12 +0300
+Subject: [PATCH 014/123] http: reset EOF indication in http_seek
+
+Otherwise next read will stop polling too early due to stale EOF
+indicator, returning incomplete data to caller.
+---
+ grub-core/net/http.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/grub-core/net/http.c b/grub-core/net/http.c
+index a7c5101a1..5aa4ad3be 100644
+--- a/grub-core/net/http.c
++++ b/grub-core/net/http.c
+@@ -449,6 +449,7 @@ http_seek (struct grub_file *file, grub_off_t off)
+     }
+ 
+   file->device->net->stall = 0;
++  file->device->net->eof = 0;
+   file->device->net->offset = off;
+ 
+   data = grub_zalloc (sizeof (*data));
+-- 
+2.14.3
+

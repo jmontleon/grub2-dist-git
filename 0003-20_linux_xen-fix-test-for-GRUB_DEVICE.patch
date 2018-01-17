@@ -1,0 +1,26 @@
+From 9545a8fd04ca33bcecc1907fec4d2354b02992ba Mon Sep 17 00:00:00 2001
+From: Andrei Borzenkov <arvidjaar@gmail.com>
+Date: Sun, 6 Mar 2016 08:54:19 +0300
+Subject: [PATCH 003/123] 20_linux_xen: fix test for GRUB_DEVICE
+
+Same fix as in 082bc9f.
+---
+ util/grub.d/20_linux_xen.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/util/grub.d/20_linux_xen.in b/util/grub.d/20_linux_xen.in
+index 46045db1a..c48af948d 100644
+--- a/util/grub.d/20_linux_xen.in
++++ b/util/grub.d/20_linux_xen.in
+@@ -47,7 +47,7 @@ esac
+ # and mounting btrfs requires user space scanning, so force UUID in this case.
+ if [ "x${GRUB_DEVICE_UUID}" = "x" ] || [ "x${GRUB_DISABLE_LINUX_UUID}" = "xtrue" ] \
+     || ! test -e "/dev/disk/by-uuid/${GRUB_DEVICE_UUID}" \
+-    || test -e "${GRUB_DEVICE}" && uses_abstraction "${GRUB_DEVICE}" lvm; then
++    || ( test -e "${GRUB_DEVICE}" && uses_abstraction "${GRUB_DEVICE}" lvm ); then
+   LINUX_ROOT_DEVICE=${GRUB_DEVICE}
+ else
+   LINUX_ROOT_DEVICE=UUID=${GRUB_DEVICE_UUID}
+-- 
+2.14.3
+

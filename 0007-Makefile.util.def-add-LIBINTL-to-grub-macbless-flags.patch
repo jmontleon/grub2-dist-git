@@ -1,0 +1,29 @@
+From ee83919e938e7987c2753b3003a2074e92edf671 Mon Sep 17 00:00:00 2001
+From: Andrei Borzenkov <arvidjaar@gmail.com>
+Date: Sun, 13 Mar 2016 08:11:58 +0300
+Subject: [PATCH 007/123] Makefile.util.def: add $LIBINTL to grub-macbless
+ flags
+
+Fixes compilation on OpenBSD 5.9.
+
+Reported by Jiri B <jirib@devio.us>
+---
+ Makefile.util.def | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.util.def b/Makefile.util.def
+index ed9b4c697..f9caccb97 100644
+--- a/Makefile.util.def
++++ b/Makefile.util.def
+@@ -416,7 +416,7 @@ program = {
+   ldadd = libgrubgcry.a;
+   ldadd = libgrubkern.a;
+   ldadd = grub-core/gnulib/libgnu.a;
+-  ldadd = '$(LIBINTL) $(LIBDEVMAPPER) $(LIBZFS) $(LIBNVPAIR) $(LIBGEOM)';
++  ldadd = '$(LIBINTL) $(LIBDEVMAPPER) $(LIBUTIL) $(LIBZFS) $(LIBNVPAIR) $(LIBGEOM)';
+ };
+ 
+ data = {
+-- 
+2.14.3
+

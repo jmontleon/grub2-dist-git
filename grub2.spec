@@ -45,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.42%{?dist}
+Release:        0.43%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 
 Group:          System Environment/Base
@@ -546,6 +546,10 @@ fi
 %{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Wed Jan 17 2018 Peter Jones <pjones@redhat.com> - 2.02-0.43
+- Pull in patches for Apollo Lake hardware
+  Resolves: rhbz#1519311
+
 * Thu Aug 03 2017 Peter Jones <pjones@redhat.com> - 2.02-0.42
 - Rebuild this so it gets SB signed correctly.
   Related: rhbz#1335533

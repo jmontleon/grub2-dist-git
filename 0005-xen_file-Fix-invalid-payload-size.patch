@@ -1,0 +1,30 @@
+From 15aee573d2312ebf4aab53d07d3d30eccf1484f9 Mon Sep 17 00:00:00 2001
+From: Michael Chang <mchang@suse.com>
+Date: Fri, 11 Mar 2016 10:26:51 +0100
+Subject: [PATCH 005/123] xen_file: Fix invalid payload size
+
+---
+ grub-core/loader/i386/xen_file.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/grub-core/loader/i386/xen_file.c b/grub-core/loader/i386/xen_file.c
+index 583621890..37f9ad8ac 100644
+--- a/grub-core/loader/i386/xen_file.c
++++ b/grub-core/loader/i386/xen_file.c
+@@ -55,11 +55,11 @@ grub_xen_file (grub_file_t file)
+   grub_dprintf ("xen", "found bzimage payload 0x%llx-0x%llx\n",
+ 		(unsigned long long) (lh.setup_sects + 1) * 512
+ 		+ lh.payload_offset,
+-		(unsigned long long) lh.payload_length - 4);
++		(unsigned long long) lh.payload_length);
+ 
+   off_file = grub_file_offset_open (file, (lh.setup_sects + 1) * 512
+ 				    + lh.payload_offset,
+-				    lh.payload_length - 4);
++				    lh.payload_length);
+   if (!off_file)
+     goto fail;
+ 
+-- 
+2.14.3
+

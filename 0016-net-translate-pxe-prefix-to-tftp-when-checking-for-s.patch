@@ -1,0 +1,35 @@
+From b524fa27f56381bb0efa4944e36f50265113aee5 Mon Sep 17 00:00:00 2001
+From: Andrei Borzenkov <arvidjaar@gmail.com>
+Date: Tue, 3 May 2016 19:23:31 +0300
+Subject: [PATCH 016/123] net: translate pxe prefix to tftp when checking for
+ self-load
+
+Commit ba218c1 missed legacy pxe and pxe: prefixes which are
+translated to tftp, so comparison failed.
+---
+ grub-core/net/net.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/grub-core/net/net.c b/grub-core/net/net.c
+index 26a1fc3fc..10773fc34 100644
+--- a/grub-core/net/net.c
++++ b/grub-core/net/net.c
+@@ -1346,6 +1346,15 @@ grub_net_open_real (const char *name)
+ 		continue;
+ 	    }
+ 
++	  if (grub_strncmp (prefdev, "pxe", sizeof ("pxe") - 1) == 0 &&
++	      (!prefdev[sizeof ("pxe") - 1] || (prefdev[sizeof("pxe") - 1] == ':')))
++	    {
++	      grub_free (prefdev);
++	      prefdev = grub_strdup ("tftp");
++	      if (!prefdev)
++		continue;
++	    }
++
+ 	  comma = grub_strchr (prefdev, ',');
+ 	  if (comma)
+ 	    *comma = '\0';
+-- 
+2.14.3
+

@@ -1,0 +1,39 @@
+From f4d35d49e32c29183b3492da18ea480d91716efe Mon Sep 17 00:00:00 2001
+From: Andrei Borzenkov <arvidjaar@gmail.com>
+Date: Tue, 22 Mar 2016 20:12:22 +0300
+Subject: [PATCH 011/123] configure: set -fno-pie together with -fno-PIE
+
+OpenBSD 5.9 apparently defaults to -fpie. We use -fno-PIE when appropriate
+already, but that is not enough - it does not turn off -fpie.
+
+Actually check for -fPIE is not precise enough. __PIE__ is set for both
+-fpie and -fPIE but with different values. As far as I can tell, both
+options were introduced at the same time, so both should always be supported.
+
+This fixes compilation on OpenBSD 5.9 which otherwise created insanely big
+lzma_decompress.img.
+
+Reported, suggested and tested by: Jiri B <jirib@devio.us>
+---
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index a85b134ec..57e17138e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1185,9 +1185,9 @@ CFLAGS="$TARGET_CFLAGS"
+ # Position independent executable.
+ grub_CHECK_PIE
+ [# Need that, because some distributions ship compilers that include
+-# `-fPIE' in the default specs.
++# `-fPIE' or '-fpie' in the default specs.
+ if [ x"$pie_possible" = xyes ]; then
+-  TARGET_CFLAGS="$TARGET_CFLAGS -fno-PIE"
++  TARGET_CFLAGS="$TARGET_CFLAGS -fno-PIE -fno-pie"
+ fi]
+ 
+ CFLAGS="$TARGET_CFLAGS"
+-- 
+2.14.3
+
