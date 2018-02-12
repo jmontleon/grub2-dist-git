@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	22%{?dist}
+Release:	23%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 Group:		System Environment/Base
 License:	GPLv3+
@@ -130,6 +130,19 @@ Obsoletes:	%{name}-tools < %{evr}
 %description tools-extra
 %{desc}
 This subpackage provides tools for support of all platforms.
+
+%package starfield-theme
+Summary:	An example theme for GRUB.
+Group:		System Environment/Base
+Requires:	system-logos
+Obsoletes:	grub2 <= 1:2.00-20%{?dist}
+Obsoletes:	grub2-efi <= 1:2.00-20%{?dist}
+
+%description starfield-theme
+The GRand Unified Bootloader (GRUB) is a highly configurable and customizable
+bootloader with modular architecture.  It support rich varietyof kernel formats,
+file systems, computer architectures and hardware devices.  This subpackage
+provides an example theme for the grub screen.
 
 %if 0%{with_efi_arch}
 %{expand:%define_efi_variant %%{package_arch} -o}
@@ -443,6 +456,12 @@ fi
 %{_datadir}/man/man1/%{name}-syslinux2cfg*
 %exclude %{_datarootdir}/grub/themes/starfield
 
+%files starfield-theme
+%dir /boot/%{name}/themes/
+/boot/%{name}/themes/system
+%dir %{_datarootdir}/grub/themes
+%{_datarootdir}/grub/themes/starfield
+
 %if 0%{with_efi_arch}
 %{expand:%define_efi_variant_files %%{package_arch} %%{grubefiname} %%{grubeficdname} %%{grubefiarch} %%{target_cpu_name} %%{grub_target_name}}
 %endif
@@ -454,6 +473,10 @@ fi
 %endif
 
 %changelog
+* Mon Feb 12 2018 Neal Gompa <ngompa13@gmail.com> - 2.02-23
+- Restore grub2-starfield-theme package accidentally dropped in merge
+  Resolves: rhbz#1519051
+
 * Tue Jan 23 2018 Peter Jones <pjones@redhat.com> - 2.02-22
 - Fix a merge error from 2.02-21 that affected kernel loading on Aarch64.
   Related: rhbz#1519311
