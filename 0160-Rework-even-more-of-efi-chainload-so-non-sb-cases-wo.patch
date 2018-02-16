@@ -1,7 +1,7 @@
 From 91943cb164e03979132310784ad802ea9dc3bbd9 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Fri, 10 Jun 2016 14:06:15 -0400
-Subject: [PATCH 160/198] Rework even more of efi chainload so non-sb cases
+Subject: [PATCH 160/206] Rework even more of efi chainload so non-sb cases
  work right.
 
 This ensures that if shim protocol is not loaded, or is loaded but shim
@@ -51,7 +51,7 @@ Signed-off-by: Peter Jones <pjones@redhat.com>
  6 files changed, 102 insertions(+), 63 deletions(-)
 
 diff --git a/grub-core/kern/efi/sb.c b/grub-core/kern/efi/sb.c
-index a41b6c5b8..d74778b0c 100644
+index a41b6c5b851e..d74778b0cacf 100644
 --- a/grub-core/kern/efi/sb.c
 +++ b/grub-core/kern/efi/sb.c
 @@ -36,14 +36,20 @@ grub_efi_secure_boot (void)
@@ -80,7 +80,7 @@ index a41b6c5b8..d74778b0c 100644
    if (*secure_boot && !*setup_mode)
      ret = 1;
 diff --git a/grub-core/loader/arm64/linux.c b/grub-core/loader/arm64/linux.c
-index 03ff83563..34f34e65a 100644
+index 03ff835633cc..34f34e65afd1 100644
 --- a/grub-core/loader/arm64/linux.c
 +++ b/grub-core/loader/arm64/linux.c
 @@ -248,6 +248,7 @@ grub_cmd_linux (grub_command_t cmd __attribute__ ((unused)),
@@ -102,7 +102,7 @@ index 03ff83563..34f34e65a 100644
        grub_error (GRUB_ERR_INVALID_COMMAND, N_("%s has invalid signature"), argv[0]);
        goto fail;
 diff --git a/grub-core/loader/efi/chainloader.c b/grub-core/loader/efi/chainloader.c
-index 4b77a7d5a..b977c7b55 100644
+index 4b77a7d5adbc..b977c7b5573c 100644
 --- a/grub-core/loader/efi/chainloader.c
 +++ b/grub-core/loader/efi/chainloader.c
 @@ -182,7 +182,6 @@ make_file_path (grub_efi_device_path_t *dp, const char *filename)
@@ -331,7 +331,7 @@ index 4b77a7d5a..b977c7b55 100644
      grub_device_close (dev);
  
 diff --git a/grub-core/loader/efi/linux.c b/grub-core/loader/efi/linux.c
-index aea378adf..8890bdf05 100644
+index aea378adf5cb..8890bdf059ae 100644
 --- a/grub-core/loader/efi/linux.c
 +++ b/grub-core/loader/efi/linux.c
 @@ -33,21 +33,24 @@ struct grub_efi_shim_lock
@@ -365,7 +365,7 @@ index aea378adf..8890bdf05 100644
  
  typedef void (*handover_func) (void *, grub_efi_system_table_t *, void *);
 diff --git a/grub-core/loader/i386/efi/linux.c b/grub-core/loader/i386/efi/linux.c
-index 7ccf32d9d..82f75b7f3 100644
+index 7ccf32d9d45f..82f75b7f3ab7 100644
 --- a/grub-core/loader/i386/efi/linux.c
 +++ b/grub-core/loader/i386/efi/linux.c
 @@ -155,6 +155,7 @@ grub_cmd_linux (grub_command_t cmd __attribute__ ((unused)),
@@ -397,7 +397,7 @@ index 7ccf32d9d..82f75b7f3 100644
        goto fail;
      }
 diff --git a/include/grub/efi/linux.h b/include/grub/efi/linux.h
-index d9ede3677..0033d9305 100644
+index d9ede36773bf..0033d9305a9f 100644
 --- a/include/grub/efi/linux.h
 +++ b/include/grub/efi/linux.h
 @@ -22,7 +22,7 @@

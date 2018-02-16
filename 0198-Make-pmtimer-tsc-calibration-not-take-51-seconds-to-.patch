@@ -1,7 +1,7 @@
 From 8df97294d653219ad03ac031c01b723ed7f6556d Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Tue, 7 Nov 2017 17:12:17 -0500
-Subject: [PATCH 198/198] Make pmtimer tsc calibration not take 51 seconds to
+Subject: [PATCH 198/206] Make pmtimer tsc calibration not take 51 seconds to
  fail.
 
 On my laptop running at 2.4GHz, if I run a VM where tsc calibration
@@ -24,7 +24,7 @@ Signed-off-by: Peter Jones <pjones@redhat.com>
  1 file changed, 33 insertions(+), 10 deletions(-)
 
 diff --git a/grub-core/kern/i386/tsc_pmtimer.c b/grub-core/kern/i386/tsc_pmtimer.c
-index c9c361699..609402b83 100644
+index c9c36169978f..609402b83766 100644
 --- a/grub-core/kern/i386/tsc_pmtimer.c
 +++ b/grub-core/kern/i386/tsc_pmtimer.c
 @@ -38,30 +38,53 @@ grub_pmtimer_wait_count_tsc (grub_port_t pmtimer,

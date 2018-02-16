@@ -1,7 +1,7 @@
 From 87206b6fc4fcb9ac5fb5778ec7c9fbb4ef1841b7 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Thu, 18 Sep 2014 11:26:14 -0400
-Subject: [PATCH 123/198] Load arm with SB enabled.
+Subject: [PATCH 123/206] Load arm with SB enabled.
 
 Make sure we actually try to validate secure boot on this platform (even
 though we're not shipping it enabled by default.)
@@ -21,7 +21,7 @@ is enabled.
  create mode 100644 include/grub/efi/linux.h
 
 diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
-index 7f3d5a2bf..5ae70204c 100644
+index 7f3d5a2bfe68..5ae70204cd29 100644
 --- a/grub-core/Makefile.core.def
 +++ b/grub-core/Makefile.core.def
 @@ -1709,6 +1709,8 @@ module = {
@@ -42,7 +42,7 @@ index 7f3d5a2bf..5ae70204c 100644
    enable = x86_64_efi;
  };
 diff --git a/grub-core/loader/arm64/linux.c b/grub-core/loader/arm64/linux.c
-index 746edd104..03ff83563 100644
+index 746edd104159..03ff835633cc 100644
 --- a/grub-core/loader/arm64/linux.c
 +++ b/grub-core/loader/arm64/linux.c
 @@ -28,6 +28,7 @@
@@ -71,7 +71,7 @@ index 746edd104..03ff83563 100644
  
    void *fdt;
  
-@@ -100,6 +103,25 @@ finalize_params_linux (void)
+@@ -100,6 +103,26 @@ finalize_params_linux (void)
    if (grub_fdt_install() != GRUB_ERR_NONE)
      goto failure;
  
@@ -86,7 +86,8 @@ index 746edd104..03ff83563 100644
 +  loaded_image->load_options_size = len =
 +    (grub_strlen (linux_args) + 1) * sizeof (grub_efi_char16_t);
 +  loaded_image->load_options =
-+    grub_efi_allocate_any_pages (GRUB_EFI_BYTES_TO_PAGES (loaded_image->load_options_size));
++    grub_efi_allocate_pages_max (0,
++				 GRUB_EFI_BYTES_TO_PAGES (loaded_image->load_options_size));
 +  if (!loaded_image->load_options)
 +    return grub_error(GRUB_ERR_BAD_OS, "failed to create kernel parameters");
 +
@@ -97,7 +98,7 @@ index 746edd104..03ff83563 100644
    return GRUB_ERR_NONE;
  
  failure:
-@@ -107,72 +129,47 @@ failure:
+@@ -107,72 +130,47 @@ failure:
    return grub_error(GRUB_ERR_BAD_OS, "failed to install/update FDT");
  }
  
@@ -198,7 +199,7 @@ index 746edd104..03ff83563 100644
  }
  
  static grub_err_t
-@@ -249,6 +246,7 @@ grub_cmd_linux (grub_command_t cmd __attribute__ ((unused)),
+@@ -249,6 +247,7 @@ grub_cmd_linux (grub_command_t cmd __attribute__ ((unused)),
  {
    grub_file_t file = 0;
    struct grub_arm64_linux_kernel_header lh;
@@ -206,7 +207,7 @@ index 746edd104..03ff83563 100644
  
    grub_dl_ref (my_mod);
  
-@@ -293,6 +291,15 @@ grub_cmd_linux (grub_command_t cmd __attribute__ ((unused)),
+@@ -293,6 +292,15 @@ grub_cmd_linux (grub_command_t cmd __attribute__ ((unused)),
  
    grub_dprintf ("linux", "kernel @ %p\n", kernel_addr);
  
@@ -224,7 +225,7 @@ index 746edd104..03ff83563 100644
    if (!linux_args)
 diff --git a/grub-core/loader/efi/linux.c b/grub-core/loader/efi/linux.c
 new file mode 100644
-index 000000000..aea378adf
+index 000000000000..aea378adf5cb
 --- /dev/null
 +++ b/grub-core/loader/efi/linux.c
 @@ -0,0 +1,65 @@
@@ -294,7 +295,7 @@ index 000000000..aea378adf
 +  return GRUB_ERR_BUG;
 +}
 diff --git a/grub-core/loader/i386/efi/linux.c b/grub-core/loader/i386/efi/linux.c
-index b79e6320b..e5b778577 100644
+index b79e6320ba9c..e5b778577f94 100644
 --- a/grub-core/loader/i386/efi/linux.c
 +++ b/grub-core/loader/i386/efi/linux.c
 @@ -26,6 +26,7 @@
@@ -361,7 +362,7 @@ index b79e6320b..e5b778577 100644
  
  static grub_err_t
 diff --git a/include/grub/arm64/linux.h b/include/grub/arm64/linux.h
-index a981df5d1..0df384133 100644
+index a981df5d15f5..0df384133381 100644
 --- a/include/grub/arm64/linux.h
 +++ b/include/grub/arm64/linux.h
 @@ -20,6 +20,7 @@
@@ -386,7 +387,7 @@ index a981df5d1..0df384133 100644
  #endif /* ! GRUB_LINUX_CPU_HEADER */
 diff --git a/include/grub/efi/linux.h b/include/grub/efi/linux.h
 new file mode 100644
-index 000000000..d9ede3677
+index 000000000000..d9ede36773bf
 --- /dev/null
 +++ b/include/grub/efi/linux.h
 @@ -0,0 +1,31 @@

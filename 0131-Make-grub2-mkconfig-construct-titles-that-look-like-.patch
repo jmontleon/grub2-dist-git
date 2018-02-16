@@ -1,7 +1,7 @@
 From 28c26e2c86d4b1218004d9e73ba3350704548e32 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Tue, 28 Apr 2015 11:15:03 -0400
-Subject: [PATCH 131/198] Make grub2-mkconfig construct titles that look like
+Subject: [PATCH 131/206] Make grub2-mkconfig construct titles that look like
  the ones we want elsewhere.
 
 Resolves: rhbz#1215839
@@ -12,7 +12,7 @@ Signed-off-by: Peter Jones <pjones@redhat.com>
  1 file changed, 23 insertions(+), 11 deletions(-)
 
 diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
-index 121524185..584ad1f46 100644
+index 1215241859be..584ad1f46399 100644
 --- a/util/grub.d/10_linux.in
 +++ b/util/grub.d/10_linux.in
 @@ -70,11 +70,28 @@ esac

@@ -1,7 +1,7 @@
 From 24e37a885269bdec9b27babf1da0bba3692d55c0 Mon Sep 17 00:00:00 2001
 From: Vladimir Serbinenko <phcoder@gmail.com>
 Date: Mon, 8 May 2017 20:53:28 +0200
-Subject: [PATCH 019/198] arm-coreboot: Start new port.
+Subject: [PATCH 019/206] arm-coreboot: Start new port.
 
 ---
  configure.ac                           |   2 +
@@ -31,7 +31,7 @@ Subject: [PATCH 019/198] arm-coreboot: Start new port.
  create mode 100644 include/grub/arm/coreboot/kernel.h
 
 diff --git a/configure.ac b/configure.ac
-index ee2c86537..571f7a0b5 100644
+index ee2c86537e98..571f7a0b5aa4 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -167,6 +167,7 @@ case "$target_cpu"-"$platform" in
@@ -51,7 +51,7 @@ index ee2c86537..571f7a0b5 100644
  AM_CONDITIONAL([COND_arm64], [test x$target_cpu = xarm64 ])
  AM_CONDITIONAL([COND_arm64_efi], [test x$target_cpu = xarm64 -a x$platform = xefi])
 diff --git a/gentpl.py b/gentpl.py
-index f08bcc404..ed268178b 100644
+index f08bcc404f6a..ed268178b4db 100644
 --- a/gentpl.py
 +++ b/gentpl.py
 @@ -31,7 +31,8 @@ GRUB_PLATFORMS = [ "emu", "i386_pc", "i386_efi", "i386_qemu", "i386_coreboot",
@@ -91,7 +91,7 @@ index f08bcc404..ed268178b 100644
  for i in GROUPS["videoinkernel"]: GROUPS["videomodules"].remove(i)
  
 diff --git a/grub-core/Makefile.am b/grub-core/Makefile.am
-index 781d0ffbf..bec058554 100644
+index 781d0ffbf750..bec0585549a1 100644
 --- a/grub-core/Makefile.am
 +++ b/grub-core/Makefile.am
 @@ -239,6 +239,16 @@ KERNEL_HEADER_FILES += $(top_srcdir)/include/grub/lib/arg.h
@@ -112,7 +112,7 @@ index 781d0ffbf..bec058554 100644
  KERNEL_HEADER_FILES += $(top_srcdir)/include/grub/arm/efi/loader.h
  KERNEL_HEADER_FILES += $(top_srcdir)/include/grub/efi/efi.h
 diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
-index 6540dc951..411dca46b 100644
+index 6540dc951d4c..411dca46bf28 100644
 --- a/grub-core/Makefile.core.def
 +++ b/grub-core/Makefile.core.def
 @@ -92,6 +92,8 @@ kernel = {
@@ -199,7 +199,7 @@ index 6540dc951..411dca46b 100644
    sparc64_ieee1275 = lib/ieee1275/cmos.c;
 diff --git a/grub-core/kern/arm/coreboot/cbtable.c b/grub-core/kern/arm/coreboot/cbtable.c
 new file mode 100644
-index 000000000..8a655bb5c
+index 000000000000..8a655bb5cc28
 --- /dev/null
 +++ b/grub-core/kern/arm/coreboot/cbtable.c
 @@ -0,0 +1,40 @@
@@ -245,7 +245,7 @@ index 000000000..8a655bb5c
 +}
 diff --git a/grub-core/kern/arm/coreboot/coreboot.S b/grub-core/kern/arm/coreboot/coreboot.S
 new file mode 100644
-index 000000000..a1104526c
+index 000000000000..a1104526c154
 --- /dev/null
 +++ b/grub-core/kern/arm/coreboot/coreboot.S
 @@ -0,0 +1,44 @@
@@ -295,7 +295,7 @@ index 000000000..a1104526c
 +
 diff --git a/grub-core/kern/arm/coreboot/init.c b/grub-core/kern/arm/coreboot/init.c
 new file mode 100644
-index 000000000..51ecaceb0
+index 000000000000..51ecaceb005b
 --- /dev/null
 +++ b/grub-core/kern/arm/coreboot/init.c
 @@ -0,0 +1,127 @@
@@ -428,7 +428,7 @@ index 000000000..51ecaceb0
 +}
 diff --git a/grub-core/kern/arm/coreboot/timer.c b/grub-core/kern/arm/coreboot/timer.c
 new file mode 100644
-index 000000000..ebefb99d5
+index 000000000000..ebefb99d58f8
 --- /dev/null
 +++ b/grub-core/kern/arm/coreboot/timer.c
 @@ -0,0 +1,65 @@
@@ -498,7 +498,7 @@ index 000000000..ebefb99d5
 +    grub_fatal ("No timer found");
 +}
 diff --git a/grub-core/kern/arm/startup.S b/grub-core/kern/arm/startup.S
-index 640837cba..3946fe8e1 100644
+index 640837cba516..3946fe8e1830 100644
 --- a/grub-core/kern/arm/startup.S
 +++ b/grub-core/kern/arm/startup.S
 @@ -24,6 +24,7 @@
@@ -527,7 +527,7 @@ index 640837cba..3946fe8e1 100644
  	@ Since we _are_ the C run-time, we need to manually zero the BSS
  	@ region before continuing
 diff --git a/grub-core/kern/coreboot/cbtable.c b/grub-core/kern/coreboot/cbtable.c
-index 996d3f407..aec63dbd1 100644
+index 996d3f407382..aec63dbd1209 100644
 --- a/grub-core/kern/coreboot/cbtable.c
 +++ b/grub-core/kern/coreboot/cbtable.c
 @@ -23,6 +23,8 @@
@@ -541,7 +541,7 @@ index 996d3f407..aec63dbd1 100644
  grub_linuxbios_check_signature (grub_linuxbios_table_header_t tbl_header)
 diff --git a/grub-core/lib/dummy/reboot.c b/grub-core/lib/dummy/reboot.c
 new file mode 100644
-index 000000000..b8cbed8f8
+index 000000000000..b8cbed8f8117
 --- /dev/null
 +++ b/grub-core/lib/dummy/reboot.c
 @@ -0,0 +1,32 @@
@@ -578,7 +578,7 @@ index 000000000..b8cbed8f8
 +  while (1);
 +}
 diff --git a/grub-core/loader/arm/linux.c b/grub-core/loader/arm/linux.c
-index 5b39f02bb..01374ee78 100644
+index 5b39f02bb2e5..01374ee78fa6 100644
 --- a/grub-core/loader/arm/linux.c
 +++ b/grub-core/loader/arm/linux.c
 @@ -31,6 +31,8 @@
@@ -597,7 +597,7 @@ index 5b39f02bb..01374ee78 100644
 +#endif
 diff --git a/include/grub/arm/coreboot/console.h b/include/grub/arm/coreboot/console.h
 new file mode 100644
-index 000000000..13a14b783
+index 000000000000..13a14b783839
 --- /dev/null
 +++ b/include/grub/arm/coreboot/console.h
 @@ -0,0 +1,29 @@
@@ -632,7 +632,7 @@ index 000000000..13a14b783
 +#endif /* ! GRUB_MACHINE_CONSOLE_HEADER */
 diff --git a/include/grub/arm/coreboot/kernel.h b/include/grub/arm/coreboot/kernel.h
 new file mode 100644
-index 000000000..09cd7fe32
+index 000000000000..09cd7fe328c7
 --- /dev/null
 +++ b/include/grub/arm/coreboot/kernel.h
 @@ -0,0 +1,44 @@
@@ -681,7 +681,7 @@ index 000000000..09cd7fe32
 +
 +#endif /* ! GRUB_KERNEL_MACHINE_HEADER */
 diff --git a/include/grub/offsets.h b/include/grub/offsets.h
-index c88c86d4d..bf0689fc9 100644
+index c88c86d4d2eb..bf0689fc99a8 100644
 --- a/include/grub/offsets.h
 +++ b/include/grub/offsets.h
 @@ -122,6 +122,12 @@
@@ -698,7 +698,7 @@ index c88c86d4d..bf0689fc9 100644
     for PowerMac to prevent "CLAIM failed" error.  The real fix is to
     rewrite grub-mkimage to generate valid ELF files.  */
 diff --git a/util/grub-mkimagexx.c b/util/grub-mkimagexx.c
-index 3fab93e20..a2bb05439 100644
+index 3fab93e20884..a2bb05439f0c 100644
 --- a/util/grub-mkimagexx.c
 +++ b/util/grub-mkimagexx.c
 @@ -87,7 +87,8 @@ struct fixup_block_list
@@ -764,7 +764,7 @@ index 3fab93e20..a2bb05439 100644
        {
  	if (grub_target_to_host32 (s->sh_type) == SHT_NOBITS)
 diff --git a/util/mkimage.c b/util/mkimage.c
-index 528166c87..6aa77ed73 100644
+index 528166c87ac4..6aa77ed73675 100644
 --- a/util/mkimage.c
 +++ b/util/mkimage.c
 @@ -533,6 +533,45 @@ static const struct grub_install_image_target_desc image_targets[] =

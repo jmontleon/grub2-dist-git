@@ -1,7 +1,7 @@
 From 461bfab7b7e47fd0a76bf6076a438af1b7e2184a Mon Sep 17 00:00:00 2001
 From: Vladimir Serbinenko <phcoder@gmail.com>
 Date: Mon, 8 May 2017 19:06:22 +0200
-Subject: [PATCH 016/198] coreboot: Split parts that are platform-independent.
+Subject: [PATCH 016/206] coreboot: Split parts that are platform-independent.
 
 We currently assume that coreboot is always i386, it's no longer the case,
 so split i386-coreboot parts from generic coreboot code.
@@ -23,7 +23,7 @@ so split i386-coreboot parts from generic coreboot code.
  rename include/grub/{i386 => }/coreboot/lbio.h (93%)
 
 diff --git a/grub-core/Makefile.am b/grub-core/Makefile.am
-index 809a8aa26..781d0ffbf 100644
+index 809a8aa26bfb..781d0ffbf750 100644
 --- a/grub-core/Makefile.am
 +++ b/grub-core/Makefile.am
 @@ -112,7 +112,7 @@ endif
@@ -36,7 +36,7 @@ index 809a8aa26..781d0ffbf 100644
  KERNEL_HEADER_FILES += $(top_srcdir)/include/grub/video_fb.h
  KERNEL_HEADER_FILES += $(top_srcdir)/include/grub/gfxterm.h
 diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
-index fb59a7b1d..45ed0fa6b 100644
+index fb59a7b1d6a3..45ed0fa6b1ce 100644
 --- a/grub-core/Makefile.core.def
 +++ b/grub-core/Makefile.core.def
 @@ -166,7 +166,7 @@ kernel = {
@@ -68,7 +68,7 @@ index fb59a7b1d..45ed0fa6b 100644
    enable = i386_efi;
    enable = i386_qemu;
 diff --git a/grub-core/commands/i386/coreboot/cb_timestamps.c b/grub-core/commands/i386/coreboot/cb_timestamps.c
-index e72f38d6e..e97ea6bed 100644
+index e72f38d6e057..e97ea6bed98b 100644
 --- a/grub-core/commands/i386/coreboot/cb_timestamps.c
 +++ b/grub-core/commands/i386/coreboot/cb_timestamps.c
 @@ -20,7 +20,7 @@
@@ -81,7 +81,7 @@ index e72f38d6e..e97ea6bed 100644
  
  GRUB_MOD_LICENSE ("GPLv3+");
 diff --git a/grub-core/commands/i386/coreboot/cbls.c b/grub-core/commands/i386/coreboot/cbls.c
-index e0a10596f..102291f42 100644
+index e0a10596fe27..102291f424ab 100644
 --- a/grub-core/commands/i386/coreboot/cbls.c
 +++ b/grub-core/commands/i386/coreboot/cbls.c
 @@ -20,7 +20,7 @@
@@ -95,7 +95,7 @@ index e0a10596f..102291f42 100644
  GRUB_MOD_LICENSE ("GPLv3+");
 diff --git a/grub-core/kern/coreboot/cbtable.c b/grub-core/kern/coreboot/cbtable.c
 new file mode 100644
-index 000000000..996d3f407
+index 000000000000..996d3f407382
 --- /dev/null
 +++ b/grub-core/kern/coreboot/cbtable.c
 @@ -0,0 +1,70 @@
@@ -173,7 +173,7 @@ diff --git a/grub-core/kern/i386/coreboot/mmap.c b/grub-core/kern/coreboot/mmap.
 similarity index 97%
 rename from grub-core/kern/i386/coreboot/mmap.c
 rename to grub-core/kern/coreboot/mmap.c
-index 4d29f6b7d..caf8f7cef 100644
+index 4d29f6b7d905..caf8f7cef1b4 100644
 --- a/grub-core/kern/i386/coreboot/mmap.c
 +++ b/grub-core/kern/coreboot/mmap.c
 @@ -16,8 +16,8 @@
@@ -204,7 +204,7 @@ index 4d29f6b7d..caf8f7cef 100644
  		     /* Multiboot mmaps match with the coreboot mmap
  		        definition.  Therefore, we can just pass type
 diff --git a/grub-core/kern/i386/coreboot/cbtable.c b/grub-core/kern/i386/coreboot/cbtable.c
-index 1669bc0ca..34a2b59be 100644
+index 1669bc0ca23a..34a2b59be1ff 100644
 --- a/grub-core/kern/i386/coreboot/cbtable.c
 +++ b/grub-core/kern/i386/coreboot/cbtable.c
 @@ -17,7 +17,7 @@
@@ -283,7 +283,7 @@ index 1669bc0ca..34a2b59be 100644
    return 0;
  }
 diff --git a/grub-core/term/i386/coreboot/cbmemc.c b/grub-core/term/i386/coreboot/cbmemc.c
-index 25e64a05c..129248c7f 100644
+index 25e64a05c032..129248c7f472 100644
 --- a/grub-core/term/i386/coreboot/cbmemc.c
 +++ b/grub-core/term/i386/coreboot/cbmemc.c
 @@ -23,7 +23,7 @@
@@ -299,7 +299,7 @@ diff --git a/grub-core/video/i386/coreboot/cbfb.c b/grub-core/video/coreboot/cbf
 similarity index 99%
 rename from grub-core/video/i386/coreboot/cbfb.c
 rename to grub-core/video/coreboot/cbfb.c
-index dede0c37e..9af81fa5b 100644
+index dede0c37ea3e..9af81fa5b01b 100644
 --- a/grub-core/video/i386/coreboot/cbfb.c
 +++ b/grub-core/video/coreboot/cbfb.c
 @@ -25,7 +25,7 @@
@@ -315,7 +315,7 @@ diff --git a/include/grub/i386/coreboot/lbio.h b/include/grub/coreboot/lbio.h
 similarity index 93%
 rename from include/grub/i386/coreboot/lbio.h
 rename to include/grub/coreboot/lbio.h
-index 1c3fa6f19..5076d36c7 100644
+index 1c3fa6f1953c..5076d36c71ba 100644
 --- a/include/grub/i386/coreboot/lbio.h
 +++ b/include/grub/coreboot/lbio.h
 @@ -20,6 +20,9 @@

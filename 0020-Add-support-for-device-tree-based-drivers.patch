@@ -1,7 +1,7 @@
 From fcbb723d4b1f7ad4687191562621dd0eb25f4d9e Mon Sep 17 00:00:00 2001
 From: Vladimir Serbinenko <phcoder@gmail.com>
 Date: Mon, 8 May 2017 21:19:59 +0200
-Subject: [PATCH 020/198] Add support for device-tree-based drivers.
+Subject: [PATCH 020/206] Add support for device-tree-based drivers.
 
 ---
  conf/Makefile.common               |   4 +-
@@ -22,7 +22,7 @@ Subject: [PATCH 020/198] Add support for device-tree-based drivers.
  create mode 100644 include/grub/fdtbus.h
 
 diff --git a/conf/Makefile.common b/conf/Makefile.common
-index 11296b550..311da61c6 100644
+index 11296b550a7c..311da61c6c59 100644
 --- a/conf/Makefile.common
 +++ b/conf/Makefile.common
 @@ -86,9 +86,11 @@ CPPFLAGS_TERMINAL_LIST += '-Dgrub_term_register_output(...)=OUTPUT_TERMINAL_LIST
@@ -39,7 +39,7 @@ index 11296b550..311da61c6 100644
  # Define these variables to calm down automake
  
 diff --git a/grub-core/Makefile.am b/grub-core/Makefile.am
-index bec058554..fc6ca3051 100644
+index bec0585549a1..fc6ca305147d 100644
 --- a/grub-core/Makefile.am
 +++ b/grub-core/Makefile.am
 @@ -368,6 +368,16 @@ terminal.lst: $(MARKER_FILES)
@@ -60,7 +60,7 @@ index bec058554..fc6ca3051 100644
  	(for pp in $^; do \
  	  b=`basename $$pp .marker`; \
 diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
-index 411dca46b..77d0b019e 100644
+index 411dca46bf28..77d0b019eb28 100644
 --- a/grub-core/Makefile.core.def
 +++ b/grub-core/Makefile.core.def
 @@ -158,6 +158,8 @@ kernel = {
@@ -74,7 +74,7 @@ index 411dca46b..77d0b019e 100644
    terminfoinkernel = term/tparm.c;
 diff --git a/grub-core/bus/fdt.c b/grub-core/bus/fdt.c
 new file mode 100644
-index 000000000..6fb077000
+index 000000000000..6fb077000a57
 --- /dev/null
 +++ b/grub-core/bus/fdt.c
 @@ -0,0 +1,255 @@
@@ -334,7 +334,7 @@ index 000000000..6fb077000
 +  return dtb;
 +}
 diff --git a/grub-core/kern/arm/coreboot/init.c b/grub-core/kern/arm/coreboot/init.c
-index 51ecaceb0..aec75c672 100644
+index 51ecaceb005b..aec75c672a24 100644
 --- a/grub-core/kern/arm/coreboot/init.c
 +++ b/grub-core/kern/arm/coreboot/init.c
 @@ -33,6 +33,7 @@
@@ -379,7 +379,7 @@ index 51ecaceb0..aec75c672 100644
  }
  
 diff --git a/grub-core/lib/fdt.c b/grub-core/lib/fdt.c
-index b5d520f20..bdc630244 100644
+index b5d520f20888..bdc6302448d0 100644
 --- a/grub-core/lib/fdt.c
 +++ b/grub-core/lib/fdt.c
 @@ -102,13 +102,13 @@ static grub_uint32_t *get_next_node (const void *fdt, char *node_name)
@@ -589,7 +589,7 @@ index b5d520f20..bdc630244 100644
  		       const void *val, grub_uint32_t len)
  {
 diff --git a/include/grub/fdt.h b/include/grub/fdt.h
-index fdfca75bf..75525fa31 100644
+index fdfca75bf487..75525fa317c3 100644
 --- a/include/grub/fdt.h
 +++ b/include/grub/fdt.h
 @@ -20,6 +20,7 @@
@@ -633,7 +633,7 @@ index fdfca75bf..75525fa31 100644
    grub_uint32_t _val = grub_cpu_to_be32(val); \
 diff --git a/include/grub/fdtbus.h b/include/grub/fdtbus.h
 new file mode 100644
-index 000000000..985837e55
+index 000000000000..985837e55f6c
 --- /dev/null
 +++ b/include/grub/fdtbus.h
 @@ -0,0 +1,73 @@
@@ -711,7 +711,7 @@ index 000000000..985837e55
 +
 +#endif
 diff --git a/include/grub/kernel.h b/include/grub/kernel.h
-index 20ddf2da2..ecd88ca72 100644
+index 20ddf2da297d..ecd88ca72c6d 100644
 --- a/include/grub/kernel.h
 +++ b/include/grub/kernel.h
 @@ -28,7 +28,8 @@ enum
@@ -725,7 +725,7 @@ index 20ddf2da2..ecd88ca72 100644
  
  /* The module header.  */
 diff --git a/include/grub/util/install.h b/include/grub/util/install.h
-index 5ca4811cd..6abd288c3 100644
+index 5ca4811cd130..6abd288c313e 100644
 --- a/include/grub/util/install.h
 +++ b/include/grub/util/install.h
 @@ -176,7 +176,7 @@ grub_install_generate_image (const char *dir, const char *prefix,
@@ -738,7 +738,7 @@ index 5ca4811cd..6abd288c3 100644
  const struct grub_install_image_target_desc *
  grub_install_get_image_target (const char *arg);
 diff --git a/util/grub-install-common.c b/util/grub-install-common.c
-index 452b230da..8539ff348 100644
+index 452b230daedc..8539ff3484dc 100644
 --- a/util/grub-install-common.c
 +++ b/util/grub-install-common.c
 @@ -499,7 +499,7 @@ grub_install_make_image_wrap_file (const char *dir, const char *prefix,
@@ -751,7 +751,7 @@ index 452b230da..8539ff348 100644
      grub_install_pop_module ();
  }
 diff --git a/util/grub-mkimage.c b/util/grub-mkimage.c
-index aba19d21b..98d24cc06 100644
+index aba19d21b9a7..98d24cc06ea5 100644
 --- a/util/grub-mkimage.c
 +++ b/util/grub-mkimage.c
 @@ -71,6 +71,7 @@ static struct argp_option options[] = {
@@ -794,7 +794,7 @@ index aba19d21b..98d24cc06 100644
    grub_util_file_sync  (fp);
    fclose (fp);
 diff --git a/util/mkimage.c b/util/mkimage.c
-index 6aa77ed73..e22d82afa 100644
+index 6aa77ed73675..e22d82afa61a 100644
 --- a/util/mkimage.c
 +++ b/util/mkimage.c
 @@ -777,13 +777,12 @@ grub_install_generate_image (const char *dir, const char *prefix,

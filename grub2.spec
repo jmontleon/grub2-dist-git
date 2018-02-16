@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	25%{?dist}
+Release:	26%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 Group:		System Environment/Base
 License:	GPLv3+
@@ -451,6 +451,9 @@ fi
 %endif
 
 %changelog
+* Mon Feb 19 2018 Javier Martinez Canillas <javierm@redhat.com> - 2.02-26
+- Add blscfg command and improve BootLoaderSpec support.
+
 * Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org>
 - Escape macros in %%changelog
 

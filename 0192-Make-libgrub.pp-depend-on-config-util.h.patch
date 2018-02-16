@@ -1,7 +1,7 @@
 From 210eb8d06d2b1db324ef0e158000c4590035fea3 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Wed, 23 Aug 2017 10:37:27 -0400
-Subject: [PATCH 192/198] Make libgrub.pp depend on config-util.h
+Subject: [PATCH 192/206] Make libgrub.pp depend on config-util.h
 
 If you build with "make -j48" a lot, sometimes you see:
 
@@ -31,7 +31,7 @@ Signed-off-by: Peter Jones <pjones@redhat.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 7795baeb6..c7b0e6a9c 100644
+index 7795baeb6549..c7b0e6a9c463 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -37,7 +37,7 @@ grub_script.yy.c: grub_script.yy.h

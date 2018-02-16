@@ -1,7 +1,7 @@
 From 216950a4eea1a1ead1c28eaca94e34ea2ef2ad19 Mon Sep 17 00:00:00 2001
 From: Vladimir Serbinenko <phcoder@gmail.com>
 Date: Mon, 8 May 2017 21:41:22 +0200
-Subject: [PATCH 023/198] at_keyboard: Split protocol from controller code.
+Subject: [PATCH 023/206] at_keyboard: Split protocol from controller code.
 
 On vexpress controller is different but protocol is the same, so reuse the
 code.
@@ -16,7 +16,7 @@ code.
  create mode 100644 include/grub/ps2.h
 
 diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
-index 77d0b019e..6ade6e950 100644
+index 77d0b019eb28..6ade6e950576 100644
 --- a/grub-core/Makefile.core.def
 +++ b/grub-core/Makefile.core.def
 @@ -251,6 +251,7 @@ kernel = {
@@ -44,7 +44,7 @@ index 77d0b019e..6ade6e950 100644
  };
  
 diff --git a/grub-core/term/at_keyboard.c b/grub-core/term/at_keyboard.c
-index b4ea9ff7e..3ab4e205f 100644
+index b4ea9ff7e637..3ab4e205f40b 100644
 --- a/grub-core/term/at_keyboard.c
 +++ b/grub-core/term/at_keyboard.c
 @@ -22,212 +22,21 @@
@@ -567,7 +567,7 @@ index b4ea9ff7e..3ab4e205f 100644
  }
 diff --git a/grub-core/term/ps2.c b/grub-core/term/ps2.c
 new file mode 100644
-index 000000000..7ae4e9f2f
+index 000000000000..7ae4e9f2f8cd
 --- /dev/null
 +++ b/grub-core/term/ps2.c
 @@ -0,0 +1,387 @@
@@ -959,7 +959,7 @@ index 000000000..7ae4e9f2f
 +    }
 +}
 diff --git a/include/grub/at_keyboard.h b/include/grub/at_keyboard.h
-index b4f8ff0a0..b031523eb 100644
+index b4f8ff0a0611..b031523eb7df 100644
 --- a/include/grub/at_keyboard.h
 +++ b/include/grub/at_keyboard.h
 @@ -27,10 +27,6 @@
@@ -975,7 +975,7 @@ index b4f8ff0a0..b031523eb 100644
  #define KEYBOARD_SCANCODE(x)	((x) & 0x7f)
 diff --git a/include/grub/ps2.h b/include/grub/ps2.h
 new file mode 100644
-index 000000000..4f2e527e4
+index 000000000000..4f2e527e4976
 --- /dev/null
 +++ b/include/grub/ps2.h
 @@ -0,0 +1,43 @@

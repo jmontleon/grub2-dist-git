@@ -1,7 +1,7 @@
 From 1a7e8fd6eaff05a32889e48e9fae6f9c80219a04 Mon Sep 17 00:00:00 2001
 From: Jeff Mahoney <jeffm@suse.com>
 Date: Wed, 18 Dec 2013 09:57:04 +0000
-Subject: [PATCH 174/198] grub2/btrfs: Add ability to boot from subvolumes
+Subject: [PATCH 174/206] grub2/btrfs: Add ability to boot from subvolumes
 
 This patch adds the ability to specify a different root on a btrfs
 filesystem too boot from other than the default one.
@@ -24,7 +24,7 @@ Signed-off-by: Jeff Mahoney <jeffm@suse.com>
  2 files changed, 531 insertions(+), 18 deletions(-)
 
 diff --git a/grub-core/fs/btrfs.c b/grub-core/fs/btrfs.c
-index 4849c1ceb..38facf3cb 100644
+index 4849c1ceb653..38facf3cb8b8 100644
 --- a/grub-core/fs/btrfs.c
 +++ b/grub-core/fs/btrfs.c
 @@ -29,6 +29,9 @@
@@ -685,7 +685,7 @@ index 4849c1ceb..38facf3cb 100644
 +
 +// vim: si et sw=2:
 diff --git a/include/grub/btrfs.h b/include/grub/btrfs.h
-index 9d93fb6c1..234ad9767 100644
+index 9d93fb6c1826..234ad9767714 100644
 --- a/include/grub/btrfs.h
 +++ b/include/grub/btrfs.h
 @@ -29,6 +29,7 @@ enum

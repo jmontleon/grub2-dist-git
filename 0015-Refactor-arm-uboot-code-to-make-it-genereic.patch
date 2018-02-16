@@ -1,7 +1,7 @@
 From d08c9685149e7788001ac9a209baa1d84c3628e0 Mon Sep 17 00:00:00 2001
 From: Vladimir Serbinenko <phcoder@gmail.com>
 Date: Mon, 8 May 2017 17:47:57 +0200
-Subject: [PATCH 015/198] Refactor arm-uboot code to make it genereic.
+Subject: [PATCH 015/206] Refactor arm-uboot code to make it genereic.
 
 arm-coreboot startup code can be very similar to arm-uboot but current code has
 U-Boot specific references. So split U-Boot part from generic part.
@@ -20,7 +20,7 @@ U-Boot specific references. So split U-Boot part from generic part.
  create mode 100644 include/grub/arm/startup.h
 
 diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
-index 8dcd0e5a9..fb59a7b1d 100644
+index 8dcd0e5a9982..fb59a7b1d6a3 100644
 --- a/grub-core/Makefile.core.def
 +++ b/grub-core/Makefile.core.def
 @@ -105,7 +105,7 @@ kernel = {
@@ -45,7 +45,7 @@ diff --git a/grub-core/kern/arm/uboot/startup.S b/grub-core/kern/arm/startup.S
 similarity index 77%
 rename from grub-core/kern/arm/uboot/startup.S
 rename to grub-core/kern/arm/startup.S
-index 5efaae16e..640837cba 100644
+index 5efaae16e838..640837cba516 100644
 --- a/grub-core/kern/arm/uboot/startup.S
 +++ b/grub-core/kern/arm/startup.S
 @@ -86,7 +86,7 @@ FUNCTION(codestart)
@@ -136,7 +136,7 @@ index 5efaae16e..640837cba 100644
 +entry_state:
 diff --git a/grub-core/kern/arm/uboot/init.c b/grub-core/kern/arm/uboot/init.c
 new file mode 100644
-index 000000000..2a6aa3fdd
+index 000000000000..2a6aa3fdd3dd
 --- /dev/null
 +++ b/grub-core/kern/arm/uboot/init.c
 @@ -0,0 +1,70 @@
@@ -212,7 +212,7 @@ index 000000000..2a6aa3fdd
 +}
 diff --git a/grub-core/kern/arm/uboot/uboot.S b/grub-core/kern/arm/uboot/uboot.S
 new file mode 100644
-index 000000000..d128775f1
+index 000000000000..d128775f19ea
 --- /dev/null
 +++ b/grub-core/kern/arm/uboot/uboot.S
 @@ -0,0 +1,73 @@
@@ -290,7 +290,7 @@ index 000000000..d128775f1
 +
 +	END
 diff --git a/grub-core/kern/uboot/init.c b/grub-core/kern/uboot/init.c
-index 5dcc106ed..3e338645c 100644
+index 5dcc106ed9bc..3e338645c573 100644
 --- a/grub-core/kern/uboot/init.c
 +++ b/grub-core/kern/uboot/init.c
 @@ -36,30 +36,14 @@
@@ -325,7 +325,7 @@ index 5dcc106ed..3e338645c 100644
  uboot_timer_ms (void)
  {
 diff --git a/grub-core/kern/uboot/uboot.c b/grub-core/kern/uboot/uboot.c
-index 6800a4beb..cf0168e62 100644
+index 6800a4beb1c4..cf0168e62ddd 100644
 --- a/grub-core/kern/uboot/uboot.c
 +++ b/grub-core/kern/uboot/uboot.c
 @@ -39,48 +39,13 @@
@@ -379,7 +379,7 @@ index 6800a4beb..cf0168e62 100644
   * All functions below are wrappers around the grub_uboot_syscall() function
 diff --git a/include/grub/arm/startup.h b/include/grub/arm/startup.h
 new file mode 100644
-index 000000000..9afb6c57c
+index 000000000000..9afb6c57c0bc
 --- /dev/null
 +++ b/include/grub/arm/startup.h
 @@ -0,0 +1,16 @@

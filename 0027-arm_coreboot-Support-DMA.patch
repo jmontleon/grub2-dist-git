@@ -1,7 +1,7 @@
 From 265292f2b0da0eb414c409871ba0f94a99ec33c1 Mon Sep 17 00:00:00 2001
 From: Vladimir Serbinenko <phcoder@gmail.com>
 Date: Mon, 8 May 2017 22:06:04 +0200
-Subject: [PATCH 027/198] arm_coreboot: Support DMA.
+Subject: [PATCH 027/206] arm_coreboot: Support DMA.
 
 This is needed to support USB and some other busses.
 ---
@@ -18,7 +18,7 @@ This is needed to support USB and some other busses.
  create mode 100644 include/grub/dma.h
 
 diff --git a/grub-core/Makefile.am b/grub-core/Makefile.am
-index a2aaf9f54..104513847 100644
+index a2aaf9f54b00..104513847204 100644
 --- a/grub-core/Makefile.am
 +++ b/grub-core/Makefile.am
 @@ -248,6 +248,7 @@ KERNEL_HEADER_FILES += $(top_srcdir)/include/grub/gfxterm.h
@@ -30,7 +30,7 @@ index a2aaf9f54..104513847 100644
  KERNEL_HEADER_FILES += $(top_srcdir)/include/grub/fdtbus.h
  endif
 diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
-index 6be6e7f61..e4f253a20 100644
+index 6be6e7f61ee7..e4f253a205e8 100644
 --- a/grub-core/Makefile.core.def
 +++ b/grub-core/Makefile.core.def
 @@ -163,6 +163,7 @@ kernel = {
@@ -42,7 +42,7 @@ index 6be6e7f61..e4f253a20 100644
    terminfoinkernel = term/terminfo.c;
    terminfoinkernel = term/tparm.c;
 diff --git a/grub-core/kern/arm/cache.c b/grub-core/kern/arm/cache.c
-index 34154ccdb..af1c4bbf5 100644
+index 34154ccdb0e0..af1c4bbf544f 100644
 --- a/grub-core/kern/arm/cache.c
 +++ b/grub-core/kern/arm/cache.c
 @@ -29,6 +29,8 @@ void grub_arm_clean_dcache_range_armv6 (grub_addr_t start, grub_addr_t end,
@@ -94,7 +94,7 @@ index 34154ccdb..af1c4bbf5 100644
  grub_arm_disable_caches_mmu (void)
  {
 diff --git a/grub-core/kern/arm/cache_armv7.S b/grub-core/kern/arm/cache_armv7.S
-index 1ef2754af..5ae76a3d8 100644
+index 1ef2754af8a7..5ae76a3d819c 100644
 --- a/grub-core/kern/arm/cache_armv7.S
 +++ b/grub-core/kern/arm/cache_armv7.S
 @@ -33,6 +33,18 @@
@@ -118,7 +118,7 @@ index 1ef2754af..5ae76a3d8 100644
  	@ r2  - current level
 diff --git a/grub-core/kern/arm/coreboot/dma.c b/grub-core/kern/arm/coreboot/dma.c
 new file mode 100644
-index 000000000..2c2a62789
+index 000000000000..2c2a62789046
 --- /dev/null
 +++ b/grub-core/kern/arm/coreboot/dma.c
 @@ -0,0 +1,59 @@
@@ -182,7 +182,7 @@ index 000000000..2c2a62789
 +}
 +
 diff --git a/include/grub/cache.h b/include/grub/cache.h
-index fc669dfd1..1c98ce270 100644
+index fc669dfd1892..1c98ce270b62 100644
 --- a/include/grub/cache.h
 +++ b/include/grub/cache.h
 @@ -34,15 +34,14 @@ void EXPORT_FUNC(grub_arch_sync_caches) (void *address, grub_size_t len);
@@ -206,7 +206,7 @@ index fc669dfd1..1c98ce270 100644
  
 diff --git a/include/grub/dma.h b/include/grub/dma.h
 new file mode 100644
-index 000000000..19992ebc1
+index 000000000000..19992ebc131d
 --- /dev/null
 +++ b/include/grub/dma.h
 @@ -0,0 +1,44 @@
@@ -255,7 +255,7 @@ index 000000000..19992ebc1
 +
 +#endif
 diff --git a/include/grub/pci.h b/include/grub/pci.h
-index 70d9a0513..262c89b74 100644
+index 70d9a05131b2..262c89b748bb 100644
 --- a/include/grub/pci.h
 +++ b/include/grub/pci.h
 @@ -142,27 +142,7 @@ grub_pci_address_t EXPORT_FUNC(grub_pci_make_address) (grub_pci_device_t dev,

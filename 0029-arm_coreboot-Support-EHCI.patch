@@ -1,7 +1,7 @@
 From d11ced1e1fb93676942e51618eb53c140f541890 Mon Sep 17 00:00:00 2001
 From: Vladimir Serbinenko <phcoder@gmail.com>
 Date: Mon, 8 May 2017 22:14:28 +0200
-Subject: [PATCH 029/198] arm_coreboot: Support EHCI.
+Subject: [PATCH 029/206] arm_coreboot: Support EHCI.
 
 ---
  gentpl.py                    |  2 +-
@@ -13,7 +13,7 @@ Subject: [PATCH 029/198] arm_coreboot: Support EHCI.
  create mode 100644 grub-core/bus/usb/ehci-fdt.c
 
 diff --git a/gentpl.py b/gentpl.py
-index ed268178b..da67965a4 100644
+index ed268178b4db..da67965a41a4 100644
 --- a/gentpl.py
 +++ b/gentpl.py
 @@ -63,7 +63,7 @@ GROUPS["cmos"] = GROUPS["x86"][:] + ["mips_loongson", "mips_qemu_mips",
@@ -26,7 +26,7 @@ index ed268178b..da67965a4 100644
  # If gfxterm is main output console integrate it into kernel
  GROUPS["videoinkernel"] = ["mips_loongson", "i386_coreboot", "arm_coreboot" ]
 diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
-index 4745eb4d9..5ce506597 100644
+index 4745eb4d93ec..5ce506597a67 100644
 --- a/grub-core/Makefile.core.def
 +++ b/grub-core/Makefile.core.def
 @@ -593,8 +593,10 @@ module = {
@@ -42,7 +42,7 @@ index 4745eb4d9..5ce506597 100644
  module = {
 diff --git a/grub-core/bus/usb/ehci-fdt.c b/grub-core/bus/usb/ehci-fdt.c
 new file mode 100644
-index 000000000..29b50bdd5
+index 000000000000..29b50bdd5c30
 --- /dev/null
 +++ b/grub-core/bus/usb/ehci-fdt.c
 @@ -0,0 +1,45 @@
@@ -92,7 +92,7 @@ index 000000000..29b50bdd5
 +  grub_fdtbus_register (&ehci);
 +}
 diff --git a/grub-core/bus/usb/usbtrans.c b/grub-core/bus/usb/usbtrans.c
-index 9266e4931..85f081fff 100644
+index 9266e49311c4..85f081fffb3a 100644
 --- a/grub-core/bus/usb/usbtrans.c
 +++ b/grub-core/bus/usb/usbtrans.c
 @@ -18,7 +18,7 @@
@@ -105,7 +105,7 @@ index 9266e4931..85f081fff 100644
  #include <grub/misc.h>
  #include <grub/usb.h>
 diff --git a/include/grub/usb.h b/include/grub/usb.h
-index 11d96481f..512ae1dd0 100644
+index 11d96481ff6b..512ae1dd0e64 100644
 --- a/include/grub/usb.h
 +++ b/include/grub/usb.h
 @@ -321,5 +321,9 @@ grub_usb_err_t
