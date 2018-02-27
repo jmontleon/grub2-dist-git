@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	22%{?dist}
+Release:	23%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 Group:		System Environment/Base
 License:	GPLv3+
@@ -314,7 +314,7 @@ fi
 %exclude /boot/%{name}/themes/system/*
 %attr(0700,root,root) %dir /boot/grub2
 %exclude /boot/grub2/*
-%dir %attr(0755,root,root) /boot/efi/EFI/%{efidir}
+%dir %attr(0700,root,root) /boot/efi/EFI/%{efidir}
 %exclude /boot/efi/EFI/%{efidir}/*
 %license COPYING
 %ghost %config(noreplace) /boot/grub2/grubenv
@@ -454,6 +454,10 @@ fi
 %endif
 
 %changelog
+* Tue Feb 27 2018 Peter Jones <pjones@redhat.com> - 2.02-23
+- Fix directory/file permissions on /boot/efi/* to match what the filesystem
+  enforces.
+
 * Tue Jan 23 2018 Peter Jones <pjones@redhat.com> - 2.02-22
 - Fix a merge error from 2.02-21 that affected kernel loading on Aarch64.
   Related: rhbz#1519311
