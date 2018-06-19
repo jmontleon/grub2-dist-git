@@ -1,7 +1,7 @@
 From c3a05672a450fd9e95de5df2b0c27c24fe04cd83 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Wed, 11 Apr 2018 11:36:43 +0200
-Subject: [PATCH 232/243] Add missing options to grub2-switch-to-blscfg man
+Subject: [PATCH 232/246] Add missing options to grub2-switch-to-blscfg man
  page
 
 The script --bls-directory and --backup-suffix options were not documented

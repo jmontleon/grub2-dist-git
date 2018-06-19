@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	38%{?dist}
+Release:	37%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 Group:		System Environment/Base
 License:	GPLv3+
@@ -453,12 +453,14 @@ fi
 %endif
 
 %changelog
-* Fri Jun 15 2018 Javier Martinez Canillas <javierm@redhat.com> - 2.02-38
-- Make 20-grub.install to exit if there is no machine ID set
+* Tue Jun 19 2018 Peter Jones <pjones@redhat.com> - 2.02-37
+- Fix some TPM errors on 32-bit (hdegoede)
+- More fixups to avoid compiler changes (pjones)
+- Put lsmmap into the EFI builds (pjones)
+  Related: rhbz#1572126
+- Make 20-grub.install to exit if there is no machine ID set (javierm)
   Resolves: rhbz#1576573
-
-* Thu Jun 07 2018 Javier Martinez Canillas <javierm@redhat.com> - 2.02-37
-- More fixes for BLS
+- More fixes for BLS (javierm)
   Resolves: rhbz#1588184
 
 * Thu May 10 2018 Javier Martinez Canillas <javierm@redhat.com> - 2.02-36
