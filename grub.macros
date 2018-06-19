@@ -82,10 +82,11 @@
 %{?with_efi_only:%global without_efi_only 1}
 
 ### fixme
+%global efi_modules_base http lsmmap
 %ifarch aarch64 %{arm}
-%global efi_modules " http linux "
+%global efi_modules "%{efi_modules_base} linux "
 %else
-%global efi_modules " backtrace http linuxefi usb usbserial_common usbserial_pl2303 usbserial_ftdi usbserial_usbdebug "
+%global efi_modules "%{efi_modules_base} backtrace linuxefi usb usbserial_common usbserial_pl2303 usbserial_ftdi usbserial_usbdebug "
 %endif
 
 %ifarch aarch64
