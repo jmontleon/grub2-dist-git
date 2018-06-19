@@ -82,7 +82,7 @@
 %{?with_efi_only:%global without_efi_only 1}
 
 ### fixme
-%global efi_modules_base http lsmmap
+%global efi_modules_base http lsefimmap
 %ifarch aarch64 %{arm}
 %global efi_modules "%{efi_modules_base} linux "
 %else
