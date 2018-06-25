@@ -453,6 +453,10 @@ fi
 %endif
 
 %changelog
+* Tue Jun 26 2018 Javier Martinez Canillas <javierm@redhat.com>
+- Cleanups and fixes for grub2-switch-to-blscfg (pjones)
+- Use /boot/loader/entries as BLS dir also on EFI (javierm)
+
 * Tue Jun 19 2018 Peter Jones <pjones@redhat.com> - 2.02-37
 - Fix some TPM errors on 32-bit (hdegoede)
 - More fixups to avoid compiler changes (pjones)

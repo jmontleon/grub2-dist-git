@@ -244,3 +244,6 @@ Patch0243: 0243-Skip-leading-spaces-on-BLS-field-values.patch
 Patch0244: 0244-Fixup-for-newer-compiler.patch
 Patch0245: 0245-TPM-Fix-hash_log_extend_event-function-prototype.patch
 Patch0246: 0246-TPM-Fix-compiler-warnings.patch
+Patch0247: 0247-grub-switch-to-blscfg.in-get-rid-of-a-bunch-of-bashi.patch
+Patch0248: 0248-grub-switch-to-blscfg.in-Better-boot-prefix-checking.patch
+Patch0249: 0249-Use-boot-loader-entries-as-BLS-directory-path-also-o.patch
