@@ -1,7 +1,7 @@
 From d03f1ebcdf88a1bf850730b9cbd1126894bdca76 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Sat, 12 May 2018 11:29:07 +0200
-Subject: [PATCH 240/249] Don't attempt to export the start and _start symbols
+Subject: [PATCH 240/250] Don't attempt to export the start and _start symbols
  for grub-emu
 
 Commit 318ee04aadc ("make better backtraces") reworked the backtrace logic

@@ -1,7 +1,7 @@
 From df99134313f5571d8806d9121d04b8c8a5509d98 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Thu, 10 May 2018 13:40:19 -0400
-Subject: [PATCH 244/249] Fixup for newer compiler
+Subject: [PATCH 244/250] Fixup for newer compiler
 
 ---
  conf/Makefile.common | 2 +-

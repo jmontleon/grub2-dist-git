@@ -453,6 +453,9 @@ fi
 %endif
 
 %changelog
+* Mon Jul 02 2018 Javier Martinez Canillas <javierm@redhat.com>
+- Use BLS fragment filename as menu entry id and for sort criterion
+
 * Tue Jun 26 2018 Javier Martinez Canillas <javierm@redhat.com>
 - Cleanups and fixes for grub2-switch-to-blscfg (pjones)
 - Use /boot/loader/entries as BLS dir also on EFI (javierm)

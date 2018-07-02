@@ -1,7 +1,7 @@
 From a4fc13ebd23cb7a89ea678ed4e52b5142215671d Mon Sep 17 00:00:00 2001
 From: Hans de Goede <hdegoede@redhat.com>
 Date: Fri, 15 Jun 2018 09:25:00 +0200
-Subject: [PATCH 245/249] TPM: Fix hash_log_extend_event function prototype
+Subject: [PATCH 245/250] TPM: Fix hash_log_extend_event function prototype
 
 The DataToHash argument is a efi_physical_address, not a *pointer* to
 a efi_physical_address.

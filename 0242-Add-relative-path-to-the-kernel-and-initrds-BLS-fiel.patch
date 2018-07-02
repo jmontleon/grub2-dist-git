@@ -1,7 +1,7 @@
 From a24ca589707fa69fe7be9dc1007f4ae114994f9f Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Mon, 4 Jun 2018 16:10:22 +0200
-Subject: [PATCH 242/249] Add relative path to the kernel and initrds BLS
+Subject: [PATCH 242/250] Add relative path to the kernel and initrds BLS
  fields if needed
 
 The static BLS config file shipped with the kernel package assumes that
