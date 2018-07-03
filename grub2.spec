@@ -453,7 +453,7 @@ fi
 %endif
 
 %changelog
-* Mon Jul 02 2018 Javier Martinez Canillas <javierm@redhat.com>
+* Mon Jul 02 2018 Javier Martinez Canillas <javierm@redhat.com> - 2.02-37
 - Use BLS fragment filename as menu entry id and for sort criterion
 
 * Tue Jun 26 2018 Javier Martinez Canillas <javierm@redhat.com>
