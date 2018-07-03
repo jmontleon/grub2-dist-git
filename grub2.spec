@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	37%{?dist}
+Release:	38%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 Group:		System Environment/Base
 License:	GPLv3+
@@ -453,7 +453,7 @@ fi
 %endif
 
 %changelog
-* Mon Jul 02 2018 Javier Martinez Canillas <javierm@redhat.com> - 2.02-37
+* Mon Jul 02 2018 Javier Martinez Canillas <javierm@redhat.com> - 2.02-38
 - Use BLS fragment filename as menu entry id and for sort criterion
 
 * Tue Jun 26 2018 Javier Martinez Canillas <javierm@redhat.com>
