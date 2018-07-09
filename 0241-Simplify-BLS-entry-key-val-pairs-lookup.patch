@@ -1,7 +1,7 @@
 From 385bb1bd33e9467eda798ea3a4ac16e86a40ce75 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Fri, 11 May 2018 23:47:31 +0200
-Subject: [PATCH 241/250] Simplify BLS entry key val pairs lookup
+Subject: [PATCH 241/251] Simplify BLS entry key val pairs lookup
 
 The <key,value> pairs found in the BLS are being sorted but this isn't
 really needed and it makes the implementation complex and error prone.

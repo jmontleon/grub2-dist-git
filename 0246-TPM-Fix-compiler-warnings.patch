@@ -1,7 +1,7 @@
 From c850916d93293465abc8beb5bdebd0ab70035d88 Mon Sep 17 00:00:00 2001
 From: Hans de Goede <hdegoede@redhat.com>
 Date: Fri, 15 Jun 2018 09:58:50 +0200
-Subject: [PATCH 246/250] TPM: Fix compiler warnings
+Subject: [PATCH 246/251] TPM: Fix compiler warnings
 
 Stop defining our own Event type in tpm.c instead use the one from
 the header, so that it matches the function prototype.

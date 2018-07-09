@@ -1,7 +1,7 @@
 From b3ac18e3265f709b35fe0aa5578c6f4030882a4d Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Fri, 22 Jun 2018 14:04:28 -0400
-Subject: [PATCH 248/250] grub-switch-to-blscfg.in: Better boot prefix checking
+Subject: [PATCH 248/251] grub-switch-to-blscfg.in: Better boot prefix checking
 
 Signed-off-by: Peter Jones <pjones@redhat.com>
 ---

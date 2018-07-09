@@ -248,3 +248,4 @@ Patch0247: 0247-grub-switch-to-blscfg.in-get-rid-of-a-bunch-of-bashi.patch
 Patch0248: 0248-grub-switch-to-blscfg.in-Better-boot-prefix-checking.patch
 Patch0249: 0249-Use-boot-loader-entries-as-BLS-directory-path-also-o.patch
 Patch0250: 0250-Use-BLS-fragment-filename-as-menu-entry-id-and-for-c.patch
+Patch0251: 0251-Fix-grub-switch-to-blscfg-boot-prefix-handling.patch

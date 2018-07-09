@@ -1,7 +1,7 @@
 From cc110d5dfd58a6ac1320f8b7c27b7ff8852c40e6 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Tue, 26 Jun 2018 14:01:26 +0200
-Subject: [PATCH 250/250] Use BLS fragment filename as menu entry id and for
+Subject: [PATCH 250/251] Use BLS fragment filename as menu entry id and for
  criteria to sort
 
 The BLS config filenames are guaranteed to be unique, so they can be

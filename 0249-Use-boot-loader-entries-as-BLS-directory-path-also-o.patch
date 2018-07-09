@@ -1,7 +1,7 @@
 From fc5abde941409619f8c40b842e35e1820d4327dc Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Mon, 25 Jun 2018 11:45:33 +0200
-Subject: [PATCH 249/250] Use /boot/loader/entries as BLS directory path also
+Subject: [PATCH 249/251] Use /boot/loader/entries as BLS directory path also
  on EFI systems
 
 For EFI systems, the BLS fragments were stored in the EFI System Partition
