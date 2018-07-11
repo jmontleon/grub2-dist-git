@@ -1,8 +1,8 @@
 From cc110d5dfd58a6ac1320f8b7c27b7ff8852c40e6 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Tue, 26 Jun 2018 14:01:26 +0200
-Subject: [PATCH 250/251] Use BLS fragment filename as menu entry id and for
- criteria to sort
+Subject: [PATCH] Use BLS fragment filename as menu entry id and for criteria
+ to sort
 
 The BLS config filenames are guaranteed to be unique, so they can be
 used as GRUB2 entry id and can also be used to sort the menu entries.
@@ -132,6 +132,3 @@ index 11fe6e2c29f..23d15adfadc 100644
    if (initrds)
      {
        int initrd_size = sizeof (GRUB_INITRD_CMD);
--- 
-2.17.1
-

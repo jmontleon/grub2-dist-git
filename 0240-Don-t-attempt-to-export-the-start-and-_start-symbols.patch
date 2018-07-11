@@ -1,8 +1,8 @@
 From d03f1ebcdf88a1bf850730b9cbd1126894bdca76 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Sat, 12 May 2018 11:29:07 +0200
-Subject: [PATCH 240/251] Don't attempt to export the start and _start symbols
- for grub-emu
+Subject: [PATCH] Don't attempt to export the start and _start symbols for
+ grub-emu
 
 Commit 318ee04aadc ("make better backtraces") reworked the backtrace logic
 but the changes lead to the following build error on the grub-emu platform:
@@ -40,6 +40,3 @@ index ae69218af20..9548d552aad 100644
  
  /* The start point of the C code.  */
  void grub_main (void) __attribute__ ((noreturn));
--- 
-2.17.1
-

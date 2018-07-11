@@ -1,7 +1,7 @@
 From 7065436d1c086d15933f76b7f490bcb5d094c9af Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Mon, 9 Jul 2018 12:19:03 +0200
-Subject: [PATCH 251/251] Fix grub-switch-to-blscfg boot prefix handling
+Subject: [PATCH] Fix grub-switch-to-blscfg boot prefix handling
 
 Commit b3ac18e3265f ("grub-switch-to-blscfg.in: Better boot prefix checking")
 simplified the boot prefix checking, but unfortunately introduced a couple of
@@ -56,6 +56,3 @@ index 2f37a1f740b..40612e00686 100644
      mkbls "0-rescue-${MACHINE_ID}" "0" "${bootprefix}" >"${blsdir}/${MACHINE_ID}-0-rescue.conf"
  fi
  
--- 
-2.17.1
-

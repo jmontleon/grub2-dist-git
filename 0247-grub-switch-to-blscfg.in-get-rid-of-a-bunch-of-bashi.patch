@@ -1,8 +1,7 @@
 From cee0bf1f56c89af640b23432f8b40fcd1f4a2f55 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Fri, 22 Jun 2018 14:01:06 -0400
-Subject: [PATCH 247/251] grub-switch-to-blscfg.in: get rid of a bunch of
- bashisms
+Subject: [PATCH] grub-switch-to-blscfg.in: get rid of a bunch of bashisms
 
 Since this says /bin/sh at the top, it should work with dash.
 
@@ -112,6 +111,3 @@ index 2482483a437..dac41e73836 100644
      cp -af "${GRUB_CONFIG_FILE}" "${GRUB_CONFIG_FILE}${backupsuffix}"
      if ! grub2-mkconfig -o "${GRUB_CONFIG_FILE}" ; then
          cp -af "${GRUB_CONFIG_FILE}${backupsuffix}" "${GRUB_CONFIG_FILE}"
--- 
-2.17.1
-

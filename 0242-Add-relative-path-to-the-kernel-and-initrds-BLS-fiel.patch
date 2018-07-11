@@ -1,8 +1,8 @@
 From a24ca589707fa69fe7be9dc1007f4ae114994f9f Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Mon, 4 Jun 2018 16:10:22 +0200
-Subject: [PATCH 242/251] Add relative path to the kernel and initrds BLS
- fields if needed
+Subject: [PATCH] Add relative path to the kernel and initrds BLS fields if
+ needed
 
 The static BLS config file shipped with the kernel package assumes that
 the /boot directory is a mount point, and that the kernel and initramfs
@@ -71,6 +71,3 @@ index 89487ad611c..2482483a437 100644
  fi
  
  GENERATE=0
--- 
-2.17.1
-

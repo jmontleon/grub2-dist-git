@@ -1,7 +1,7 @@
 From a4fc13ebd23cb7a89ea678ed4e52b5142215671d Mon Sep 17 00:00:00 2001
 From: Hans de Goede <hdegoede@redhat.com>
 Date: Fri, 15 Jun 2018 09:25:00 +0200
-Subject: [PATCH 245/251] TPM: Fix hash_log_extend_event function prototype
+Subject: [PATCH] TPM: Fix hash_log_extend_event function prototype
 
 The DataToHash argument is a efi_physical_address, not a *pointer* to
 a efi_physical_address.
@@ -48,6 +48,3 @@ index e2aff4a3c22..63d8a0fe714 100644
  					      grub_efi_uint64_t DataToHashLen,
  					      EFI_TCG2_EVENT *EfiTcgEvent);
    grub_efi_status_t (*submit_command) (struct grub_efi_tpm2_protocol *this,
--- 
-2.17.1
-

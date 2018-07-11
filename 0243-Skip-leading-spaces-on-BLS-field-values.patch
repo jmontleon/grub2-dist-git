@@ -1,7 +1,7 @@
 From a5bf618156915e97a0e7df07556ab728377de77e Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Thu, 7 Jun 2018 00:44:51 +0200
-Subject: [PATCH 243/251] Skip leading spaces on BLS field values
+Subject: [PATCH] Skip leading spaces on BLS field values
 
 The GRUB 2 blscfg command doesn't parse correctly the BLS fields if these
 have extra spaces before the field values. For example, the following BLS
@@ -54,6 +54,3 @@ index 111972d5f67..cd5c29fdf74 100644
        grub_free (buf);
        if (rc < 0)
  	break;
--- 
-2.17.1
-

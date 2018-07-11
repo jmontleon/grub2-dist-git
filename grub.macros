@@ -284,11 +284,19 @@ echo '!config.h' > include/grub/emu/.gitignore			\
 git config user.email "%{name}-owner@fedoraproject.org"		\
 git config user.name "Fedora Ninjas"				\
 git config gc.auto 0						\
-git add .							\
-git commit -a -q -m "%{tarversion} baseline."			\
-git am %%{patches} </dev/null					\
-git config --unset user.email					\
-git config --unset user.name					\
+rm -f configure                                                 \
+git add .                                                       \
+git commit -a -q -m "%{tarversion} baseline."                   \
+git apply --index --whitespace=nowarn %{SOURCE3}                \
+git commit -a -q -m "%{tarversion} master."                     \
+git am --whitespace=nowarn %%{patches} </dev/null               \
+autoreconf -vi                                                  \
+git add .                                                       \
+git commit -a -q -m "autoreconf"                                \
+autoconf                                                        \
+PYTHON=python3 ./autogen.sh                                     \
+git config --unset user.email                                   \
+git config --unset user.name                                    \
 %{nil}
 
 %define do_efi_configure()					\

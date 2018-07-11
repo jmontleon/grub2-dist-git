@@ -59,6 +59,3 @@ index d6ef6c3..3e897bd 100644
  if test "x$target_cpu" = xi386; then
    if test "$platform" != emu && test "x$TARGET_APPLE_LINKER" != x1 ; then
      if test ! -z "$TARGET_IMG_LDSCRIPT"; then
--- 
-2.5.0
-

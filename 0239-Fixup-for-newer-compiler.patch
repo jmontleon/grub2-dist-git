@@ -1,7 +1,7 @@
 From fe5e237fbe38fcbec4018b7e5d328b211bbabb2f Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Thu, 10 May 2018 13:40:19 -0400
-Subject: [PATCH 239/251] Fixup for newer compiler
+Subject: [PATCH] Fixup for newer compiler
 
 ---
  grub-core/fs/btrfs.c         | 2 +-
@@ -34,6 +34,3 @@ index 1b32f6725a4..8cddf997efc 100644
  
  grub_err_t
  grub_gpt_partition_map_iterate (grub_disk_t disk,
--- 
-2.17.1
-
