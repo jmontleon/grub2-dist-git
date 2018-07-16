@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	44%{?dist}
+Release:	45%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 Group:		System Environment/Base
 License:	GPLv3+
@@ -479,6 +479,11 @@ fi
 %endif
 
 %changelog
+* Mon Jul 16 2018 Filipe Brandenburger <filbranden@gmail.com> - 2.02-45
+- Fix linux16 -> initrd16 in 10_linux, which was accidentally
+  introduced in commit 752ceb1640e8 (2.02-38) rebasing the patches
+  to fedora-29.
+
 * Mon Jul 16 2018 Hans de Goede <hdegoede@redhat.com> - 2.02-44
 - Make the user session automatically set the boot_success grubenv flag
 - Make offline-updates increment the boot_indeterminate grubenv variable

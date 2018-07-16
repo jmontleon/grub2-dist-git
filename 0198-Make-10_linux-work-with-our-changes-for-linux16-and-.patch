@@ -28,7 +28,7 @@ index 11f50d5730b..c889b47db59 100644
 +	    initrdcmd=initrdefi
 +	else
 +	    linuxcmd=linux16
-+	    initrdcmd=linux16
++	    initrdcmd=initrd16
 +	fi
 +	;;
    esac
