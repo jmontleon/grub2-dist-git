@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Tue, 31 Jul 2018 12:39:05 -0400
+Subject: [PATCH] Put our bls_import compat command in this tree as well.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ grub-core/commands/blscfg.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/grub-core/commands/blscfg.c b/grub-core/commands/blscfg.c
+index e649f6cd11b..bdb1c5a95aa 100644
+--- a/grub-core/commands/blscfg.c
++++ b/grub-core/commands/blscfg.c
+@@ -789,6 +789,7 @@ finish:
+ }
+ 
+ static grub_extcmd_t cmd;
++static grub_extcmd_t oldcmd;
+ 
+ GRUB_MOD_INIT(blscfg)
+ {
+@@ -799,9 +800,16 @@ GRUB_MOD_INIT(blscfg)
+ 			      NULL,
+ 			      N_("Import Boot Loader Specification snippets."),
+ 			      NULL);
++  oldcmd = grub_register_extcmd ("bls_import",
++				 grub_cmd_blscfg,
++				 0,
++				 NULL,
++				 N_("Import Boot Loader Specification snippets."),
++				 NULL);
+ }
+ 
+ GRUB_MOD_FINI(blscfg)
+ {
+   grub_unregister_extcmd (cmd);
++  grub_unregister_extcmd (oldcmd);
+ }
