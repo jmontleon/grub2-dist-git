@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	46%{?dist}
+Release:	47%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 Group:		System Environment/Base
 License:	GPLv3+
@@ -479,6 +479,9 @@ fi
 %endif
 
 %changelog
+* Tue Jul 31 2018 Christian Glombek <lorbus@fedoraproject.org> - 2.02-47
+- Add boot counting
+
 * Tue Jul 17 2018 Peter Jones <pjones@redhat.com> - 2.02-46
 - Fix some minor BLS issues
 - Rework the FDT module linking to make aarch64 build and boot right
