@@ -456,6 +456,7 @@ fi
 %changelog
 * Mon Jul 09 2018 pjones <pjones@redhat.com> - 2.02-39
 - Fix my fix of grub2-switch-to-blscfg (javierm and pjones)
+  Resolves: rhbz#1609431
 
 * Mon Jul 02 2018 Javier Martinez Canillas <javierm@redhat.com> - 2.02-38
 - Use BLS fragment filename as menu entry id and for sort criterion
