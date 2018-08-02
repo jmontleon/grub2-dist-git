@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	40%{?dist}
+Release:	41%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 Group:		System Environment/Base
 License:	GPLv3+
@@ -29,7 +29,8 @@ Source9:	20-grub.install
 # generate with do-rebase
 %include %{SOURCE2}
 
-BuildRequires:	flex bison binutils python
+BuildRequires:	gcc
+BuildRequires:	flex bison binutils python3
 BuildRequires:	ncurses-devel xz-devel bzip2-devel
 BuildRequires:	freetype-devel libusb-devel
 BuildRequires:	rpm-devel
@@ -137,23 +138,30 @@ This subpackage provides tools for support of all platforms.
 %do_common_setup
 %if 0%{with_efi_arch}
 mkdir grub-%{grubefiarch}-%{tarversion}
+grep -A100000 '# stuff "make" creates' .gitignore > grub-%{grubefiarch}-%{tarversion}/.gitignore
 cp %{SOURCE4} grub-%{grubefiarch}-%{tarversion}/unifont.pcf.gz
+git add grub-%{grubefiarch}-%{tarversion}
 %endif
 %if 0%{with_alt_efi_arch}
 mkdir grub-%{grubaltefiarch}-%{tarversion}
+grep -A100000 '# stuff "make" creates' .gitignore > grub-%{grubaltefiarch}-%{tarversion}/.gitignore
 cp %{SOURCE4} grub-%{grubaltefiarch}-%{tarversion}/unifont.pcf.gz
+git add grub-%{grubaltefiarch}-%{tarversion}
 %endif
 %if 0%{with_legacy_arch}
 mkdir grub-%{grublegacyarch}-%{tarversion}
+grep -A100000 '# stuff "make" creates' .gitignore > grub-%{grublegacyarch}-%{tarversion}/.gitignore
 cp %{SOURCE4} grub-%{grublegacyarch}-%{tarversion}/unifont.pcf.gz
+git add grub-%{grublegacyarch}-%{tarversion}
 %endif
+git commit -m "After making subdirs"
 
 %build
 %if 0%{with_efi_arch}
-%{expand:%do_primary_efi_build %%{grubefiarch} %%{grubefiname} %%{grubeficdname} %%{_target_platform} %%{efi_cflags}}
+%{expand:%do_primary_efi_build %%{grubefiarch} %%{grubefiname} %%{grubeficdname} %%{_target_platform} %%{efi_target_cflags} %%{efi_host_cflags}}
 %endif
 %if 0%{with_alt_efi_arch}
-%{expand:%do_alt_efi_build %%{grubaltefiarch} %%{grubaltefiname} %%{grubalteficdname} %%{_alt_target_platform} %%{alt_efi_cflags}}
+%{expand:%do_alt_efi_build %%{grubaltefiarch} %%{grubaltefiname} %%{grubalteficdname} %%{_alt_target_platform} %%{alt_efi_target_cflags} %%{alt_efi_host_cflags}}
 %endif
 %if 0%{with_legacy_arch}
 %{expand:%do_legacy_build %%{grublegacyarch}}
@@ -179,10 +187,11 @@ rm -fr $RPM_BUILD_ROOT
 %{expand:%do_alt_efi_install %%{grubaltefiarch} %%{grubaltefiname} %%{grubalteficdname}}
 %endif
 %if 0%{with_legacy_arch}
-%{expand:%do_legacy_install %%{grublegacyarch} %%{alt_grub_target_name}}
+%{expand:%do_legacy_install %%{grublegacyarch} %%{alt_grub_target_name} 0%{with_efi_arch}}
 %endif
-${RPM_BUILD_ROOT}/%{_bindir}/%{name}-editenv ${RPM_BUILD_ROOT}/boot/efi/EFI/%{efidir}/grubenv create
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+ln -s %{name}-set-password ${RPM_BUILD_ROOT}/%{_sbindir}/%{name}-setpassword
+echo '.so man8/%{name}-set-password.8' > ${RPM_BUILD_ROOT}/%{_datadir}/man/man8/%{name}-setpassword.8
 %ifnarch x86_64
 rm -vf ${RPM_BUILD_ROOT}/%{_bindir}/%{name}-render-label
 rm -vf ${RPM_BUILD_ROOT}/%{_sbindir}/%{name}-bios-setup
@@ -236,19 +245,19 @@ if [ -f /boot/grub2/user.cfg ]; then
     if grep -q '^GRUB_PASSWORD=' /boot/grub2/user.cfg ; then
 	sed -i 's/^GRUB_PASSWORD=/GRUB2_PASSWORD=/' /boot/grub2/user.cfg
     fi
-elif [ -f /boot/efi/EFI/%{efidir}/user.cfg ]; then
-    if grep -q '^GRUB_PASSWORD=' /boot/efi/EFI/%{efidir}/user.cfg ; then
+elif [ -f %{efi_esp_dir}/user.cfg ]; then
+    if grep -q '^GRUB_PASSWORD=' %{efi_esp_dir}/user.cfg ; then
 	sed -i 's/^GRUB_PASSWORD=/GRUB2_PASSWORD=/' \
-	    /boot/efi/EFI/%{efidir}/user.cfg
+	    %{efi_esp_dir}/user.cfg
     fi
 elif [ -f /etc/grub.d/01_users ] && \
 	grep -q '^password_pbkdf2 root' /etc/grub.d/01_users ; then
-    if [ -f /boot/efi/EFI/%{efidir}/grub.cfg ]; then
+    if [ -f %{efi_esp_dir}/grub.cfg ]; then
 	# on EFI we don't get permissions on the file, but
 	# the directory is protected.
 	grep '^password_pbkdf2 root' /etc/grub.d/01_users | \
 		sed 's/^password_pbkdf2 root \(.*\)$/GRUB2_PASSWORD=\1/' \
-	    > /boot/efi/EFI/%{efidir}/user.cfg
+	    > %{efi_esp_dir}/user.cfg
     fi
     if [ -f /boot/grub2/grub.cfg ]; then
 	install -m 0600 /dev/null /boot/grub2/user.cfg
@@ -313,8 +322,8 @@ fi
 %exclude /boot/%{name}/themes/system/*
 %attr(0700,root,root) %dir /boot/grub2
 %exclude /boot/grub2/*
-%dir %attr(0700,root,root) /boot/efi/EFI/%{efidir}
-%exclude /boot/efi/EFI/%{efidir}/*
+%dir %attr(0700,root,root) %{efi_esp_dir}
+%exclude %{efi_esp_dir}/*
 %license COPYING
 %ghost %config(noreplace) /boot/grub2/grubenv
 %doc INSTALL
@@ -330,13 +339,13 @@ fi
 %{_sysconfdir}/prelink.conf.d/grub2.conf
 %{_sbindir}/%{name}-get-kernel-settings
 %{_sbindir}/%{name}-set-default
-%{_sbindir}/%{name}-setpassword
+%{_sbindir}/%{name}-set*password
 %{_bindir}/%{name}-editenv
 %{_bindir}/%{name}-mkpasswd-pbkdf2
 
 %{_datadir}/man/man3/%{name}-get-kernel-settings*
 %{_datadir}/man/man8/%{name}-set-default*
-%{_datadir}/man/man8/%{name}-setpassword*
+%{_datadir}/man/man8/%{name}-set*password*
 %{_datadir}/man/man1/%{name}-editenv*
 %{_datadir}/man/man1/%{name}-mkpasswd-*
 
@@ -386,7 +395,7 @@ fi
 # exclude man pages from tools-minimal
 %exclude %{_datadir}/man/man3/%{name}-get-kernel-settings*
 %exclude %{_datadir}/man/man8/%{name}-set-default*
-%exclude %{_datadir}/man/man8/%{name}-setpassword*
+%exclude %{_datadir}/man/man8/%{name}-set*password*
 %exclude %{_datadir}/man/man1/%{name}-editenv*
 %exclude %{_datadir}/man/man1/%{name}-mkpasswd-*
 %exclude %{_datadir}/man/man8/%{name}-macbless*
@@ -454,6 +463,10 @@ fi
 %endif
 
 %changelog
+* Thu Aug 02 2018 Peter Jones <pjones@redhat.com> - 2.02-41
+- Backport a pile of fixes from the f29 tree.
+  Related: rhbz#1609431
+
 * Tue Jul 31 2018 Peter Jones <pjones@redhat.com> - 2.02-40
 - More bls fixes.
   Resolves: rhbz#1609431
