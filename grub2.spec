@@ -72,7 +72,7 @@ hardware devices.\
 Summary:	grub2 common layout
 Group:		System Environment/Base
 BuildArch:	noarch
-Conflicts:	grubby < 8.40-16.%{?dist}
+Conflicts:	grubby < 8.40-16%{?dist}
 
 %description common
 This package provides some directories which are required by various grub2
