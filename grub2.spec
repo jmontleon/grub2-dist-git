@@ -323,6 +323,7 @@ fi
 %{_prefix}/lib/kernel/install.d/20-grub.install
 %{_sysconfdir}/kernel/install.d/20-grubby.install
 %{_sysconfdir}/kernel/install.d/90-loaderentry.install
+%dir %{_libexecdir}/installkernel
 %{_libexecdir}/installkernel/installkernel-bls
 %attr(0755,root,root) %{_sbindir}/installkernel
 %dir %{_datarootdir}/grub
