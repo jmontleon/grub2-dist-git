@@ -494,7 +494,7 @@ fi
 %endif
 
 %changelog
-* Tue Sep 25 2018 Peter Jones <pjones@redhat.com> - 2.02-59
+* Fri Sep 14 2018 Hans de Goede <hdegoede@redhat.com> - 2.02-59
 - Stop using pkexec for grub2-set-bootflag, it does not work under gdm
   instead make it suid root (it was written with this in mind)
 
