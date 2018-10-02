@@ -239,3 +239,4 @@ Patch0238: 0238-arm-arm64-loader-Better-memory-allocation-and-error-.patch
 Patch0239: 0239-Try-to-pick-better-locations-for-kernel-and-initrd.patch
 Patch0240: 0240-grub-boot-success.timer-Add-a-few-Conditions-for-run.patch
 Patch0241: 0241-docs-Stop-using-polkit-pkexec-for-grub-boot-success..patch
+Patch0242: 0242-Fix-boot-counting-grub.cfg-snippet-creation.patch

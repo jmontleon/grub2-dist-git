@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	59%{?dist}
+Release:	60%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 Group:		System Environment/Base
 License:	GPLv3+
@@ -494,6 +494,10 @@ fi
 %endif
 
 %changelog
+* Tue Oct 02 2018 Peter Jones <pjones@redhat.com> - 2.02-60
+- Fix grub.cfg boot counting snippet generation (lorbus)
+  Resolves: rhbz#1614637
+
 * Fri Sep 14 2018 Hans de Goede <hdegoede@redhat.com> - 2.02-59
 - Stop using pkexec for grub2-set-bootflag, it does not work under gdm
   instead make it suid root (it was written with this in mind)
