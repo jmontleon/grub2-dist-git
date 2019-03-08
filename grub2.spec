@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	72%{?dist}
+Release:	73%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -215,8 +215,6 @@ install -d -m 0755 %{buildroot}%{_prefix}/lib/kernel/install.d/
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE9}
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE13}
 install -d -m 0755 %{buildroot}%{_sysconfdir}/kernel/install.d/
-install -m 0644 /dev/null %{buildroot}%{_sysconfdir}/kernel/install.d/20-grubby.install
-install -m 0644 /dev/null %{buildroot}%{_sysconfdir}/kernel/install.d/90-loaderentry.install
 # Install systemd user service to set the boot_success flag
 install -D -m 0755 -t %{buildroot}%{_userunitdir} \
 	docs/grub-boot-success.{timer,service}
@@ -317,8 +315,6 @@ rm -r /boot/grub2.tmp/ || :
 %exclude %{_datarootdir}/grub/themes/*
 %attr(0700,root,root) %dir %{_sysconfdir}/grub.d
 %{_prefix}/lib/kernel/install.d/20-grub.install
-%{_sysconfdir}/kernel/install.d/20-grubby.install
-%{_sysconfdir}/kernel/install.d/90-loaderentry.install
 %{_prefix}/lib/kernel/install.d/99-grub-mkconfig.install
 %dir %{_datarootdir}/grub
 %exclude %{_datarootdir}/grub/*
@@ -480,6 +476,11 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Tue Mar 12 2019 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 2.02-73
+- Never remove boot loader configuration for other boot loaders from the ESP.
+  This would render machines with sd-boot unbootable (#1648907).
+- Do not mask systemd's kernel-install scriptlets.
+
 * Mon Mar 11 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-72
 - Avoid grub2-efi package to overwrite existing /boot/grub2/grubenv file
   Resolves: rhbz#1687323
