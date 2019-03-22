@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	73%{?dist}
+Release:	74%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -476,6 +476,12 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Fri Mar 22 2019 Javier Martinez Canillas <javierm@redhat.com> 2.02-74
+- Only set blsdir if /boot/loader/entries is in a btrfs or zfs partition
+  Related: rhbz#1688453
+- Fix some BLS snippets not being displayed in the GRUB menu
+  Resolves: rhbz#1691232
+
 * Tue Mar 12 2019 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 2.02-73
 - Never remove boot loader configuration for other boot loaders from the ESP.
   This would render machines with sd-boot unbootable (#1648907).
