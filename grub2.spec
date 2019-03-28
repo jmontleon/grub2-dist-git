@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	74%{?dist}
+Release:	75%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -476,6 +476,10 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Thu Mar 28 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-75
+- 10_linux_bls: don't add --users option to generated menu entries
+  Resolves: rhbz#1693515
+
 * Fri Mar 22 2019 Javier Martinez Canillas <javierm@redhat.com> 2.02-74
 - Only set blsdir if /boot/loader/entries is in a btrfs or zfs partition
   Related: rhbz#1688453
