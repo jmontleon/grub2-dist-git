@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	75%{?dist}
+Release:	76%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -276,9 +276,9 @@ elif [ -f /etc/grub.d/01_users ] && \
     fi
 fi
 
-%post tools
+%posttrans tools
 
-if [ "$1" = 2 ]; then
+if [ -f /etc/default/grub ]; then
     ! grep -q '^GRUB_ENABLE_BLSCFG=false' /etc/default/grub && \
       /sbin/grub2-switch-to-blscfg --backup-suffix=.rpmsave &>/dev/null || :
 fi
@@ -476,6 +476,10 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Mon Apr 15 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-76
+- Execute grub2-switch-to-blscfg script in %%posttrans instead of %%post
+  Resolves: rhbz#1652806
+
 * Thu Mar 28 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-75
 - 10_linux_bls: don't add --users option to generated menu entries
   Resolves: rhbz#1693515
