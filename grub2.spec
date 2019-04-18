@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	76%{?dist}
+Release:	77%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -476,6 +476,11 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Thu Apr 18 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-77
+- grub.d: Split out boot success reset from menu auto hide script (lorbus)
+  Resolves: rhbz#1701003
+- HTTP boot: strncmp returns 0 on equal (stephen)
+
 * Mon Apr 15 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-76
 - Execute grub2-switch-to-blscfg script in %%posttrans instead of %%post
   Resolves: rhbz#1652806
