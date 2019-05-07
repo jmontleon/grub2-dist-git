@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	78%{?dist}
+Release:	79%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -476,6 +476,10 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Tue May 07 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-79
+- Make blscfg module compatible at least up to the Fedora 19 GRUB core
+  Related: rhbz#1652806
+
 * Thu Apr 18 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-78
 - Add 10_reset_boot_success to Makefile
   Related: rhbz#1701003

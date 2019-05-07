@@ -289,3 +289,4 @@ Patch0288: 0288-10_linux_bls-don-t-add-users-option-to-generated-men.patch
 Patch0289: 0289-grub.d-Split-out-boot-success-reset-from-menu-auto-h.patch
 Patch0290: 0290-HTTP-boot-strncmp-returns-0-on-equal.patch
 Patch0291: 0291-Add-10_reset_boot_success-to-Makefile.patch
+Patch0292: 0292-blscfg-remove-BLS-file-size-check.patch
