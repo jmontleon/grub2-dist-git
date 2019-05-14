@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	79%{?dist}
+Release:	80%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -476,6 +476,11 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Wed May 15 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-80
+- Fix error messages wrongly being printed when executing blscfg command
+  Resolves: rhbz#1699761
+- Remove bogus load_env after blscfg command in 10_linux
+
 * Tue May 07 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-79
 - Make blscfg module compatible at least up to the Fedora 19 GRUB core
   Related: rhbz#1652806
