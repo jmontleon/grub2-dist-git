@@ -9,17 +9,20 @@ fi
 [[ -e /proc/xen/capabilities ]] && grep -q "control_d" /proc/xen/capabilities && XEN_DOM0=true
 
 if [[ $HV_TYPE = "xen" && $XEN_DOM0 != "true" ]]; then
+    RUN_MKCONFIG=true
     if grep -q '^GRUB_ENABLE_BLSCFG="*true"*\s*$' /etc/default/grub; then
 	sed -i 's/^GRUB_ENABLE_BLSCFG=.*/GRUB_ENABLE_BLSCFG=false/' /etc/default/grub
     fi
 fi
 
 ARCH=$(uname -m)
+if [[ $ARCH = "ppc64le" ]]; then
+    RUN_MKCONFIG=true
+fi
 
 # A traditional grub configuration file needs to be generated only for ppc64le and
 # Xen DomU guests since we can't assume that bootloaders will be BLS capable there.
-if [[ $ARCH != "ppc64" && $ARCH != "ppc64le" ]] ||
-   [[ $HV_TYPE = "xen" && $XEN_DOM0 = "true" ]]; then
+if [[ $RUN_MKCONFIG != "true" ]]; then
     exit 0
 fi
 
