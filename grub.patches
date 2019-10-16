@@ -186,3 +186,4 @@ Patch0185: 0185-arm-Align-section-alignment-with-manual-relocation-o.patch
 Patch0186: 0186-grub-core-loader-efi-fdt.c-Do-not-copy-random-memory.patch
 Patch0187: 0187-linux-efi-arm-fdt-break-FDT-extra-allocation-space-o.patch
 Patch0188: 0188-Don-t-add-a-class-option-to-menu-entries-generated-f.patch
+Patch0189: 0189-blscfg-Fix-typo-for-gfxpayload-variable-name.patch
