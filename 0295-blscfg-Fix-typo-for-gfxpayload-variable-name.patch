@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Javier Martinez Canillas <javierm@redhat.com>
+Date: Wed, 16 Oct 2019 12:16:32 +0200
+Subject: [PATCH] blscfg: Fix typo for gfxpayload variable name
+
+There was a silly typo when setting the environment variable gfxpayload so
+graphics mode wouldn't be preserved on some machines leading to text mode.
+
+Resolves: rhbz#1706489
+
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+---
+ grub-core/commands/blscfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/grub-core/commands/blscfg.c b/grub-core/commands/blscfg.c
+index 26dbe873fe4..8c6dd91be10 100644
+--- a/grub-core/commands/blscfg.c
++++ b/grub-core/commands/blscfg.c
+@@ -822,7 +822,7 @@ static void create_entry (struct bls_entry *entry)
+     }
+ 
+   src = grub_xasprintf ("load_video\n"
+-			"set gfx_payload=keep\n"
++			"set gfxpayload=keep\n"
+ 			"insmod gzio\n"
+ 			"linux %s%s%s%s\n"
+ 			"%s",
