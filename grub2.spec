@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	101%{?dist}
+Release:	102%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -518,6 +518,11 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Tue Nov 26 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-102
+- grub-set-bootflag: Write new env to tmpfile and then rename (hdegoede)
+  Resolves: CVE-2019-14865
+  Resolves: rhbz#1776580
+
 * Wed Oct 16 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-101
 - 99-grub-mkconfig: Also disable BLS usage for Xen Dom0 hosts
   Resolves: rhbz#1761799
