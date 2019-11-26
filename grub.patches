@@ -293,3 +293,5 @@ Patch0292: 0292-blscfg-remove-BLS-file-size-check.patch
 Patch0293: 0293-Remove-bogus-load_env-after-blscfg-command-in-10_lin.patch
 Patch0294: 0294-blscfg-Don-t-leave-grub_errno-set-to-an-error-if-the.patch
 Patch0295: 0295-blscfg-Fix-typo-for-gfxpayload-variable-name.patch
+Patch0296: 0296-grub-set-bootflag-Update-comment-about-running-as-ro.patch
+Patch0297: 0297-grub-set-bootflag-Write-new-env-to-tmpfile-and-then-.patch
