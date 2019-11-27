@@ -189,3 +189,5 @@ Patch0188: 0188-Don-t-add-a-class-option-to-menu-entries-generated-f.patch
 Patch0189: 0189-blscfg-Fix-typo-for-gfxpayload-variable-name.patch
 Patch0190: 0190-grub-set-bootflag-Update-comment-about-running-as-ro.patch
 Patch0191: 0191-grub-set-bootflag-Write-new-env-to-tmpfile-and-then-.patch
+Patch0192: 0192-blscfg-add-a-space-char-when-appending-fields-for-va.patch
+Patch0193: 0193-grub.d-Fix-boot_indeterminate-getting-set-on-boot_su.patch
