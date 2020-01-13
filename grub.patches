@@ -190,3 +190,5 @@ Patch0189: 0189-blscfg-Fix-typo-for-gfxpayload-variable-name.patch
 Patch0190: 0190-grub-set-bootflag-Update-comment-about-running-as-ro.patch
 Patch0191: 0191-grub-set-bootflag-Write-new-env-to-tmpfile-and-then-.patch
 Patch0192: 0192-grub.d-Fix-boot_indeterminate-getting-set-on-boot_su.patch
+Patch0193: 0193-10_linux.in-Also-use-GRUB_CMDLINE_LINUX_DEFAULT-to-s.patch
+Patch0194: 0194-Fix-savedefault-with-blscfg.patch
