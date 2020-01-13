@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	87%{?dist}
+Release:	88%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -476,6 +476,11 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Mon Jan 13 2020 Javier Martinez Canillas <javierm@redhat.com> - 2.02-88
+- 10_linux.in: Also use GRUB_CMDLINE_LINUX_DEFAULT to set kernelopts
+- Make the blscfg module honour the GRUB_SAVEDEFAULT option
+  Resolves: rhbz#1704926
+
 * Thu Dec 05 2019 Javier Martinez Canillas <javierm@redhat.com> - 2.02-87
 - Drop patch fixing a corner case in BLS variable expansion
   Related: rhbz#1779611
