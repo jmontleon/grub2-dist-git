@@ -192,3 +192,7 @@ Patch0191: 0191-grub-set-bootflag-Write-new-env-to-tmpfile-and-then-.patch
 Patch0192: 0192-grub.d-Fix-boot_indeterminate-getting-set-on-boot_su.patch
 Patch0193: 0193-10_linux.in-Also-use-GRUB_CMDLINE_LINUX_DEFAULT-to-s.patch
 Patch0194: 0194-Fix-savedefault-with-blscfg.patch
+Patch0195: 0195-blscfg-add-a-space-char-when-appending-fields-for-va.patch
+Patch0196: 0196-blscfg-Add-support-for-sorting-the-plus-higher-than-.patch
+Patch0197: 0197-blscfg-Always-use-the-root-variable-to-search-for-BL.patch
+Patch0198: 0198-blscfg-return-NULL-instead-of-a-zero-length-array-in.patch
