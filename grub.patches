@@ -198,3 +198,5 @@ Patch0197: 0197-blscfg-Always-use-the-root-variable-to-search-for-BL.patch
 Patch0198: 0198-blscfg-return-NULL-instead-of-a-zero-length-array-in.patch
 Patch0199: 0199-grub-switch-to-blscfg-Update-grub2-binary-in-ESP-for.patch
 Patch0200: 0200-grub-switch-to-blscfg-Only-mark-GRUB-as-BLS-supporte.patch
+Patch0201: 0201-grub-switch-to-blscfg-Use-install-to-copy-GRUB-binar.patch
+Patch0202: 0202-10_linux.in-Enable-BLS-configuration-if-new-kernel-p.patch
