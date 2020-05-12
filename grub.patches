@@ -208,3 +208,4 @@ Patch0207: 0207-grub-switch-to-blscfg-Use-install-to-copy-GRUB-binar.patch
 Patch0208: 0208-10_linux.in-Enable-BLS-configuration-if-new-kernel-p.patch
 Patch0209: 0209-efi-Set-image-base-address-before-jumping-to-the-PE-.patch
 Patch0210: 0210-blscfg-Lookup-default_kernelopts-variable-as-fallbac.patch
+Patch0211: 0211-envblk-Fix-buffer-overrun-when-attempting-to-shrink-.patch
