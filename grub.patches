@@ -200,3 +200,4 @@ Patch0199: 0199-grub-switch-to-blscfg-Update-grub2-binary-in-ESP-for.patch
 Patch0200: 0200-grub-switch-to-blscfg-Only-mark-GRUB-as-BLS-supporte.patch
 Patch0201: 0201-grub-switch-to-blscfg-Use-install-to-copy-GRUB-binar.patch
 Patch0202: 0202-10_linux.in-Enable-BLS-configuration-if-new-kernel-p.patch
+Patch0203: 0203-envblk-Fix-buffer-overrun-when-attempting-to-shrink-.patch
