@@ -209,3 +209,5 @@ Patch0208: 0208-10_linux.in-Enable-BLS-configuration-if-new-kernel-p.patch
 Patch0209: 0209-efi-Set-image-base-address-before-jumping-to-the-PE-.patch
 Patch0210: 0210-blscfg-Lookup-default_kernelopts-variable-as-fallbac.patch
 Patch0211: 0211-envblk-Fix-buffer-overrun-when-attempting-to-shrink-.patch
+Patch0212: 0212-tpm-Don-t-propagate-TPM-measurement-errors-to-the-ve.patch
+Patch0213: 0213-tpm-Enable-module-for-all-EFI-platforms.patch
