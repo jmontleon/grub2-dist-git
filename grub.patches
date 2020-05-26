@@ -211,3 +211,4 @@ Patch0210: 0210-blscfg-Lookup-default_kernelopts-variable-as-fallbac.patch
 Patch0211: 0211-envblk-Fix-buffer-overrun-when-attempting-to-shrink-.patch
 Patch0212: 0212-tpm-Don-t-propagate-TPM-measurement-errors-to-the-ve.patch
 Patch0213: 0213-tpm-Enable-module-for-all-EFI-platforms.patch
+Patch0214: 0214-x86-efi-Reduce-maximum-bounce-buffer-size-to-16-MiB.patch
