@@ -9,7 +9,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.04
-Release:	20%{?dist}
+Release:	21%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -509,6 +509,9 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Thu Jun 18 2020 Javier Martinez Canillas <javierm@redhat.com> - 2.04-21
+- Only mark GRUB as BLS supported in OSTree systems with a boot partition
+
 * Fri Jun 05 2020 Javier Martinez Canillas <javierm@redhat.com> - 2.04-20
 - Install GRUB as \EFI\BOOT\BOOTARM.EFI in armv7hl
 
