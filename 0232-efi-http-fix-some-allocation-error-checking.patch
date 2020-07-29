@@ -1,0 +1,42 @@
+From ffa36b5e2200a39a801fb0f660a40bcc687e0e48 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Sun, 19 Jul 2020 17:14:15 -0400
+Subject: [PATCH 232/237] efi+http: fix some allocation error checking.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ grub-core/net/efi/http.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/grub-core/net/efi/http.c b/grub-core/net/efi/http.c
+index de351b2cd03..c56231105e4 100644
+--- a/grub-core/net/efi/http.c
++++ b/grub-core/net/efi/http.c
+@@ -392,8 +392,8 @@ grub_efihttp_open (struct grub_efi_net_device *dev,
+ 		  int type)
+ {
+   grub_err_t err;
+-  grub_off_t size;
+-  char *buf;
++  grub_off_t size = 0;
++  char *buf = NULL;
+   char *file_name = NULL;
+   const char *http_path;
+ 
+@@ -421,8 +421,11 @@ grub_efihttp_open (struct grub_efi_net_device *dev,
+       return err;
+     }
+ 
+-  buf = grub_malloc (size);
+-  efihttp_read (dev, buf, size);
++  if (size)
++    {
++      buf = grub_malloc (size);
++      efihttp_read (dev, buf, size);
++    }
+ 
+   file->size = size;
+   file->data = buf;
+-- 
+2.26.2
+

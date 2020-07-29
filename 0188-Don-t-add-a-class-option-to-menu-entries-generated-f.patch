@@ -1,8 +1,8 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 55ab66328a6c0142cf0944494101b704709b2df5 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Fri, 4 Oct 2019 16:43:05 +0200
-Subject: [PATCH] Don't add a class option to menu entries generated for
- ppc64le
+Subject: [PATCH 188/237] Don't add a class option to menu entries generated
+ for ppc64le
 
 For ppc64le a grub config file with menuentry commands is still generated
 even when BLS support is enabled. That's because BLS support was added to
@@ -76,3 +76,6 @@ index 1b7536435f1..68fbedf2129 100644
          menu="${menu}\t linux ${linux} ${options}\n"
          if [ -n "${initrd}" ] ; then
              menu="${menu}\t initrd ${boot_prefix}${initrd}\n"
+-- 
+2.26.2
+

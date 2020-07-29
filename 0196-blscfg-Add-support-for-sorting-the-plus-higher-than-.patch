@@ -1,8 +1,8 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 42fedf2e00e13b7900f3e05c45bcdd87b58cc952 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Mon, 4 Nov 2019 17:33:30 +0100
-Subject: [PATCH] blscfg: Add support for sorting the plus ('+') higher than
- base version
+Subject: [PATCH 196/237] blscfg: Add support for sorting the plus ('+') higher
+ than base version
 
 Handle plus separator. Concept is the same as tilde, except that if one of
 the strings ends (base version), the other is considered as higher version.
@@ -57,3 +57,6 @@ index 1504be30e8e..286a5b88d12 100644
  	/* If we ran to the end of either, we are finished with the loop */
  	if (!(*one && *two)) break;
  
+-- 
+2.26.2
+

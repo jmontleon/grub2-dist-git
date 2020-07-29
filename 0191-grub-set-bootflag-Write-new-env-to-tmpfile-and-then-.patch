@@ -1,7 +1,8 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 2b3341589cb47f35332332abeed1e5edcab1e4b3 Mon Sep 17 00:00:00 2001
 From: Hans de Goede <hdegoede@redhat.com>
 Date: Wed, 13 Nov 2019 13:02:01 +0100
-Subject: [PATCH] grub-set-bootflag: Write new env to tmpfile and then rename
+Subject: [PATCH 191/237] grub-set-bootflag: Write new env to tmpfile and then
+ rename
 
 Make the grubenv writing code in grub-set-bootflag more robust by
 writing the modified grubenv to a tmpfile first and then renaming the
@@ -9,7 +10,7 @@ tmpfile over the old grubenv (following symlinks).
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- util/grub-set-bootflag.c | 87 +++++++++++++++++++++++++++++++++++++++++++-----
+ util/grub-set-bootflag.c | 87 +++++++++++++++++++++++++++++++++++-----
  1 file changed, 78 insertions(+), 9 deletions(-)
 
 diff --git a/util/grub-set-bootflag.c b/util/grub-set-bootflag.c
@@ -150,3 +151,6 @@ index 65d74ce010f..d1c5e28862b 100644
  
    return 0;
  }
+-- 
+2.26.2
+

@@ -1,7 +1,7 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 5668ad4ae37b70975b5f6e3da1b909bd1d51f2d5 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Mon, 16 Mar 2020 13:51:45 +0100
-Subject: [PATCH] blscfg: return NULL instead of a zero-length array in
+Subject: [PATCH 198/237] blscfg: return NULL instead of a zero-length array in
  bls_make_list()
 
 The bls_make_list() function returns a list of all the values for a given
@@ -36,3 +36,6 @@ index aa4e624905e..df6947f58cd 100644
    if (num)
      *num = nlist;
  
+-- 
+2.26.2
+

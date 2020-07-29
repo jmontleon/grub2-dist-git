@@ -1,8 +1,8 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From f654b4baf92c2d95e84ea017831f06404fbcef61 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Thu, 16 Apr 2020 18:53:03 +0200
-Subject: [PATCH] grub-switch-to-blscfg: Use install to copy GRUB binary,
- modules and config
+Subject: [PATCH 201/237] grub-switch-to-blscfg: Use install to copy GRUB
+ binary, modules and config
 
 By default the cp command truncates the destination before copying from the
 source, so if interrupted it can lead to a file that's half written.
@@ -44,3 +44,6 @@ index 4bbed8e4fe9..3333a620c28 100644
          sed -i"${backupsuffix}" \
              -e 's,^GRUB_ENABLE_BLSCFG=.*,GRUB_ENABLE_BLSCFG=false,' \
              "${etcdefaultgrub}"
+-- 
+2.26.2
+

@@ -7,7 +7,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.02
-Release:	109%{?dist}
+Release:	110%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -518,6 +518,17 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Wed Jul 29 2020 Peter Jones <pjones@redhat.com> - 2.02-110
+- "Minor" bug fixes
+  CVE-2020-10713
+  CVE-2020-14308
+  CVE-2020-14309
+  CVE-2020-14310
+  CVE-2020-14311
+  CVE-2020-15705
+  CVE-2020-15706
+  CVE-2020-15707
+
 * Tue May 12 2020 Javier Martinez Canillas <javierm@redhat.com> - 2.02-109
 - Fix grub2-editenv segfault when attempting to shrink a variable
 

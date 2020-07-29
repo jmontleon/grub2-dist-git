@@ -1,7 +1,7 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From dce8f564823148a4512e7f15dc97ae5640ed9d5b Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Wed, 16 Oct 2019 12:16:32 +0200
-Subject: [PATCH] blscfg: Fix typo for gfxpayload variable name
+Subject: [PATCH 189/237] blscfg: Fix typo for gfxpayload variable name
 
 There was a silly typo when setting the environment variable gfxpayload so
 graphics mode wouldn't be preserved on some machines leading to text mode.
@@ -26,3 +26,6 @@ index 26dbe873fe4..8c6dd91be10 100644
  			"insmod gzio\n"
  			"linux %s%s%s%s\n"
  			"%s",
+-- 
+2.26.2
+

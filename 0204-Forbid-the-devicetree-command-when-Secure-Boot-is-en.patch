@@ -1,0 +1,75 @@
+From 0d34ea81fbc863b00148834bd0ec92537b9f4e06 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 24 Apr 2019 10:03:04 -0400
+Subject: [PATCH 204/237] Forbid the "devicetree" command when Secure Boot is
+ enabled.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ grub-core/loader/arm/linux.c | 12 ++++++++++++
+ grub-core/loader/efi/fdt.c   | 12 ++++++++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/grub-core/loader/arm/linux.c b/grub-core/loader/arm/linux.c
+index b4f609d2d01..5f5723b4b8f 100644
+--- a/grub-core/loader/arm/linux.c
++++ b/grub-core/loader/arm/linux.c
+@@ -28,6 +28,7 @@
+ #include <grub/cpu/linux.h>
+ #include <grub/lib/cmdline.h>
+ #include <grub/linux.h>
++#include <grub/efi/sb.h>
+ 
+ GRUB_MOD_LICENSE ("GPLv3+");
+ 
+@@ -467,6 +468,17 @@ grub_cmd_devicetree (grub_command_t cmd __attribute__ ((unused)),
+   if (argc != 1)
+     return grub_error (GRUB_ERR_BAD_ARGUMENT, N_("filename expected"));
+ 
++  if (grub_efi_secure_boot ())
++    {
++#if 0
++      /* This is an error, but grub2-mkconfig still generates a pile of
++       * insmod commands, so emitting it would be mostly just obnoxious. */
++      grub_error (GRUB_ERR_ACCESS_DENIED,
++		  "Secure Boot forbids loading devicetree from %s", filename);
++#endif
++      return 0;
++    }
++
+   dtb = grub_file_open (argv[0]);
+   if (!dtb)
+     return grub_errno;
+diff --git a/grub-core/loader/efi/fdt.c b/grub-core/loader/efi/fdt.c
+index cecd617dccc..2c14a11fa6b 100644
+--- a/grub-core/loader/efi/fdt.c
++++ b/grub-core/loader/efi/fdt.c
+@@ -25,6 +25,7 @@
+ #include <grub/efi/efi.h>
+ #include <grub/efi/fdtload.h>
+ #include <grub/efi/memory.h>
++#include <grub/efi/sb.h>
+ 
+ GRUB_MOD_LICENSE ("GPLv3+");
+ 
+@@ -125,6 +126,17 @@ grub_cmd_devicetree (grub_command_t cmd __attribute__ ((unused)),
+       return GRUB_ERR_NONE;
+     }
+ 
++  if (grub_efi_secure_boot ())
++    {
++#if 0
++      /* This is an error, but grub2-mkconfig still generates a pile of
++       * insmod commands, so emitting it would be mostly just obnoxious. */
++      grub_error (GRUB_ERR_ACCESS_DENIED,
++		  "Secure Boot forbids loading devicetree from %s", filename);
++#endif
++      return 0;
++    }
++
+   dtb = grub_file_open (argv[0]);
+   if (!dtb)
+     goto out;
+-- 
+2.26.2
+

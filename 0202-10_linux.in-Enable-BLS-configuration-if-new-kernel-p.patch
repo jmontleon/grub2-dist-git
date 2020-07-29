@@ -1,8 +1,8 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 1beb2d222a7ace793287211ae3265a95bff09ad5 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Thu, 16 Apr 2020 21:11:04 +0200
-Subject: [PATCH] 10_linux.in: Enable BLS configuration if new-kernel-pkg isn't
- present
+Subject: [PATCH 202/237] 10_linux.in: Enable BLS configuration if
+ new-kernel-pkg isn't present
 
 Currently if the the GRUB_ENABLE_BLSCFG option in /etc/default/grub hasn't
 been set, the 10_linux script will generate a GRUB configuration that does
@@ -37,3 +37,6 @@ index d5319300e04..b99eaa8f203 100644
  if [ "x${GRUB_ENABLE_BLSCFG}" = "xtrue" ]; then
    if [ x$dirname = x/ ]; then
      if [ -z "${prepare_root_cache}" ]; then
+-- 
+2.26.2
+

@@ -1,8 +1,8 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 5c365350a3b1558114a385dc6c85fe2094247fcc Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Thu, 2 Apr 2020 11:07:24 +0200
-Subject: [PATCH] grub-switch-to-blscfg: Only mark GRUB as BLS supported if
- blsdir isn't set
+Subject: [PATCH 200/237] grub-switch-to-blscfg: Only mark GRUB as BLS
+ supported if blsdir isn't set
 
 If the user set the blsdir environemnt variable to a path that is not the
 default where ostree writes the BLS snippets, the blscfg module won't be
@@ -35,3 +35,6 @@ index a05a8d98554..4bbed8e4fe9 100644
      grub_binary="$(find /usr/lib/ostree-boot/efi/EFI/${EFIDIR}/ -name grub*.efi)"
      cp ${grub_binary} ${grubdir} || exit 1
      # Create a hidden file to indicate that grub2 now has BLS support.
+-- 
+2.26.2
+
