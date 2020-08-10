@@ -518,6 +518,9 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Mon Aug 10 2020 Peter Jones <pjones@redhat.com> - 2.02-110
+- Attempt to enable dual-signing in f31
+
 * Wed Jul 29 2020 Peter Jones <pjones@redhat.com> - 2.02-110
 - "Minor" bug fixes
   CVE-2020-10713
