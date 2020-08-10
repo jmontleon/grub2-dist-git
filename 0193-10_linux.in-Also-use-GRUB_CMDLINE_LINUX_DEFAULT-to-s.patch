@@ -1,8 +1,8 @@
-From 217890e8fd2235e92e59f54a68a2c19dcc67cc8e Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Tue, 15 Oct 2019 09:08:25 +0200
-Subject: [PATCH 193/237] 10_linux.in: Also use GRUB_CMDLINE_LINUX_DEFAULT to
- set kernelopts
+Subject: [PATCH] 10_linux.in: Also use GRUB_CMDLINE_LINUX_DEFAULT to set
+ kernelopts
 
 The GRUB documentation mentions that there are two variables to set the
 linux kernel cmdline: GRUB_CMDLINE_LINUX and GRUB_CMDLINE_LINUX_DEFAULT.
@@ -43,6 +43,3 @@ index 3919b8aff4e..9e015c2c134 100644
        if [ -n "${GRUB_EARLY_INITRD_LINUX_CUSTOM}" ]; then
            ${grub_editenv} - set early_initrd="${GRUB_EARLY_INITRD_LINUX_CUSTOM}"
        fi
--- 
-2.26.2
-

@@ -1,8 +1,8 @@
-From 983aeec4df983df6d02f71e9d26f36571382d0b6 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Tue, 26 Nov 2019 09:51:41 +0100
-Subject: [PATCH 195/237] blscfg: add a space char when appending fields for
- variable expansion
+Subject: [PATCH] blscfg: add a space char when appending fields for variable
+ expansion
 
 The GRUB variables are expanded and replaced by their values before adding
 menu entries, but they didn't include space characters after the values so
@@ -74,6 +74,3 @@ index f2c1fd0733d..1504be30e8e 100644
        }
      }
  
--- 
-2.26.2
-

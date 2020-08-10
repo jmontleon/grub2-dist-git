@@ -1,8 +1,8 @@
-From b987476a6bd5462e6258f4e4c6e3c4553a2a5b6a Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Tue, 14 Jan 2020 17:41:29 +0100
-Subject: [PATCH 197/237] blscfg: Always use the root variable to search for
- BLS snippets
+Subject: [PATCH] blscfg: Always use the root variable to search for BLS
+ snippets
 
 The boot and root variables are set by grub2-mkconfig to tell GRUB what
 are the devices and partitions used as the EFI System Partition (ESP)
@@ -45,6 +45,3 @@ index 286a5b88d12..aa4e624905e 100644
    }
  
    grub_dprintf ("blscfg", "opening %s\n", devid);
--- 
-2.26.2
-

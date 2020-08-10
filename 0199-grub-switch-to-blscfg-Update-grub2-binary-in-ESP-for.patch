@@ -1,8 +1,8 @@
-From a0b42e6003987d194b9780ea91cb3c9245547521 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Thu, 26 Mar 2020 15:08:30 +0100
-Subject: [PATCH 199/237] grub-switch-to-blscfg: Update grub2 binary in ESP for
- OSTree systems
+Subject: [PATCH] grub-switch-to-blscfg: Update grub2 binary in ESP for OSTree
+ systems
 
 The grub2 EFI binary in the ESP isn't updated as a part of an OSTree update
 transaction. So let's make the script to update this and also create a file
@@ -35,6 +35,3 @@ index 49b3985fadb..a05a8d98554 100644
  GENERATE=0
  if grep '^GRUB_ENABLE_BLSCFG=.*' "${etcdefaultgrub}" \
          | grep -vq '^GRUB_ENABLE_BLSCFG="*true"*\s*$' ; then
--- 
-2.26.2
-

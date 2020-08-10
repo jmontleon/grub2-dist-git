@@ -1,8 +1,7 @@
-From bb240087ce9ef9a62936fd6c1241df65a1e42d01 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Dimitri John Ledkov <xnox@ubuntu.com>
 Date: Wed, 22 Jul 2020 11:31:43 +0100
-Subject: [PATCH 236/237] linuxefi: fail kernel validation without shim
- protocol.
+Subject: [PATCH] linuxefi: fail kernel validation without shim protocol.
 
 If certificates that signed grub are installed into db, grub can be
 booted directly. It will then boot any kernel without signature
@@ -96,6 +95,3 @@ index 2bd6663625d..cc6a503adb1 100644
      }
  
    lh = (struct linux_i386_kernel_header *)kernel;
--- 
-2.26.2
-

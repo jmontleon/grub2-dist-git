@@ -1,7 +1,7 @@
-From e8d3b5faccac28f0b204fcc227a00cc83662f23b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Sun, 19 Jul 2020 17:11:06 -0400
-Subject: [PATCH 231/237] efi+dhcp: fix some allocation error checking.
+Subject: [PATCH] efi+dhcp: fix some allocation error checking.
 
 Signed-off-by: Peter Jones <pjones@redhat.com>
 ---
@@ -35,6 +35,3 @@ index dbef63d8c08..e5c79b748b0 100644
  	  }
  
  	if (status != GRUB_EFI_SUCCESS)
--- 
-2.26.2
-

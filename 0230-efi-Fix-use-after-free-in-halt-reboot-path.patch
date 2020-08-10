@@ -1,7 +1,7 @@
-From 092b0c6b0ba0cc1cfb91fe2901795ae295b77b5d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Alexey Makhalov <amakhalov@vmware.com>
 Date: Mon, 20 Jul 2020 23:03:05 +0000
-Subject: [PATCH 230/237] efi: Fix use-after-free in halt/reboot path
+Subject: [PATCH] efi: Fix use-after-free in halt/reboot path
 
 commit 92bfc33db984 ("efi: Free malloc regions on exit")
 introduced memory freeing in grub_efi_fini(), which is
@@ -160,6 +160,3 @@ index 7f82a499fd9..b208642821b 100644
  };
  
  void EXPORT_FUNC (grub_loader_set) (grub_err_t (*boot) (void),
--- 
-2.26.2
-

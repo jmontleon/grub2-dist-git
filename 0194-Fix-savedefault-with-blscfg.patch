@@ -1,7 +1,7 @@
-From e1a1226abd8f579b411b715639ab8e0abedc0f0a Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Fritz Elfert <fritz@fritz-elfert.de>
 Date: Sun, 12 Jan 2020 22:07:52 +0100
-Subject: [PATCH 194/237] Fix savedefault with blscfg
+Subject: [PATCH] Fix savedefault with blscfg
 
 The GRUB_SAVEDEFAULT option was ignored on a BLS configuration. Fix it by
 making the menu entries populated from the BLS files to call savedefault
@@ -48,6 +48,3 @@ index 9e015c2c134..d5319300e04 100644
    fi
  
    exit 0
--- 
-2.26.2
-

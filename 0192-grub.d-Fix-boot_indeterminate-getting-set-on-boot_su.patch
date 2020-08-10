@@ -1,8 +1,8 @@
-From 5235d8a87e7b11193cb76af9381e738199f67655 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Hans de Goede <hdegoede@redhat.com>
 Date: Tue, 26 Nov 2019 09:51:41 +0100
-Subject: [PATCH 192/237] grub.d: Fix boot_indeterminate getting set on
- boot_success=0 boot
+Subject: [PATCH] grub.d: Fix boot_indeterminate getting set on boot_success=0
+ boot
 
 The "grub.d: Split out boot success reset from menu auto hide script"
 not only moved the code to clear boot_success and boot_indeterminate
@@ -73,6 +73,3 @@ index 6c88d933dde..737e1ae5b68 100644
  fi
  # Reset boot_success for current boot 
  set boot_success=0
--- 
-2.26.2
-

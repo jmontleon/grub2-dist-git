@@ -1,8 +1,8 @@
-From 2cf1cfd4a16b924afdccdb887663fb506f4a1885 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Hans de Goede <hdegoede@redhat.com>
 Date: Wed, 13 Nov 2019 12:15:43 +0100
-Subject: [PATCH 190/237] grub-set-bootflag: Update comment about running as
- root through pkexec
+Subject: [PATCH] grub-set-bootflag: Update comment about running as root
+ through pkexec
 
 We have stopped using pkexec for grub-set-bootflag, instead it is now
 installed suid root, update the comment accordingly.
@@ -25,6 +25,3 @@ index 6a79ee67444..65d74ce010f 100644
   * use any grub library / util functions to allow for easy auditing.
   * The grub headers are only included to get certain defines.
   */
--- 
-2.26.2
-

@@ -1,8 +1,7 @@
-From 1758c2a567025aa49fd7c8ba5f3f891f7483040d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>
 Date: Mon, 16 Dec 2019 11:15:55 +0100
-Subject: [PATCH 219/237] multiboot2: Set min address for mbi allocation to
- 0x1000
+Subject: [PATCH] multiboot2: Set min address for mbi allocation to 0x1000
 
 In some cases GRUB2 allocates multiboot2 structure at 0 address, that is
 a confusing behavior. Consumers of that structure can have internal NULL-checks
@@ -43,6 +42,3 @@ index 47d4c6f0977..797870b6138 100644
  					  bufsize, MULTIBOOT_TAG_ALIGN,
  					  GRUB_RELOCATOR_PREFERENCE_NONE, 1);
    if (err)
--- 
-2.26.2
-

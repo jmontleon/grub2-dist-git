@@ -1,7 +1,7 @@
-From e69336cd346bcd06931e290fe059e3e749f1fe0a Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Sun, 19 Jul 2020 14:43:31 -0400
-Subject: [PATCH 225/237] hfsplus: fix two more overflows
+Subject: [PATCH] hfsplus: fix two more overflows
 
 Both node->size and node->namelen come from the supplied filesystem,
 which may be user-supplied.  We can't trust them for the math unless we
@@ -52,6 +52,3 @@ index db8ee7afc5d..6ceea039b65 100644
    if (! filename)
      return 0;
  
--- 
-2.26.2
-

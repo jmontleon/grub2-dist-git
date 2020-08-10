@@ -1,8 +1,8 @@
-From 3dff974017867a65e6aae14e14a0233ce9520cb3 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Date: Fri, 26 Jun 2020 10:51:43 -0400
-Subject: [PATCH 217/237] multiboot2: Fix memory leak if
- grub_create_loader_cmdline() fails
+Subject: [PATCH] multiboot2: Fix memory leak if grub_create_loader_cmdline()
+ fails
 
 Fixes: CID 292468
 
@@ -42,6 +42,3 @@ index 54078455e2f..47d4c6f0977 100644
  
    if (modules_last)
      modules_last->next = newmod;
--- 
-2.26.2
-
