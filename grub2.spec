@@ -9,7 +9,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.04
-Release:	22%{?dist}
+Release:	23%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -509,6 +509,10 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Tue Sep 15 2020 Javier Martinez Canillas <javierm@redhat.com> - 2.04-23
+- Roll over TFTP block counter to prevent timeouts with data packets
+  Resolves: rhbz#1869335
+
 * Mon Aug 10 2020 Peter Jones <pjones@redhat.com> - 2.04-22
 - Attempt to enable dual-signing in f32
 - "Minor" bug fixes.  For f32:
