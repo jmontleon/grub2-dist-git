@@ -516,6 +516,9 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Thu Nov 12 2020 Peter Hazenberg <fedoraproject@haas-en-berg.nl> - 2020.11.12-1
+- Fixed some typos in grub-install.8 man page
+
 * Mon Aug 31 2020 Javier Martinez Canillas <javierm@redhat.com> - 2.04-31
 - Roll over TFTP block counter to prevent timeouts with data packets
   Resolves: rhbz#1869335
@@ -916,7 +919,7 @@ rm -r /boot/grub2.tmp/ || :
   Resolves: rhbz#1624532
 
 * Thu Aug 30 2018 Peter Jones <pjones@redhat.com> - 2.02-53
-- Fix AArch64 machines with no RAM latched lower than 1GB 
+- Fix AArch64 machines with no RAM latched lower than 1GB
   Resolves: rhbz#1615969
 - Set http_path and http_url when HTTP booting
 - Hopefully slightly better error reporting in some cases
