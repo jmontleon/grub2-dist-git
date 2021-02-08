@@ -14,7 +14,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.04
-Release:	31%{?dist}
+Release:	32%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -516,6 +516,10 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Tue Feb 09 2021 Javier Martinez Canillas <javierm@redhat.com> - 2.04-32
+- Fix module loading in the 20_linux_xen script
+  Resolves: rhbz#1858364
+
 * Mon Aug 31 2020 Javier Martinez Canillas <javierm@redhat.com> - 2.04-31
 - Roll over TFTP block counter to prevent timeouts with data packets
   Resolves: rhbz#1869335
