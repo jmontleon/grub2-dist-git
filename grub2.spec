@@ -14,7 +14,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06~rc1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -519,6 +519,10 @@ rm -r /boot/grub2.tmp/ || :
 %endif
 
 %changelog
+* Mon Apr 12 2021 Javier Martinez Canillas <javierm@redhat.com> - 2.06~rc1-2
+- Add again 20_linux_xen script fix that got dropped by mistake
+  Resolves: rhbz#1858364
+
 * Tue Apr 06 2021 Javier Martinez Canillas <javierm@redhat.com> - 2.06~rc1-1
 - Update to 2.06~rc1 to fix a bunch of CVEs
   Resolves: CVE-2020-14372
