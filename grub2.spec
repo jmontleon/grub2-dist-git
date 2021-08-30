@@ -525,7 +525,7 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %changelog
 * Tue Aug 24 2021 Peter Jones <pjones@redhat.com> - 2.06-4
 - Fix aarch64 kernel alignment.
-- Fix missing libfl-devel build dep
+- Fix annobin regexp on ppc64le
 
 * Tue Jul 06 2021 Javier Martinez Canillas <javierm@redhat.com> - 2.06-3
 - Add luks2 to GRUB_MODULES
