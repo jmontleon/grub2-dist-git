@@ -14,7 +14,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -523,6 +523,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Thu Sep 09 2021 Peter Jones <pjones@redhat.com> - 2.06-5
+- Fix the 32-bit Arm PE header magic check
+  Resolves: rhbz#2000756
+
 * Tue Aug 24 2021 Peter Jones <pjones@redhat.com> - 2.06-4
 - Fix aarch64 kernel alignment.
 - Fix annobin regexp on ppc64le
