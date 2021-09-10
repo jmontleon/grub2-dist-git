@@ -15,6 +15,8 @@ This patch adds a constant definition for GRUB_PE32_PEXX_MAGIC, which is
 either GRUB_PE32_PE64_MAGIC or GRUB_PE32_PE32_MAGIC, depending on which
 platform is being built, and uses it in the header magic check.
 
+Resolves: rhbz#2000756
+
 Signed-off-by: Peter Jones <pjones@redhat.com>
 ---
  grub-core/loader/arm64/linux.c | 2 +-
