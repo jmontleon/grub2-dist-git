@@ -14,7 +14,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -523,6 +523,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Wed Sep 29 2021 Robbie Harwood <rharwood@redhat.com> - 2.06-6
+- Pull-up to Fedora 36
+- Resolves: rhbz#2008819
+
 * Thu Sep 09 2021 Peter Jones <pjones@redhat.com> - 2.06-5
 - Fix the 32-bit Arm PE header magic check
   Resolves: rhbz#2000756
