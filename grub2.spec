@@ -14,7 +14,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	2%{?dist}
+Release:	6%{?dist}b
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -562,6 +562,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Wed Sep 29 2021 Robbie Harwood <rharwood@redhat.com> - 2.06-6
+- Pull-up to Fedora 35+36
+- Resolves: rhbz#2008819
+
 * Tue Jun 15 2021 Javier Martinez Canillas <javierm@redhat.com> - 2.06-2
 - Only try to generate a config if the ESP is mounted
 
