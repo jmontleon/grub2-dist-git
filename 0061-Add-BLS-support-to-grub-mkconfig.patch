@@ -263,7 +263,7 @@ index 7bb3a211a7c..9fcd77cacc3 100644
 +}
 +
 +# Make BLS the default if GRUB_ENABLE_BLSCFG was not set and grubby is not installed.
-+if [ -z "${GRUB_ENABLE_BLSCFG}" ] && [ -z "$(which new-kernel-pkg 2> /dev/null)" ]; then
++if [ -z "${GRUB_ENABLE_BLSCFG}" ] && ! command -v new-kernel-pkg >/dev/null; then
 +	  GRUB_ENABLE_BLSCFG="true"
 +fi
 +

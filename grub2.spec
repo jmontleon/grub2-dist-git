@@ -91,7 +91,7 @@ subpackages.
 Summary:	Support tools for GRUB.
 Obsoletes:	%{name}-tools < %{evr}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
-Requires:	gettext os-prober which file
+Requires:	gettext os-prober file
 Requires(pre):	dracut
 Requires(post):	dracut
 
@@ -102,7 +102,7 @@ This subpackage provides tools for support of all platforms.
 %ifarch x86_64
 %package tools-efi
 Summary:	Support tools for GRUB.
-Requires:	gettext os-prober which file
+Requires:	gettext os-prober file
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-tools < %{evr}
 
@@ -123,7 +123,7 @@ This subpackage provides tools for support of all platforms.
 
 %package tools-extra
 Summary:	Support tools for GRUB.
-Requires:	gettext os-prober which file
+Requires:	gettext os-prober file
 Requires:	%{name}-tools-minimal = %{epoch}:%{version}-%{release}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-tools < %{evr}
