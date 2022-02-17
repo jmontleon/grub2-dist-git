@@ -81,7 +81,9 @@ hardware devices.\
 Summary:	grub2 common layout
 BuildArch:	noarch
 Conflicts:	grubby < 8.40-18
-Requires(post): util-linux
+Requires(posttrans): util-linux-core
+Requires(posttrans): coreutils
+Requires(posttrans): grep
 
 %description common
 This package provides some directories which are required by various grub2
@@ -93,7 +95,8 @@ Obsoletes:	%{name}-tools < %{evr}
 Requires:	%{name}-common = %{epoch}:%{version}-%{release}
 Requires:	gettext os-prober file
 Requires(pre):	dracut
-Requires(post):	dracut
+Requires(pre):	grep
+Requires(pre):	sed
 
 %description tools
 %{desc}
