@@ -1,4 +1,4 @@
-From 65dc9998b9091c17b92fc41357a3926f937eb261 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Michael Chang via Grub-devel <grub-devel@gnu.org>
 Date: Fri, 3 Dec 2021 16:13:28 +0800
 Subject: [PATCH] grub-mkconfig: restore umask for grub.cfg
@@ -27,7 +27,7 @@ Signed-off-by: Robbie Harwood <rharwood@redhat.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/util/grub-mkconfig.in b/util/grub-mkconfig.in
-index f55339a3f..520a672cd 100644
+index f55339a3f6..520a672cd2 100644
 --- a/util/grub-mkconfig.in
 +++ b/util/grub-mkconfig.in
 @@ -311,7 +311,9 @@ and /etc/grub.d/* files or please file a bug report with
@@ -40,6 +40,3 @@ index f55339a3f..520a672cd 100644
      rm -f ${grub_cfg}.new
    fi
  fi
--- 
-2.33.0
-
