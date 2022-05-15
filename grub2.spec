@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	40%{?dist}
+Release:	41%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -530,6 +530,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Sat May 14 2022 René Genz <liebundartig@freenet.de> - 1:2.06-41
+- Fix "rpm -Va" reporting permission change on grub.cfg
+- Fix typos
+
 * Thu May 05 2022 Robbie Harwood <rharwood@redhat.com> - 1:2.06-40
 - Fix missing declaration of strchrnul in rpm-sort
 
@@ -663,7 +667,7 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 - Drop grub2 prelink configuration
   Resolves: rhbz#1659675
 - Remove triggers needed to upgrade from legacy GRUB
-- Don't harcode grub2 in the spec file
+- Don't hardcode grub2 in the spec file
 - Update to unifont-13.0.06
   Resolves: rhbz#1939125
 - 20-grub-install: Use relative paths for btrfs in BLS snippets
@@ -751,7 +755,7 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
   Resolves: rhbz#1874541
  - Include keylayouts and at_keyboard modules in EFI builds
  - Add GRUB enhanced debugging features
- - ieee1275: Avoiding many unecessary open/close
+ - ieee1275: Avoiding many unnecessary open/close
  - ieee1275: device mapper and fibre channel discovery support
  - Fix tps-rpmtest failing due /boot/grub2/grubenv attributes mismatch
 
@@ -1103,7 +1107,7 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 * Tue Oct 02 2018 Peter Jones <pjones@redhat.com> - 2.02-60
 - Fix grub.cfg boot counting snippet generation (lorbus)
   Resolves: rhbz#1614637
-- Fix spurrious allocation error reporting on EFI boot
+- Fix spurious allocation error reporting on EFI boot
   Resolves: rhbz#1635319
 - Stop doing TPM on BIOS *again*.  It just doesn't work.
   Related: rhbz#1579835
@@ -1283,7 +1287,7 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
   struct" should imply __attribute__((align (1))) and that it should have a
   warning that it does so.  The obvious behavior would be to keep the alignment
   of the first element unless it's used in another object or type that /also/
-  hask the packed attribute.  Why should it change the default alignment at
+  has the packed attribute.  Why should it change the default alignment at
   all?
 - Merge in the BLS patches Javier and I wrote.
 - Attempt to fix pmtimer initialization failures to not be super duper slow.
@@ -1352,7 +1356,7 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 - Add some unconditional Provides:
   grub2-efi on grub2-efi-${arch}
   grub2-efi-cdboot on grub2-efi-${arch}-cdboot
-  grub2 on all grub2-${arch} pacakges
+  grub2 on all grub2-${arch} packages
 - Something is somehow adding /usr/lib/.build-id/... to all the -tools
   subpackages, so exclude all that.
 
@@ -1568,7 +1572,7 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 - Fix obsoletes to pull in -starfield-theme subpackage when it should.
 
 * Fri Jun 14 2013 Peter Jones <pjones@redhat.com> - 2.00-20
-- Put the theme entirely ento the subpackage where it belongs (#974667)
+- Put the theme entirely into the subpackage where it belongs (#974667)
 
 * Wed Jun 12 2013 Peter Jones <pjones@redhat.com> - 2.00-19
 - Rebase to upstream snapshot.
