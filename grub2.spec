@@ -96,7 +96,7 @@ subpackages.
 Summary:	Support tools for GRUB.
 Obsoletes:	grub2-tools < %{evr}
 Requires:	grub2-common = %{epoch}:%{version}-%{release}
-Requires:	gettext os-prober file
+Requires:	gettext-runtime os-prober file
 Requires(pre):	dracut
 Requires(pre):	grep
 Requires(pre):	sed
@@ -108,7 +108,7 @@ This subpackage provides tools for support of all platforms.
 %ifarch x86_64
 %package tools-efi
 Summary:	Support tools for GRUB.
-Requires:	gettext os-prober file
+Requires:	gettext-runtime os-prober file
 Requires:	grub2-common = %{epoch}:%{version}-%{release}
 Obsoletes:	grub2-tools < %{evr}
 
@@ -119,7 +119,7 @@ This subpackage provides tools for support of EFI platforms.
 
 %package tools-minimal
 Summary:	Support tools for GRUB.
-Requires:	gettext
+Requires:	gettext-runtime
 Requires:	grub2-common = %{epoch}:%{version}-%{release}
 Obsoletes:	grub2-tools < %{evr}
 
@@ -129,7 +129,7 @@ This subpackage provides tools for support of all platforms.
 
 %package tools-extra
 Summary:	Support tools for GRUB.
-Requires:	gettext os-prober file
+Requires:	gettext-runtime os-prober file
 Requires:	grub2-tools-minimal = %{epoch}:%{version}-%{release}
 Requires:	grub2-common = %{epoch}:%{version}-%{release}
 Requires:	mtools
