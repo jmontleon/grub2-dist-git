@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	52%{?dist}
+Release:	53%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -530,6 +530,9 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Wed Sep 07 2022 Robbie Harwood <rharwood@redhat.com> - 2.06-53
+- Sync with rawhide at 2.06-56 minus gettext changes
+
 * Wed Aug 17 2022 Robbie Harwood <rharwood@redhat.com> - 2.06-52
 - Handle ostree's non-writable /etc/kernel
 
