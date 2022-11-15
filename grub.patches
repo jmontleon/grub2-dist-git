@@ -279,3 +279,16 @@ Patch0278: 0278-squish-BLS-only-write-etc-kernel-cmdline-if-writable.patch
 Patch0279: 0279-ieee1275-implement-vec5-for-cas-negotiation.patch
 Patch0280: 0280-blscfg-Don-t-root-device-in-emu-builds.patch
 Patch0281: 0281-x86-efi-Fix-an-incorrect-array-size-in-kernel-alloca.patch
+Patch0282: 0282-font-Reject-glyphs-exceeds-font-max_glyph_width-or-f.patch
+Patch0283: 0283-font-Fix-size-overflow-in-grub_font_get_glyph_intern.patch
+Patch0284: 0284-font-Fix-several-integer-overflows-in-grub_font_cons.patch
+Patch0285: 0285-font-Remove-grub_font_dup_glyph.patch
+Patch0286: 0286-font-Fix-integer-overflow-in-ensure_comb_space.patch
+Patch0287: 0287-font-Fix-integer-overflow-in-BMP-index.patch
+Patch0288: 0288-font-Fix-integer-underflow-in-binary-search-of-char-.patch
+Patch0289: 0289-kern-efi-sb-Enforce-verification-of-font-files.patch
+Patch0290: 0290-fbutil-Fix-integer-overflow.patch
+Patch0291: 0291-font-Fix-an-integer-underflow-in-blit_comb.patch
+Patch0292: 0292-font-Harden-grub_font_blit_glyph-and-grub_font_blit_.patch
+Patch0293: 0293-font-Assign-null_font-to-glyphs-in-ascii_font_glyph.patch
+Patch0294: 0294-normal-charset-Fix-an-integer-overflow-in-grub_unico.patch
