@@ -267,3 +267,16 @@ Patch0266: 0266-nx-add-memory-attribute-get-set-API.patch
 Patch0267: 0267-nx-set-page-permissions-for-loaded-modules.patch
 Patch0268: 0268-nx-set-attrs-in-our-kernel-loaders.patch
 Patch0269: 0269-nx-set-the-nx-compatible-flag-in-EFI-grub-images.patch
+Patch0270: 0270-font-Reject-glyphs-exceeds-font-max_glyph_width-or-f.patch
+Patch0271: 0271-font-Fix-size-overflow-in-grub_font_get_glyph_intern.patch
+Patch0272: 0272-font-Fix-several-integer-overflows-in-grub_font_cons.patch
+Patch0273: 0273-font-Remove-grub_font_dup_glyph.patch
+Patch0274: 0274-font-Fix-integer-overflow-in-ensure_comb_space.patch
+Patch0275: 0275-font-Fix-integer-overflow-in-BMP-index.patch
+Patch0276: 0276-font-Fix-integer-underflow-in-binary-search-of-char-.patch
+Patch0277: 0277-kern-efi-sb-Enforce-verification-of-font-files.patch
+Patch0278: 0278-fbutil-Fix-integer-overflow.patch
+Patch0279: 0279-font-Fix-an-integer-underflow-in-blit_comb.patch
+Patch0280: 0280-font-Harden-grub_font_blit_glyph-and-grub_font_blit_.patch
+Patch0281: 0281-font-Assign-null_font-to-glyphs-in-ascii_font_glyph.patch
+Patch0282: 0282-normal-charset-Fix-an-integer-overflow-in-grub_unico.patch
