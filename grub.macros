@@ -383,11 +383,16 @@ rm -f %{1}.conf							\
 
 %ifarch x86_64 aarch64 %{arm} riscv64
 %define mkimage()						\
+mkdir -p memdisk/fonts						\
+cp %{4}/unicode.pf2 memdisk/fonts				\
+mksquashfs memdisk memdisk.squashfs -comp xz			\
 %{4}./grub-mkimage -O %{1} -o %{2}.orig				\\\
 	-p /EFI/%{efi_vendor} -d grub-core ${GRUB_MODULES}	\\\
+	-m memdisk.squashfs					\\\
 	--sbat %{4}./sbat.csv					\
 %{4}./grub-mkimage -O %{1} -o %{3}.orig				\\\
 	-p /EFI/BOOT -d grub-core ${GRUB_MODULES}		\\\
+	-m memdisk.squashfs					\\\
 	--sbat %{4}./sbat.csv					\
 %{expand:%%define ___pesign_client_cert %{?___pesign_client_cert}%{!?___pesign_client_cert:%{__pesign_client_cert}}} \
 %{?__pesign_client_cert:%{expand:%%define __pesign_client_cert %{___pesign_client_cert}}} \
@@ -415,11 +420,15 @@ GRUB_MODULES="	all_video boot blscfg btrfs			\\\
 		gfxmenu gfxterm gzio				\\\
 		halt hfsplus http increment iso9660 jpeg	\\\
 		loadenv loopback linux lvm lsefi lsefimmap luks	\\\
-		luks2 mdraid09 mdraid1x minicmd net		\\\
+		luks2						\\\
+		memdisk						\\\
+		mdraid09 mdraid1x minicmd net			\\\
 		normal part_apple part_msdos part_gpt		\\\
 		password_pbkdf2 pgp png read reboot		\\\
 		regexp search search_fs_uuid search_fs_file	\\\
-		search_label serial sleep syslinuxcfg test tftp	\\\
+		search_label serial sleep			\\\
+		squash4						\\\
+		syslinuxcfg test tftp				\\\
 		version video xfs zstd "			\
 GRUB_MODULES+=%{efi_modules}					\
 %{expand:%%{mkimage %{1} %{2} %{3} %{4}}}			\
@@ -520,8 +529,6 @@ install -m 700 %{3} $RPM_BUILD_ROOT%{efi_esp_dir}/%{3}		\
 %ifarch %{arm}							\
 install -D -m 700 %{2} $RPM_BUILD_ROOT%{efi_esp_boot}/BOOTARM.EFI \
 %endif								\
-install -D -m 700 unicode.pf2					\\\
-	${RPM_BUILD_ROOT}/boot/grub2/fonts/unicode.pf2		\
 ${RPM_BUILD_ROOT}/%{_bindir}/grub2-editenv			\\\
 		${RPM_BUILD_ROOT}/boot/grub2/grubenv create	\
 %{expand:%%do_install_protected_file grub2-%{package_arch}}	\
@@ -619,7 +626,6 @@ ln -s ../boot/grub2/grub.cfg					\\\
 %ifarch %{arm}							\
 %attr(0700,root,root) %verify(not mtime) %{efi_esp_boot}/BOOTARM.EFI \
 %endif								\
-%attr(0700,root,root)/boot/grub2/fonts			\
 %dir %attr(0700,root,root)/boot/loader/entries			\
 %ghost %config(noreplace) %attr(0700,root,root)/boot/grub2/grub.cfg	\
 %ghost %config(noreplace) %verify(not mtime) %attr(0700,root,root)%{efi_esp_dir}/grub.cfg	\
@@ -641,5 +647,4 @@ ln -s ../boot/grub2/grub.cfg					\\\
 %{expand:%%files %{1}-cdboot}					\
 %defattr(-,root,root,-)						\
 %attr(0700,root,root) %verify(not mtime) %{efi_esp_dir}/%{3}	\
-%attr(0700,root,root)/boot/grub2/fonts			\
 %{nil}

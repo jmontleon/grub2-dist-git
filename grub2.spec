@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	55%{?dist}
+Release:	56%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -49,6 +49,7 @@ BuildRequires:	freetype-devel gettext-devel git
 BuildRequires:	texinfo
 BuildRequires:	dejavu-sans-fonts
 BuildRequires:	help2man
+BuildRequires:	squashfs-tools
 # For %%_userunitdir macro
 BuildRequires:	systemd
 %ifarch %{efi_arch}
@@ -530,6 +531,11 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Tue Nov 22 2022 Robbie Harwood <rharwood@redhat.com> - 2.06-56
+- Bundle unicode.pf2 with images
+- Resolves: #2143725
+- Resolves: #2144113
+
 * Tue Nov 15 2022 Robbie Harwood <rharwood@redhat.com> - 2.06-55
 - Font fixes (CVE-2022-2601 batch)
 
