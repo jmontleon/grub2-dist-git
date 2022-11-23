@@ -522,6 +522,8 @@ install -m 700 %{3} $RPM_BUILD_ROOT%{efi_esp_dir}/%{3}		\
 %ifarch %{arm}							\
 install -D -m 700 %{2} $RPM_BUILD_ROOT%{efi_esp_boot}/BOOTARM.EFI \
 %endif								\
+install -D -m 700 unicode.pf2					\\\
+	${RPM_BUILD_ROOT}/boot/%{name}/fonts/unicode.pf2		\
 ${RPM_BUILD_ROOT}/%{_bindir}/%{name}-editenv			\\\
 		${RPM_BUILD_ROOT}/boot/%{name}/grubenv create	\
 %{expand:%%do_install_protected_file %{name}-%{package_arch}}	\
@@ -619,6 +621,7 @@ ln -s ../boot/%{name}/grub.cfg					\\\
 %ifarch %{arm}							\
 %attr(0700,root,root)%{efi_esp_boot}/BOOTARM.EFI		\
 %endif								\
+%attr(0700,root,root)/boot/%{name}/fonts			\
 %dir %attr(0700,root,root)/boot/loader/entries			\
 %ghost %config(noreplace) /boot/%{name}/grub.cfg		\
 %ghost %config(noreplace) %attr(0700,root,root)%{efi_esp_dir}/grub.cfg	\
@@ -640,4 +643,5 @@ ln -s ../boot/%{name}/grub.cfg					\\\
 %{expand:%%files %{1}-cdboot}					\
 %defattr(-,root,root,-)						\
 %attr(0700,root,root)%{efi_esp_dir}/%{3}			\
+%attr(0700,root,root)/boot/%{name}/fonts			\
 %{nil}
