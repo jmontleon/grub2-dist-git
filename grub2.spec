@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	56%{?dist}
+Release:	57%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -531,6 +531,9 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Wed Nov 23 2022 Robbie Harwood <rharwood@redhat.com> - 2.06-57
+- Temporarily restore the font because everything is pain
+
 * Tue Nov 22 2022 Robbie Harwood <rharwood@redhat.com> - 2.06-56
 - Bundle unicode.pf2 with images
 - Resolves: #2143725
