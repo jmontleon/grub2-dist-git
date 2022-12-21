@@ -387,12 +387,14 @@ mkdir -p memdisk/fonts						\
 cp %{4}/unicode.pf2 memdisk/fonts				\
 mksquashfs memdisk memdisk.squashfs -comp xz			\
 %{4}./grub-mkimage -O %{1} -o %{2}.orig				\\\
-	-p /EFI/%{efi_vendor} -d grub-core ${GRUB_MODULES}	\\\
+	-d grub-core ${GRUB_MODULES}				\\\
 	-m memdisk.squashfs					\\\
+	-p /EFI/%{efi_vendor}					\\\
 	--sbat %{4}./sbat.csv					\
 %{4}./grub-mkimage -O %{1} -o %{3}.orig				\\\
-	-p /EFI/BOOT -d grub-core ${GRUB_MODULES}		\\\
+	-d grub-core ${GRUB_MODULES}				\\\
 	-m memdisk.squashfs					\\\
+	-p /EFI/BOOT						\\\
 	--sbat %{4}./sbat.csv					\
 %{expand:%%define ___pesign_client_cert %{?___pesign_client_cert}%{!?___pesign_client_cert:%{__pesign_client_cert}}} \
 %{?__pesign_client_cert:%{expand:%%define __pesign_client_cert %{___pesign_client_cert}}} \
