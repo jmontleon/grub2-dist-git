@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	60%{?dist}
+Release:	61%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -531,6 +531,9 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Thu Jan 12 2023 Robbie Harwood <rharwood@redhat.com> - 2.06-61
+- Fix missing SBAT bump (sign)
+
 * Thu Jan 12 2023 Robbie Harwood <rharwood@redhat.com> - 2.06-60
 - Alllow for xz'd symvers.gz file
 
