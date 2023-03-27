@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	61%{?dist}
+Release:	62%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -531,6 +531,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Mon Mar 27 2023 Robbie Harwood <rharwood@redhat.com> - 2.06-62
+- Backport arm compressed boot changes
+- Resolves: #2181825
+
 * Thu Jan 12 2023 Robbie Harwood <rharwood@redhat.com> - 2.06-61
 - Fix missing SBAT bump (sign)
 

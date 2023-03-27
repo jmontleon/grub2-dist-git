@@ -294,3 +294,5 @@ Patch0293: 0293-font-Assign-null_font-to-glyphs-in-ascii_font_glyph.patch
 Patch0294: 0294-normal-charset-Fix-an-integer-overflow-in-grub_unico.patch
 Patch0295: 0295-font-Try-opening-fonts-from-the-bundled-memdisk.patch
 Patch0296: 0296-Correction-in-vector-5-values.patch
+Patch0297: 0297-loader-arm64-linux-Remove-magic-number-header-field-.patch
+Patch0298: 0298-Correct-BSS-zeroing-on-aarch64.patch
