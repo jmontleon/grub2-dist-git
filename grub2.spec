@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	95%{?dist}
+Release:	96%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -110,7 +110,7 @@ subpackages.
 %package tools
 Summary:	Support tools for GRUB.
 Requires:	grub2-common = %{epoch}:%{version}-%{release}
-Requires:	gettext-runtime os-prober file
+Requires:	gettext os-prober file
 Requires(pre):	dracut
 Requires(pre):	grep
 Requires(pre):	sed
@@ -122,7 +122,7 @@ This subpackage provides tools for support of all platforms.
 %ifarch x86_64
 %package tools-efi
 Summary:	Support tools for GRUB.
-Requires:	gettext-runtime os-prober file
+Requires:	gettext os-prober file
 Requires:	grub2-common = %{epoch}:%{version}-%{release}
 
 %description tools-efi
@@ -132,7 +132,7 @@ This subpackage provides tools for support of EFI platforms.
 
 %package tools-minimal
 Summary:	Support tools for GRUB.
-Requires:	gettext-runtime
+Requires:	gettext
 Requires:	grub2-common = %{epoch}:%{version}-%{release}
 Obsoletes:	grub2-tools < %{evr}
 
@@ -142,7 +142,7 @@ This subpackage provides tools for support of all platforms.
 
 %package tools-extra
 Summary:	Support tools for GRUB.
-Requires:	gettext-runtime os-prober file
+Requires:	gettext os-prober file
 Requires:	grub2-tools-minimal = %{epoch}:%{version}-%{release}
 Requires:	grub2-common = %{epoch}:%{version}-%{release}
 Requires:	mtools
@@ -544,6 +544,14 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Thu Aug 10 2023 Simone Caronni <negativo17@gmail.com> - 1:2.06-96
+- Add UEFI VLAN patches:
+  https://git.savannah.gnu.org/cgit/grub.git/commit/?id=98c299e540ec2942c2734c3e56cf586302d3eef0
+  https://git.savannah.gnu.org/cgit/grub.git/commit/?id=954c48b9c833d64b74ced1f27701af2ea5c6f55a
+  https://git.savannah.gnu.org/cgit/grub.git/commit/?id=c143056a34b4ccc255a6ad4e96a5aa989d304760
+  https://git.savannah.gnu.org/cgit/grub.git/commit/?id=9322a7740f7ca48d0b23a231af1c7807d9f7b5dd
+- Require gettext and not gettext-runtime so it installs on el9.
+
 * Wed Apr 12 2023 Robbie Harwood <rharwood@redhat.com> - 2.06-95
 - Add switch-root support to grub-emu
 
