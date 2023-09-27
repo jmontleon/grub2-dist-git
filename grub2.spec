@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	100%{?dist}
+Release:	101%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -548,6 +548,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Wed Sep 27 2023 Zbigniew Jedrzejewski-Szmek <zbyszek@in.waw.pl> - 1:2.06-101
+- Rename installed kernel to match name used in boot entry
+- Resolves: #2239008
+
 * Wed Sep 13 2023 Nicolas Frayer <nfrayer@redhat.com> - 2.06-100
 - arm64: Use proper memory type for kernel allocation
 - Resolves: #2149020
