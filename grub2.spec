@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	104%{?dist}
+Release:	105%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -364,7 +364,7 @@ BOOT_UUID=$(grub2-probe --target=fs_uuid ${GRUB_HOME})
 GRUB_DIR=$(grub2-mkrelpath ${GRUB_HOME})
 
 cat << EOF > ${EFI_HOME}/grub.cfg.stb
-search --no-floppy --fs-uuid --set=dev ${BOOT_UUID}
+search --no-floppy --fs-uuid --root-dev-only --set=dev ${BOOT_UUID}
 set prefix=(\$dev)${GRUB_DIR}
 export \$prefix
 configfile \$prefix/grub.cfg
@@ -548,6 +548,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Mon Oct 16 2023 Nicolas Frayer <nfrayer@redhat.com> - 2.06-105
+- grub-core: add flag to only search root dev
+- Resolves: #2223437
+
 * Wed Oct 11 2023 Janne Grunau <j@jannau.net> - 2.06-104
 - 20-grub.install: Copy device-tree directory recursively
 - Resolves: #2243060
