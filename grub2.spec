@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	105%{?dist}
+Release:	106%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -364,7 +364,7 @@ BOOT_UUID=$(grub2-probe --target=fs_uuid ${GRUB_HOME})
 GRUB_DIR=$(grub2-mkrelpath ${GRUB_HOME})
 
 cat << EOF > ${EFI_HOME}/grub.cfg.stb
-search --no-floppy --fs-uuid --set=dev ${BOOT_UUID}
+search --no-floppy --root-dev-only --fs-uuid --set=dev ${BOOT_UUID}
 set prefix=(\$dev)${GRUB_DIR}
 export \$prefix
 configfile \$prefix/grub.cfg
@@ -548,6 +548,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Wed Oct 25 2023 Nicolas Frayer <nfrayer@redhat.com> - 2.06-106
+- grub-core/commands: add flag to only search root dev
+- Resolves: #2223437
+
 * Fri Oct 20 2023 Nicolas Frayer <nfrayer@redhat.com> - 2.06-105
 - kern/ieee1275/init: ppc64: Restrict high memory in presence
   of fadump
