@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	106%{?dist}
+Release:	107%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -274,6 +274,12 @@ install -D -m 0755 -t %{buildroot}%{_userunitdir} \
 	docs/grub-boot-success.{timer,service}
 # Install systemd system-update unit to set boot_indeterminate for offline-upd
 install -D -m 0755 -t %{buildroot}%{_unitdir} docs/grub-boot-indeterminate.service
+install -d -m 0755 %{buildroot}%{_unitdir}/system-update.target.wants
+install -d -m 0755 %{buildroot}%{_unitdir}/reboot.target.wants
+ln -s ../grub-boot-indeterminate.service \
+	%{buildroot}%{_unitdir}/system-update.target.wants
+ln -s ../grub2-systemd-integration.service \
+	%{buildroot}%{_unitdir}/reboot.target.wants
 
 # Don't run debuginfo on all the grub modules and whatnot; it just
 # rejects them, complains, and slows down extraction.
@@ -325,18 +331,12 @@ elif [ -f /etc/grub.d/01_users ] && \
 fi
 
 %post tools
-%systemd_post grub-boot-indeterminate.service
-%systemd_post grub2-systemd-integration.service
 %systemd_user_post grub-boot-success.timer
 
 %preun tools
-%systemd_preun grub-boot-indeterminate.service
-%systemd_preun grub2-systemd-integration.service
 %systemd_user_preun grub-boot-success.timer
 
 %postun tools
-%systemd_postun_with_restart grub-boot-indeterminate.service
-%systemd_postun_with_restart grub2-systemd-integration.service
 %systemd_user_postun_with_restart grub-boot-success.timer
 
 %posttrans common
@@ -548,6 +548,9 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Tue Nov 14 2023 Christian Glombek <cglombek@redhat.com> - 2.06-107
+- spec: Switch back to static enablement for grub units in tools package
+
 * Mon Nov 6 2023 Nicolas Frayer <nfrayer@redhat.com> - 2.06-106
 - util: grub-install on EFI if forced
 - Resolves: #1917213
