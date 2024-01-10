@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	112%{?dist}
+Release:	113%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -554,6 +554,9 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Sat Jan 13 2024 Hector Martin <marcan@fedoraproject.org> - 2.06-113
+- Switch memdisk compression to lzop
+
 * Thu Jan 11 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 2.06-112
 -  Don't obsolete the tools package with minimal
 
