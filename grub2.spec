@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	113%{?dist}
+Release:	114%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -135,7 +135,6 @@ This subpackage provides tools for support of EFI platforms.
 Summary:	Support tools for GRUB.
 Requires:	gettext-runtime
 Requires:	grub2-common = %{epoch}:%{version}-%{release}
-Obsoletes:	grub2-tools < %{evr}
 
 %description tools-minimal
 %{desc}
@@ -555,6 +554,9 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Thu Jan 11 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 2.06-114
+-  Don't obsolete the tools package with minimal
+
 * Mon Jan 8 2024 Nicolas Frayer <nfrayer@redhat.com> - 2.06-113
 - xfs: some bios systems with /boot partition created with
   xfsprog < 6.5.0 can't boot with one of the xfs upstream patches
