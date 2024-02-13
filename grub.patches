@@ -350,3 +350,4 @@ Patch0349: 0349-grub-set-bootflag-Conservative-partial-fix-for-CVE-2.patch
 Patch0350: 0350-grub-set-bootflag-More-complete-fix-for-CVE-2024-104.patch
 Patch0351: 0351-grub-set-bootflag-Exit-calmly-when-not-running-as-ro.patch
 Patch0352: 0352-fs-xfs-Fix-XFS-directory-extent-parsing.patch
+Patch0353: 0353-fs-xfs-Fix-xfs-directory-parser-for-unmapped-blocks.patch

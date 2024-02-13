@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	118%{?dist}
+Release:	119%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -554,6 +554,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Tue Feb 13 2024 Nicolas Frayer<nfrayer@redhat.com> - 2.06-119
+- fs/xfs: Fix xfs directory parser for unmapped blocks
+- Related: #2254370
+
 * Wed Feb 7 2024 Nicolas Frayer <nfrayer@redhat.com> - 2.06-118
 - fs/xfs: Re-applied the XFS directory extent parsing patch
 - Resolves: #2259266
