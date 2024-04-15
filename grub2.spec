@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.06
-Release:	119%{?dist}
+Release:	120%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPLv3+
 URL:		http://www.gnu.org/software/grub/
@@ -554,6 +554,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+* Fri Apr 12 2024 Nicolas Frayer <nfrayer@redhat.com> - 2.06-120
+- fs/xfs: Handle non-continuous data blocks in directory extents
+- Related: #2254370
+
 * Fri Mar 8 2024 Nicolas Frayer <nfrayer@redhat.com> - 2.06-119
 - GRUB2 NTFS driver vulnerabilities
 - (CVE-2023-4692)
