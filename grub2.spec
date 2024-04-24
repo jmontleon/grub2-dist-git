@@ -6,7 +6,7 @@
 %undefine _hardened_build
 %undefine _package_note_file
 
-%global tarversion 2.06
+%global tarversion 2.12
 %undefine _missing_build_ids_terminate_build
 %global _configure_gnuconfig_hack 0
 
@@ -16,12 +16,16 @@
 
 Name:		grub2
 Epoch:		1
-Version:	2.06
-Release:	121%{?dist}
+Version:	2.12
+Release:	0.1.0.riscv64%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPL-3.0-or-later
 URL:		http://www.gnu.org/software/grub/
 Obsoletes:	grub < 1:0.98
+# There is a file missing from the available archive
+# https://savannah.gnu.org/bugs/?65065
+# git clone https://git.savannah.gnu.org/git/grub.git grub-2.12 --depth 1 -b grub-2.12
+# tar --exclude-vcs -Jcvf grub-2.12.tar.xz grub-2.12
 Source0:	https://ftp.gnu.org/gnu/grub/grub-%{tarversion}.tar.xz
 Source1:	grub.macros
 Source2:	gnulib-%{gnulibversion}.tar.gz
@@ -183,7 +187,6 @@ This subpackage provides the GRUB user-space emulation modules.
 %do_common_setup
 %if 0%{with_efi_arch}
 mkdir grub-%{grubefiarch}-%{tarversion}
-grep -A100000 '# stuff "make" creates' .gitignore > grub-%{grubefiarch}-%{tarversion}/.gitignore
 cp %{SOURCE4} grub-%{grubefiarch}-%{tarversion}/unifont.pcf.gz
 sed -e "s,@@VERSION@@,%{version},g" -e "s,@@VERSION_RELEASE@@,%{version}-%{release},g" \
     %{SOURCE12} > grub-%{grubefiarch}-%{tarversion}/sbat.csv
@@ -191,19 +194,16 @@ git add grub-%{grubefiarch}-%{tarversion}
 %endif
 %if 0%{with_alt_efi_arch}
 mkdir grub-%{grubaltefiarch}-%{tarversion}
-grep -A100000 '# stuff "make" creates' .gitignore > grub-%{grubaltefiarch}-%{tarversion}/.gitignore
 cp %{SOURCE4} grub-%{grubaltefiarch}-%{tarversion}/unifont.pcf.gz
 git add grub-%{grubaltefiarch}-%{tarversion}
 %endif
 %if 0%{with_legacy_arch}
 mkdir grub-%{grublegacyarch}-%{tarversion}
-grep -A100000 '# stuff "make" creates' .gitignore > grub-%{grublegacyarch}-%{tarversion}/.gitignore
 cp %{SOURCE4} grub-%{grublegacyarch}-%{tarversion}/unifont.pcf.gz
 git add grub-%{grublegacyarch}-%{tarversion}
 %endif
 %if 0%{with_emu_arch}
 mkdir grub-emu-%{tarversion}
-grep -A100000 '# stuff "make" creates' .gitignore > grub-emu-%{tarversion}/.gitignore
 cp %{SOURCE4} grub-emu-%{tarversion}/unifont.pcf.gz
 git add grub-emu-%{tarversion}
 %endif
@@ -260,8 +260,6 @@ rm -vf ${RPM_BUILD_ROOT}/%{_sbindir}/grub2-bios-setup
 rm -vf ${RPM_BUILD_ROOT}/%{_sbindir}/grub2-macbless
 %endif
 %{expand:%%do_install_protected_file grub2-tools-minimal}
-
-%find_lang grub
 
 # Install kernel-install scripts
 install -d -m 0755 %{buildroot}%{_prefix}/lib/kernel/install.d/
@@ -383,7 +381,7 @@ cp -a ${EFI_HOME}/grub.cfg ${EFI_HOME}/grub.cfg.rpmsave
 cp -a ${EFI_HOME}/grub.cfg ${GRUB_HOME}/
 mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 
-%files common -f grub.lang
+%files common
 %dir %{_libdir}/grub/
 %dir %{_datarootdir}/grub/
 %attr(0700,root,root) %dir %{_sysconfdir}/grub.d
@@ -406,7 +404,6 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %doc docs/font_char_metrics.png
 
 %files tools-minimal
-%{_sbindir}/grub2-get-kernel-settings
 %{_sbindir}/grub2-probe
 %attr(4755, root, root) %{_sbindir}/grub2-set-bootflag
 %{_sbindir}/grub2-set-default
@@ -416,7 +413,6 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %{_bindir}/grub2-mount
 %attr(0644,root,root) %config(noreplace) /etc/dnf/protected.d/grub2-tools-minimal.conf
 
-%{_datadir}/man/man3/grub2-get-kernel-settings*
 %{_datadir}/man/man8/grub2-set-default*
 %{_datadir}/man/man8/grub2-set*password*
 %{_datadir}/man/man1/grub2-editenv*
@@ -444,9 +440,10 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %{_unitdir}/reboot.target.wants
 %{_unitdir}/systemd-logind.service.d
 %{_infodir}/grub2*
+%{_infodir}/grub.info-1.gz
+%{_infodir}/grub.info-2.gz
 %{_datarootdir}/grub/*
 %{_sbindir}/grub2-install
-%exclude %{_datarootdir}/grub/themes
 %exclude %{_datarootdir}/grub/*.h
 %{_datarootdir}/bash-completion/completions/grub
 %{_sbindir}/grub2-mkconfig
@@ -473,7 +470,6 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %exclude %{_datadir}/man/man1/grub2-syslinux2cfg*
 
 # exclude man pages from tools-minimal
-%exclude %{_datadir}/man/man3/grub2-get-kernel-settings*
 %exclude %{_datadir}/man/man8/grub2-set-default*
 %exclude %{_datadir}/man/man8/grub2-set*password*
 %exclude %{_datadir}/man/man1/grub2-editenv*
@@ -501,6 +497,11 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %exclude %{_sbindir}/grub2-ofpathname
 %exclude %{_datadir}/man/man8/grub2-ofpathname*
 %endif
+%else
+# The build of grub2-bios-setup seems to be controlled
+# by something other than with_legacy_arch
+%exclude %{_sbindir}/grub2-bios-setup
+%exclude %{_libdir}/debug/usr/sbin/grub2-bios-setup-2.12-0.1.0.riscv64.fc40.x86_64.debug
 %endif
 
 %files tools-extra
@@ -554,9 +555,11 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
-* Fri Apr 12 2024 Nicolas Frayer <nfrayer@redhat.com> - 2.06-121
-- fs/xfs: Handle non-continuous data blocks in directory extents
-- Related: #2254370
+* Wed Apr 24 2024 Jason Montleon <jmontleo@redhat.com> - 2.12-0.1.0.riscv64
+- Update to 2.12
+
+* Thu Mar 21 2024 David Abdurachmanov <davidlt@rivosinc.com> - 2.06-120.0.riscv64
+- Backport riscv64 R_RISCV_CALL_PLT reloc patch
 
 * Fri Mar 8 2024 Nicolas Frayer <nfrayer@redhat.com> - 2.06-120
 - GRUB2 NTFS driver vulnerabilities
