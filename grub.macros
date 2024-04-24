@@ -123,7 +123,7 @@
 %{?with_efi_only:%global without_efi_only 1}
 
 %ifarch %{efi_arch}
-%global efi_modules " efi_netfs efifwsetup efinet lsefi lsefimmap connectefi "
+%global efi_modules "           efifwsetup efinet lsefi lsefimmap            "
 %endif
 
 %ifarch x86_64 %{ix86}
@@ -163,7 +163,10 @@
 %global legacy_package_arch pc
 %global platform pc
 
-%global alt_efi_arch ia32
+# GCC 14 causes /usr/bin/ld: relocatable linking with relocations from
+# format elf64-x86-64 (lib/i386/relocator_module-relocator16.o) to format
+# elf32-i386 (relocator.module) is not supported
+# global alt_efi_arch ia32
 %global alt_target_cpu_name i386
 %global alt_grub_target_name i386-efi
 %global alt_platform efi
@@ -232,7 +235,9 @@
 %endif
 
 %ifnarch %{efi_only}
-%global with_legacy_arch 1
+# GCC 14 causes ./../include/grub/misc.h:36:56: error: duplicate case value
+# so the following has been set to 0 to work around
+%global with_legacy_arch 0
 %global grublegacyarch %{legacy_target_cpu_name}-%{platform}
 %global moduledir %{legacy_target_cpu_name}-%{platform}
 %global grubelfname core.elf
@@ -349,7 +354,7 @@ rm -f configure							\
 git add .							\
 git commit -a -q -m "%{tarversion} baseline."			\
 git am --whitespace=nowarn %%{patches} </dev/null		\
-rm -r build-aux m4						\
+rm -rf build-aux m4						\
 ./bootstrap							\
 %{nil}
 
@@ -375,11 +380,12 @@ git commit -m "After efi configure"				\
 
 %define do_efi_build_modules()					\
 make %{?_smp_mflags} ascii.h widthspec.h			\
-make %{?_smp_mflags} -C grub-core				\
+# strtoull_test.c does not build on GCC 14 without -fpermissive \
+make CFLAGS="-fpermissive" %{?_smp_mflags} -C grub-core				\
 %{nil}
 
 %define do_efi_build_all()					\
-make %{?_smp_mflags}						\
+make CFLAGS="-fpermissive" %{?_smp_mflags}						\
 %{nil}
 
 %define do_efi_link_utils()					\
@@ -402,7 +408,7 @@ rm -f %{1}.conf							\
 			gcry_rijndael gcry_rsa gcry_serpent	\\\
 			gcry_sha256 gcry_twofish gcry_whirlpool	\\\
 			gfxmenu gfxterm gzio			\\\
-			halt hfsplus http increment iso9660	\\\
+			halt hfsplus http           iso9660	\\\
 			jpeg loadenv loopback linux lvm luks	\\\
 			luks2					\\\
 			memdisk					\\\
@@ -413,7 +419,7 @@ rm -f %{1}.conf							\
 			search_label serial sleep		\\\
 			squash4					\\\
 			syslinuxcfg				\\\
-			test tftp version video xfs zstd "	\
+			test tftp         video xfs zstd "	\
 
 %ifarch %{efi_arch}
 %define efi_mkimage()						\
@@ -554,7 +560,7 @@ git add .							\
 git commit -m "After emu configure"				\
 make %{?_smp_mflags} ascii.h widthspec.h			\
 make %{?_smp_mflags} -C grub-core/lib/gnulib			\
-make %{?_smp_mflags} -C grub-core				\
+make CFLAGS="-fpermissive" %{?_smp_mflags} -C grub-core				\
 cd ..								\
 %{nil}
 
