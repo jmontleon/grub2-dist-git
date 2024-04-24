@@ -1,0 +1,145 @@
+From db20f3f983195decd60d42a67aef664afdb84336 Mon Sep 17 00:00:00 2001
+From: Jason Montleon <jason@montleon.com>
+Date: Mon, 22 Apr 2024 14:44:57 +0000
+Subject: [PATCH] Add systemd integration scripts to make systemctl reboot 2.12
+
+---
+ Makefile.util.def                             | 27 +++++++++++++++++++
+ conf/Makefile.common                          |  6 +++++
+ util/grub.d/14_menu_show_once.in              | 13 +++++++++
+ util/systemd/10-grub-logind-service.conf.in   |  2 ++
+ .../grub-systemd-integration.service.in       |  8 ++++++
+ util/systemd/systemd-integration.sh.in        |  6 +++++
+ 6 files changed, 62 insertions(+)
+ create mode 100755 util/grub.d/14_menu_show_once.in
+ create mode 100644 util/systemd/10-grub-logind-service.conf.in
+ create mode 100644 util/systemd/grub-systemd-integration.service.in
+ create mode 100644 util/systemd/systemd-integration.sh.in
+
+diff --git a/Makefile.util.def b/Makefile.util.def
+index 9432365a9..557569250 100644
+--- a/Makefile.util.def
++++ b/Makefile.util.def
+@@ -469,6 +469,12 @@ script = {
+   condition = COND_HOST_HURD;
+ };
+ 
++script = {
++  name = '14_menu_show_once';
++  common = util/grub.d/14_menu_show_once.in;
++  installdir = grubconf;
++};
++
+ script = {
+   name = '10_kfreebsd';
+   common = util/grub.d/10_kfreebsd.in;
+@@ -541,6 +547,27 @@ script = {
+   installdir = grubconf;
+ };
+ 
++script = {
++  name = 'grub-systemd-integration.service';
++  common = util/systemd/grub-systemd-integration.service.in;
++  installdir = systemdunit;
++  condition = COND_HOST_LINUX;
++};
++
++script = {
++  name = 'systemd-integration.sh';
++  common = util/systemd/systemd-integration.sh.in;
++  installdir = grublibexec;
++  condition = COND_HOST_LINUX;
++};
++
++script = {
++  name = '10-grub-logind-service.conf';
++  common = util/systemd/10-grub-logind-service.conf.in;
++  installdir = systemd_logind_service_d;
++  condition = COND_HOST_LINUX;
++};
++
+ program = {
+   mansection = 1;
+   name = grub-mkrescue;
+diff --git a/conf/Makefile.common b/conf/Makefile.common
+index b8f216f6c..06d00fe7c 100644
+--- a/conf/Makefile.common
++++ b/conf/Makefile.common
+@@ -72,8 +72,11 @@ CCASFLAGS_LIBRARY =
+ # Other variables
+ 
+ grubconfdir = $(sysconfdir)/grub.d
++grublibexecdir = $(libexecdir)/$(grubdirname)
+ platformdir = $(pkglibdir)/$(target_cpu)-$(platform)
+ starfielddir = $(pkgdatadir)/themes/starfield
++systemdunitdir = ${prefix}/lib/systemd/system
++systemd_logind_service_ddir = $(systemdunitdir)/systemd-logind.service.d
+ 
+ CFLAGS_GNULIB = -Wno-undef -Wno-sign-compare -Wno-unused -Wno-unused-parameter -Wno-redundant-decls -Wno-unreachable-code -Wno-conversion -Wno-error=attributes
+ CPPFLAGS_GNULIB = -I$(top_builddir)/grub-core/lib/gnulib -I$(top_srcdir)/grub-core/lib/gnulib
+@@ -130,6 +133,9 @@ pkgdata_DATA =
+ platform_DATA =
+ platform_SCRIPTS =
+ platform_PROGRAMS =
++grublibexec_SCRIPTS =
++systemdunit_SCRIPTS =
++systemd_logind_service_d_SCRIPTS =
+ sbin_SCRIPTS =
+ sbin_PROGRAMS =
+ 
+diff --git a/util/grub.d/14_menu_show_once.in b/util/grub.d/14_menu_show_once.in
+new file mode 100755
+index 000000000..1cd7f3614
+--- /dev/null
++++ b/util/grub.d/14_menu_show_once.in
+@@ -0,0 +1,13 @@
++#! /bin/sh
++# Force the menu to be shown once, with a timeout of ${menu_show_once_timeout}
++# if requested by ${menu_show_once_timeout} being set in the env.
++cat << EOF
++if [ x\$feature_timeout_style = xy ]; then
++  if [ "\${menu_show_once_timeout}" ]; then
++    set timeout_style=menu
++    set timeout="\${menu_show_once_timeout}"
++    unset menu_show_once_timeout
++    save_env menu_show_once_timeout
++  fi
++fi
++EOF
+diff --git a/util/systemd/10-grub-logind-service.conf.in b/util/systemd/10-grub-logind-service.conf.in
+new file mode 100644
+index 000000000..f2d4ac007
+--- /dev/null
++++ b/util/systemd/10-grub-logind-service.conf.in
+@@ -0,0 +1,2 @@
++[Service]
++Environment=SYSTEMD_REBOOT_TO_BOOT_LOADER_MENU=true
+diff --git a/util/systemd/grub-systemd-integration.service.in b/util/systemd/grub-systemd-integration.service.in
+new file mode 100644
+index 000000000..c81fb594c
+--- /dev/null
++++ b/util/systemd/grub-systemd-integration.service.in
+@@ -0,0 +1,8 @@
++[Unit]
++Description=Grub2 systemctl reboot --boot-loader-menu=... support
++Before=umount.target systemd-reboot.service
++DefaultDependencies=no
++ConditionPathExists=/run/systemd/reboot-to-boot-loader-menu
++
++[Service]
++ExecStart=@libexecdir@/@grubdirname@/systemd-integration.sh
+diff --git a/util/systemd/systemd-integration.sh.in b/util/systemd/systemd-integration.sh.in
+new file mode 100644
+index 000000000..dc1218597
+--- /dev/null
++++ b/util/systemd/systemd-integration.sh.in
+@@ -0,0 +1,6 @@
++#!/bin/sh
++
++TIMEOUT_USEC=$(cat /run/systemd/reboot-to-boot-loader-menu)
++TIMEOUT=$(((TIMEOUT_USEC + 500000) / 1000000))
++
++@grub_editenv@ - set menu_show_once_timeout=$TIMEOUT
+-- 
+2.41.0
+
