@@ -15,7 +15,16 @@
 %endif
 
 # gnulib actively ignores CFLAGS because it's terrible
+# strtoull_test.c does not build on GCC 14 without -fpermissive
+# riscv64 needs -fPIC with GCC 14 and it does not work with -fPIE
+# specifying -fPIC requires specifying -mcmodel=medany (or medlow, but medlow does not work for grub)
+%ifarch riscv64
+%global cc_equals "CC=%{ccpath} -fPIC -mcmodel=medany -fno-PIE -Wl,-z,noexecstack -Wl,--no-warn-rwx-segments"
+%global	make_cflags "CFLAGS=-fPIC -mcmodel=medany -fno-PIE -fpermissive"
+%else
 %global cc_equals "CC=%{ccpath} -fPIE -Wl,-z,noexecstack -Wl,--no-warn-rwx-segments"
+%global make_cflags "CFLAGS=-fpermissive"
+%endif
 
 %global cflags_sed						\\\
 	sed							\\\
@@ -32,7 +41,14 @@
 		-e 's/^/ -fno-strict-aliasing /'		\\\
 		%{nil}
 
+# hardening flags turn of -fPIE (I think?) and break builds on RISCV
+%ifarch riscv64
+%global host_cflags_ %{expand:%%(echo %{build_cflags} | %{cflags_sed})}
+%else
 %global host_cflags_ %{expand:%%(echo %{build_cflags} %{?_hardening_cflags} | %{cflags_sed})} -fstack-protector-strong
+%endif
+
+
 %ifarch x86_64
 %global host_cflags %{host_cflags_} -fcf-protection
 %else
@@ -61,7 +77,13 @@
 		-e 's/^$//'					\\\
 		%{nil}
 
+# hardening flags turn of -fPIE (I think?) and break builds on RISCV
+%ifarch riscv64
+%global host_ldflags -fPIC -mcmodel=medany -fno-PIE %{expand:%%(echo %{build_ldflags} | %{ldflags_sed})}
+%else
 %global host_ldflags %{expand:%%(echo %{build_ldflags} %{?_hardening_ldflags} | %{ldflags_sed})}
+%endif
+
 %global legacy_host_ldflags					\\\
 	%{expand:%%(echo %{host_ldflags} |			\\\
 	%{ldflags_sed}						\\\
@@ -379,13 +401,12 @@ git commit -m "After efi configure"				\
 %{nil}
 
 %define do_efi_build_modules()					\
-make %{?_smp_mflags} ascii.h widthspec.h			\
-# strtoull_test.c does not build on GCC 14 without -fpermissive \
-make CFLAGS="-fpermissive" %{?_smp_mflags} -C grub-core				\
+make %{make_cflags} %{?_smp_mflags} ascii.h widthspec.h		\
+make %{make_cflags} %{?_smp_mflags} -C grub-core		\
 %{nil}
 
 %define do_efi_build_all()					\
-make CFLAGS="-fpermissive" %{?_smp_mflags}						\
+make %{make_cflags} %{?_smp_mflags}				\
 %{nil}
 
 %define do_efi_link_utils()					\
@@ -541,7 +562,7 @@ cd grub-%{1}-%{tarversion}					\
 	--disable-werror || ( cat config.log ; exit 1 )		\
 git add .							\
 git commit -m "After legacy configure"				\
-make %{?_smp_mflags}						\
+make %{make_cflags} %{?_smp_mflags}				\
 cd ..								\
 %{nil}
 
@@ -558,9 +579,9 @@ cd grub-emu-%{tarversion}					\
 	--disable-werror || ( cat config.log ; exit 1 )		\
 git add .							\
 git commit -m "After emu configure"				\
-make %{?_smp_mflags} ascii.h widthspec.h			\
-make %{?_smp_mflags} -C grub-core/lib/gnulib			\
-make CFLAGS="-fpermissive" %{?_smp_mflags} -C grub-core				\
+make %{make_cflags} %{?_smp_mflags} ascii.h widthspec.h		\
+make %{make_cflags} %{?_smp_mflags} -C grub-core/lib/gnulib	\
+make %{make_cflags} %{?_smp_mflags} -C grub-core		\
 cd ..								\
 %{nil}
 
@@ -586,7 +607,7 @@ cd ..								\
 
 %define do_efi_install()					\
 cd grub-%{1}-%{tarversion}					\
-make DESTDIR=$RPM_BUILD_ROOT install				\
+make %{make_cflags} DESTDIR=$RPM_BUILD_ROOT install		\
 if [ -f $RPM_BUILD_ROOT%{_infodir}/grub.info ]; then		\
 	rm -f $RPM_BUILD_ROOT%{_infodir}/grub.info		\
 fi								\
@@ -611,7 +632,7 @@ cd ..								\
 
 %define do_legacy_install()					\
 cd grub-%{1}-%{tarversion}					\
-make DESTDIR=$RPM_BUILD_ROOT install				\
+make %{make_cflags} DESTDIR=$RPM_BUILD_ROOT install		\
 if [ -f $RPM_BUILD_ROOT%{_infodir}/grub.info ]; then		\
 	rm -f $RPM_BUILD_ROOT%{_infodir}/grub.info		\
 fi								\
@@ -647,7 +668,7 @@ cd ..								\
 
 %define do_emu_install()					\
 cd grub-emu-%{tarversion}					\
-make DESTDIR=$RPM_BUILD_ROOT install -C grub-core		\
+make %{make_cflags} DESTDIR=$RPM_BUILD_ROOT install -C grub-core	\
 if [ -f $RPM_BUILD_ROOT%{_infodir}/grub.info ]; then		\
 	rm -f $RPM_BUILD_ROOT%{_infodir}/grub.info		\
 fi								\
