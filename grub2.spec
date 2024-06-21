@@ -17,7 +17,7 @@
 Name:		grub2
 Epoch:		1
 Version:	2.12
-Release:	1%{?dist}
+Release:	0.2.15.riscv64%{?dist}
 Summary:	Bootloader with support for Linux, Multiboot and more
 License:	GPL-3.0-or-later
 URL:		http://www.gnu.org/software/grub/
@@ -555,6 +555,9 @@ mv ${EFI_HOME}/grub.cfg.stb ${EFI_HOME}/grub.cfg
 %endif
 
 %changelog
+- Fri Jun 21 2024 Jason Montleon <jmontleo@redhat.com> 0.2.15.riscv64
+- Update for riscv64
+
 * Mon Apr 22 2024 Leo Sandoval <lsandova@redhat.com>
 - Rebased to newer upstream for fedora-41
 
