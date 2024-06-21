@@ -260,3 +260,4 @@ Patch0259: 0259-Correct-BSS-zeroing-on-aarch64.patch
 Patch0260: 0260-arm64-Use-proper-memory-type-for-kernel-allocation.patch
 Patch0261: 0261-normal-Remove-grub_env_set-prefix-in-grub_try_normal.patch
 Patch0262: 0262-fs-xfs-Handle-non-continuous-data-blocks-in-director.patch
+Patch0263: 0263-Use-medany-instead-of-large-model-for-RISCV.patch
