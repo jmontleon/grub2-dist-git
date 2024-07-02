@@ -252,11 +252,14 @@ Patch0251: 0251-grub-set-bootflag-Conservative-partial-fix-for-CVE-2.patch
 Patch0252: 0252-grub-set-bootflag-More-complete-fix-for-CVE-2024-104.patch
 Patch0253: 0253-grub-set-bootflag-Exit-calmly-when-not-running-as-ro.patch
 Patch0254: 0254-Makefile.core.def-fix-linux-module.patch
+%ifnarch riscv64
 Patch0255: 0255-Add-support-for-Linux-EFI-stub-loading-on-arm-archit.patch
 Patch0256: 0256-arm-arm64-loader-Better-memory-allocation-and-error-.patch
 Patch0257: 0257-arm64-Fix-EFI-loader-kernel-image-allocation.patch
 Patch0258: 0258-pe-add-the-DOS-header-struct-and-fix-some-bad-naming.patch
 Patch0259: 0259-Correct-BSS-zeroing-on-aarch64.patch
 Patch0260: 0260-arm64-Use-proper-memory-type-for-kernel-allocation.patch
+%endif
 Patch0261: 0261-normal-Remove-grub_env_set-prefix-in-grub_try_normal.patch
 Patch0262: 0262-fs-xfs-Handle-non-continuous-data-blocks-in-director.patch
+Patch0263: 0263-Use-medany-instead-of-large-model-for-RISCV.patch
